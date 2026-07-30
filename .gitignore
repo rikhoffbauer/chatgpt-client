@@ -1,4 +1,9 @@
 node_modules/
 dist/
-.poc-state.json
+.test-dist/
+coverage/
 *.log
+.env
+.env.*
+!.env.example
+.DS_Store
