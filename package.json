@@ -1,0 +1,19 @@
+{
+  "name": "chatgpt-poc",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "chatgpt-poc": "./dist/chatgpt-poc.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "dev": "bun run chatgpt-poc.ts",
+    "start": "node dist/chatgpt-poc.js"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "latest"
+  }
+}
