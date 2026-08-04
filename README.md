@@ -50,7 +50,7 @@ Build and link the executable:
 ```sh
 bun run build
 bun link
-chatgpt-desktop-client --help
+chatgpt-client --help
 ```
 
 Run from source while developing:
@@ -65,16 +65,16 @@ bun run src/bin.ts send --json-stream "Explain bounded queues"
 Common operations:
 
 ```sh
-chatgpt-desktop-client models
-chatgpt-desktop-client read <conversation-id>
-chatgpt-desktop-client send -c <conversation-id> -m <model> "Continue"
-chatgpt-desktop-client send --attach ./notes.md "Summarize the attachment"
-chatgpt-desktop-client upload ./document.pdf
-chatgpt-desktop-client download <file-id> --out ./document.pdf
-chatgpt-desktop-client routes wham
-chatgpt-desktop-client api getConversation --conversation_id=<id> --json
-chatgpt-desktop-client agent methods
-chatgpt-desktop-client agent threads --limit 20
+chatgpt-client models
+chatgpt-client read <conversation-id>
+chatgpt-client send -c <conversation-id> -m <model> "Continue"
+chatgpt-client send --attach ./notes.md "Summarize the attachment"
+chatgpt-client upload ./document.pdf
+chatgpt-client download <file-id> --out ./document.pdf
+chatgpt-client routes wham
+chatgpt-client api getConversation --conversation_id=<id> --json
+chatgpt-client agent methods
+chatgpt-client agent threads --limit 20
 ```
 
 The CLI refuses to overwrite exported or downloaded files. `--json` emits structured output and structured errors. `--json-stream` emits one JSON object per streamed event and avoids buffering the full answer.
@@ -82,7 +82,7 @@ The CLI refuses to overwrite exported or downloaded files. `--json` emits struct
 ## Library usage
 
 ```ts
-import { ChatGPTClient } from 'chatgpt-desktop-client'
+import { ChatGPTClient } from 'chatgpt-client'
 
 const client = await ChatGPTClient.create()
 
@@ -172,7 +172,7 @@ See [`.env.example`](.env.example) for copyable values.
 ## Local app-server
 
 ```ts
-import { AppServer } from 'chatgpt-desktop-client'
+import { AppServer } from 'chatgpt-client'
 
 const server = await AppServer.start()
 

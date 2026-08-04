@@ -1,11 +1,11 @@
 {
-  "name": "chatgpt-desktop-client",
+  "name": "chatgpt-client",
   "version": "1.0.0",
   "description": "Unofficial typed client for the ChatGPT desktop protocol and local Codex app-server",
   "type": "module",
   "private": true,
   "bin": {
-    "chatgpt-desktop-client": "./dist/bin.js"
+    "chatgpt-client": "./dist/bin.js"
   },
   "exports": {
     ".": {

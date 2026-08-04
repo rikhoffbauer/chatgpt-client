@@ -13,10 +13,10 @@ import type { IntegritySolver, Persona, UnknownRecord } from './types.js'
 
 export const VERSION = '1.0.0'
 
-const HELP = `chatgpt-desktop-client ${VERSION}
+const HELP = `chatgpt-client ${VERSION}
 
 Usage:
-  chatgpt-desktop-client <command> [options]
+  chatgpt-client <command> [options]
 
 Conversations:
   list [--limit N] [--offset N] [--archived] [--starred]

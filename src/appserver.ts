@@ -144,7 +144,7 @@ export class AppServer extends EventEmitter {
     return server
   }
 
-  async start(clientInfo: ClientInfo = { name: 'chatgpt-desktop-client', title: 'ChatGPT desktop client', version: '1.0.0' }): Promise<unknown> {
+  async start(clientInfo: ClientInfo = { name: 'chatgpt-client', title: 'ChatGPT client', version: '1.0.0' }): Promise<unknown> {
     if (this.started) throw new ProtocolError('app-server is already started', { code: 'APP_SERVER_ALREADY_STARTED' })
     this.started = true
     this.child = spawn(this.binary, [...this.args], {

@@ -214,7 +214,7 @@ let browserPromise: Promise<BrowserSession> | undefined
 
 async function launch(options: { url: string; headless: boolean; signal?: AbortSignal }): Promise<BrowserSession> {
   const port = 9_222 + Math.floor(Math.random() * 1_000)
-  const userDataDir = await mkdtemp(join(tmpdir(), 'chatgpt-desktop-client-chrome-'))
+  const userDataDir = await mkdtemp(join(tmpdir(), 'chatgpt-client-chrome-'))
   const args = [
     `--remote-debugging-port=${port}`,
     `--user-data-dir=${userDataDir}`,

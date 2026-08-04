@@ -70,7 +70,7 @@ export function defaultConfig(overrides: Partial<Omit<ClientConfig, 'retry' | 'l
     statePath:
       overrides.statePath ??
       process.env.CHATGPT_DESKTOP_CLIENT_STATE_PATH ??
-      join(configDir, 'chatgpt-desktop-client', 'state.json'),
+      join(configDir, 'chatgpt-client', 'state.json'),
     persona: overrides.persona ?? 'browser',
     solver: overrides.solver ?? 'node',
     appVersion: overrides.appVersion ?? '1.0.0',
