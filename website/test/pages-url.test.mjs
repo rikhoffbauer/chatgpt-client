@@ -20,6 +20,13 @@ test('uses root base for a custom domain', () => {
   })
 })
 
+test('normalizes pathname slashes and strips query and hash', () => {
+  assert.deepEqual(resolvePagesUrl('https://owner.github.io/chatgpt-client?preview=1#top'), {
+    site: 'https://owner.github.io',
+    base: '/chatgpt-client/',
+  })
+})
+
 test('rejects non-http deployment URLs', () => {
   assert.throws(() => resolvePagesUrl('file:///tmp/site'), /http/)
 })

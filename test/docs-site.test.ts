@@ -1,9 +1,12 @@
 import assert from 'node:assert/strict'
-import { readFile, readdir } from 'node:fs/promises'
+import { open, opendir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import test from 'node:test'
 
 const repoRoot = process.cwd()
+const MAX_DIST_ENTRIES = 50_000
+const MAX_DIST_FILE_BYTES = 5 * 1024 * 1024
+const MAX_DIST_TOTAL_BYTES = 100 * 1024 * 1024
 const approvedPlugins = [
   'starlight-copy-button',
   'starlight-dot-md',
@@ -18,6 +21,18 @@ async function readRepoFile(relativePath: string): Promise<string> {
 
 async function readJson(relativePath: string): Promise<Record<string, unknown>> {
   return JSON.parse(await readRepoFile(relativePath)) as Record<string, unknown>
+}
+
+async function readBoundedFile(path: string, maximumBytes: number): Promise<Buffer> {
+  const handle = await open(path, 'r')
+  try {
+    const contents = Buffer.alloc(maximumBytes + 1)
+    const { bytesRead } = await handle.read(contents, 0, contents.length)
+    assert.ok(bytesRead <= maximumBytes, path + ' exceeds ' + maximumBytes + ' bytes')
+    return contents.subarray(0, bytesRead)
+  } finally {
+    await handle.close()
+  }
 }
 
 test('root package delegates documentation commands to the website package', async () => {
@@ -47,7 +62,8 @@ test('website content and TypeDoc configurations retain repository boundaries', 
   const contentConfig = await readRepoFile('website/src/content.config.ts')
   const astroConfig = await readRepoFile('website/astro.config.mjs')
 
-  assert.match(contentConfig, /import\s+\{\s*PUBLIC_DOC_PATTERNS\s*\}/)
+  assert.match(contentConfig, /import\s+\{\s*PUBLIC_DOC_PATTERNS\s*\}\s+from\s+['"]\.\/lib\/public-docs\.mjs['"]/)
+  assert.match(contentConfig, /pattern:\s*PUBLIC_DOC_PATTERNS/)
   assert.match(contentConfig, /base:\s*['"]\.\.\/docs['"]/)
   assert.match(astroConfig, /entryPoints:\s*\[\s*['"]\.\.\/src\/index\.ts['"]\s*\]/)
 })
@@ -62,9 +78,8 @@ test('documentation workflow configures, uploads, and deploys GitHub Pages', asy
 
 test('built website never contains the internal design marker', async (context) => {
   const distPath = join(repoRoot, 'website', 'dist')
-  let entries
   try {
-    entries = await readdir(distPath, { recursive: true, withFileTypes: true })
+    await opendir(distPath).then((directory) => directory.close())
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
       context.skip('website/dist does not exist before a documentation build')
@@ -73,10 +88,26 @@ test('built website never contains the internal design marker', async (context) 
     throw error
   }
 
-  const marker = 'Approved for implementation planning'
-  for (const entry of entries) {
-    if (!entry.isFile()) continue
-    const contents = await readFile(join(entry.parentPath, entry.name), 'utf8')
-    assert.doesNotMatch(contents, new RegExp(marker), join(entry.parentPath, entry.name))
+  const marker = Buffer.from('Approved for implementation planning')
+  const directories = [distPath]
+  let entryCount = 0
+  let totalBytes = 0
+  while (directories.length > 0) {
+    const directoryPath = directories.pop() as string
+    const directory = await opendir(directoryPath)
+    for await (const entry of directory) {
+      entryCount += 1
+      assert.ok(entryCount <= MAX_DIST_ENTRIES, 'website/dist exceeds ' + MAX_DIST_ENTRIES + ' entries')
+      const path = join(directoryPath, entry.name)
+      if (entry.isDirectory()) {
+        directories.push(path)
+        continue
+      }
+      if (!entry.isFile()) continue
+      const contents = await readBoundedFile(path, MAX_DIST_FILE_BYTES)
+      totalBytes += contents.length
+      assert.ok(totalBytes <= MAX_DIST_TOTAL_BYTES, 'website/dist exceeds ' + MAX_DIST_TOTAL_BYTES + ' bytes')
+      assert.equal(contents.includes(marker), false, path)
+    }
   }
 })
