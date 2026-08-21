@@ -36,6 +36,10 @@
     "test:bun": "bun test",
     "test:node": "rm -rf .test-dist && tsc -p tsconfig.test.json && node --test --enable-source-maps .test-dist/test/*.test.js",
     "verify": "npm run check && npm run clean && npm run build && npm run test:node",
+    "docs:dev": "npm --prefix website run dev",
+    "docs:check": "npm --prefix website run check",
+    "docs:build": "npm --prefix website run build",
+    "docs:serve": "npm --prefix website run serve",
     "prepack": "npm run verify"
   },
   "devDependencies": {
