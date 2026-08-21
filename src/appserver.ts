@@ -76,6 +76,7 @@ interface PendingRequest {
 
 export type ServerRequestHandler = (method: string, params: unknown, request: JsonRpcRequest) => unknown | Promise<unknown>
 
+/** Process, deadline, parser, queue, and logging options for the local Codex app-server. */
 export interface AppServerOptions {
   binary?: string
   args?: readonly string[]
@@ -90,6 +91,7 @@ export interface AppServerOptions {
   notificationQueueSize?: number
 }
 
+/** Cancellation and timeout controls for one JSON-RPC request. */
 export interface RequestOptions {
   timeoutMs?: number
   signal?: AbortSignal
@@ -101,6 +103,10 @@ export interface ClientInfo {
   version: string
 }
 
+/**
+ * Owns a local Codex app-server child process and bounded JSON-RPC state.
+ * Register an explicit server-request policy and await {@link AppServer.close} when finished.
+ */
 export class AppServer extends EventEmitter {
   readonly binary: string
   readonly args: readonly string[]
@@ -138,6 +144,7 @@ export class AppServer extends EventEmitter {
     this.notificationQueueSize = options.notificationQueueSize ?? 2_048
   }
 
+  /** Creates, starts, and initializes an app-server process. */
   static async start(options: AppServerOptions & { clientInfo?: ClientInfo } = {}): Promise<AppServer> {
     const server = new AppServer(options)
     await server.start(options.clientInfo)
@@ -164,11 +171,13 @@ export class AppServer extends EventEmitter {
     }
   }
 
+  /** Installs the policy handler for server-initiated requests such as approvals. */
   onRequest(handler: ServerRequestHandler): this {
     this.requestHandler = handler
     return this
   }
 
+  /** Sends one bounded JSON-RPC request and rejects on timeout, cancellation, or process exit. */
   async request<T = unknown>(method: string, params: unknown = {}, options: RequestOptions = {}): Promise<T> {
     const child = this.requireChild()
     if (this.pending.size >= this.maxPendingRequests) {
@@ -213,6 +222,7 @@ export class AppServer extends EventEmitter {
     await this.write({ jsonrpc: '2.0', method, params }, this.requireChild())
   }
 
+  /** Starts a turn and yields its result plus matching notifications through completion or failure. */
   async *runTurn(
     params: unknown,
     options: { startMethod?: string; signal?: AbortSignal; matches?: (message: JsonRpcNotification, startResult: unknown) => boolean } = {},
@@ -244,6 +254,7 @@ export class AppServer extends EventEmitter {
     }
   }
 
+  /** Terminates the process, escalating to SIGKILL after the finite close deadline. */
   async close(): Promise<void> {
     if (this.child === undefined || this.closing) return
     this.closing = true

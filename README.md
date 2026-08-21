@@ -233,7 +233,7 @@ docs/                  architecture and implementation criteria
 - Integrity adapters exist only to preserve compatibility with the protocol already represented by this project. They are isolated because they are unstable and security-sensitive.
 - Route coverage does not imply account authorization or API stability.
 
-See [SECURITY.md](SECURITY.md), [docs/architecture.md](docs/architecture.md), [docs/implementation-plan.md](docs/implementation-plan.md), and [docs/verification.md](docs/verification.md).
+See [SECURITY.md](SECURITY.md), the [published architecture guide](docs/project/architecture.md), [docs/implementation-plan.md](docs/implementation-plan.md), and [docs/verification.md](docs/verification.md).
 
 ## License
 

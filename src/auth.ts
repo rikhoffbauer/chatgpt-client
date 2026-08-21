@@ -40,6 +40,7 @@ interface RefreshResponse {
   id_token?: unknown
 }
 
+/** Explicit OAuth credentials and refresh dependencies for constructing {@link Auth}. */
 export interface AuthOptions {
   accessToken: string
   refreshToken?: string
@@ -50,6 +51,7 @@ export interface AuthOptions {
   logger?: Logger
 }
 
+/** Options for loading the desktop auth store and optionally refreshing it. */
 export interface LoadAuthOptions {
   path?: string
   forceRefresh?: boolean
@@ -81,6 +83,10 @@ export function accountIdFromToken(token: string | null | undefined): string | n
   return typeof value === 'string' && value !== '' ? value : null
 }
 
+/**
+ * Mutable OAuth credential holder with finite refresh deadlines and concurrent-refresh deduplication.
+ * Loaded tokens are sensitive and must not be logged or committed.
+ */
 export class Auth {
   accessToken: string
   refreshToken?: string
@@ -103,6 +109,7 @@ export class Auth {
     this.logger = options.logger ?? noopLogger
   }
 
+  /** Loads the Codex auth store, validates its token fields, and refreshes expiring credentials. */
   static async load(options: LoadAuthOptions = {}): Promise<Auth> {
     const config = defaultConfig()
     const path = options.path ?? config.authPath
@@ -144,10 +151,12 @@ export class Auth {
     return typeof exp !== 'number' || exp * 1_000 - Date.now() < skewMs
   }
 
+  /** Refreshes an expiring access token when a refresh token is available. */
   async ensureFresh(): Promise<void> {
     if (this.isExpiring() && this.refreshToken !== undefined) await this.refresh()
   }
 
+  /** Refreshes tokens once; concurrent callers share the same in-flight operation. */
   async refresh(): Promise<void> {
     if (this.refreshPromise !== undefined) return this.refreshPromise
     this.refreshPromise = this.performRefresh().finally(() => {

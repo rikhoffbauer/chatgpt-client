@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "check:boundary": "node scripts/check-public-docs.mjs",
-    "check": "npm run check:boundary && astro check && astro build",
+    "check": "npm run check:boundary && rm -rf .astro dist src/content/docs/api && astro check && astro build",
     "build": "npm run check:boundary && astro build",
     "serve": "astro preview"
   },

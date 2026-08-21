@@ -20,6 +20,13 @@ test('uses root base for a custom domain', () => {
   })
 })
 
+test('normalizes repeated root slashes to the root base', () => {
+  assert.deepEqual(resolvePagesUrl('https://docs.example.com///'), {
+    site: 'https://docs.example.com',
+    base: '/',
+  })
+})
+
 test('normalizes pathname slashes and strips query and hash', () => {
   assert.deepEqual(resolvePagesUrl('https://owner.github.io/chatgpt-client?preview=1#top'), {
     site: 'https://owner.github.io',

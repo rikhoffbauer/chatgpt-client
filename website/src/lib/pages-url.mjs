@@ -8,6 +8,7 @@ export function resolvePagesUrl(publicUrl) {
 
   url.search = ''
   url.hash = ''
-  const pathname = url.pathname === '/' ? '/' : `/${url.pathname.replace(/^\/+|\/+$/g, '')}/`
+  const normalizedPath = url.pathname.replace(/^\/+|\/+$/g, '')
+  const pathname = normalizedPath === '' ? '/' : `/${normalizedPath}/`
   return { site: url.origin, base: pathname }
 }

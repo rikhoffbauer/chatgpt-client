@@ -32,3 +32,12 @@ Use `./scripts/fix-bun-npm-registry.sh -- <bun arguments>` when the effective np
 - Use ESM and `.js` import specifiers in TypeScript source.
 - Prefer narrow typed errors with stable error codes.
 - Use conventional commits.
+
+## Documentation
+
+- Author documentation under root `docs/`. Public end-user pages belong only in `docs/index.mdx`, `docs/getting-started/`, `docs/guides/`, `docs/reference/`, or `docs/project/`; keep internal plans, specs, research, and verification outside those public sections.
+- Keep Starlight configuration, assets, scripts, and dependencies under `website/`.
+- Update the relevant manual pages whenever behavior, configuration, commands, security boundaries, or supported workflows change.
+- Treat `src/index.ts` as the public API boundary. Add useful JSDoc/TSDoc when adding or changing a public export.
+- Regenerate TypeDoc API pages, Markdown mirrors, `llms.txt`, and `website/dist/`; edit their authored Markdown/MDX or TypeScript sources instead of generated output.
+- Run `npm run docs:check` and `npm run docs:build` for documentation, navigation, plugin, or public API changes.

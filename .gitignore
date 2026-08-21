@@ -13,3 +13,4 @@ auth_*.json
 website/dist/
 website/.astro/
 website/node_modules/
+website/src/content/docs/api/

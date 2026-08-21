@@ -1,5 +1,6 @@
 import type { HttpMethod, JsonValue } from './types.js'
 
+/** JSON-safe error shape for structured CLI and service output. */
 export interface SerializedError {
   name: string
   code: string
@@ -7,6 +8,7 @@ export interface SerializedError {
   details?: JsonValue
 }
 
+/** Base error with a stable machine-readable code and optional JSON details. */
 export class ClientError extends Error {
   readonly code: string
   readonly details?: JsonValue
@@ -112,6 +114,7 @@ export function errorMessage(error: unknown): string {
   }
 }
 
+/** Converts any thrown value into a stable JSON-safe error without exposing its cause chain. */
 export function serializeError(error: unknown): SerializedError {
   if (error instanceof ClientError) {
     return {
@@ -125,6 +128,7 @@ export function serializeError(error: unknown): SerializedError {
   return { name: 'Error', code: 'UNEXPECTED_ERROR', message: errorMessage(error) }
 }
 
+/** Redacts credential-like query parameter values from a URL or URL-like string. */
 export function redactUrl(value: string): string {
   try {
     const url = new URL(value)

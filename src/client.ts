@@ -107,6 +107,7 @@ export interface TurnRequestInput {
   extra?: UnknownRecord
 }
 
+/** Options for starting or resuming a conversation turn. Pass `signal` to cancel preparation and streaming. */
 export interface StartTurnOptions extends Omit<TurnRequestInput, 'messages' | 'model' | 'parentMessageId'> {
   text?: string
   message?: ConversationMessage
@@ -119,12 +120,14 @@ export interface StartTurnOptions extends Omit<TurnRequestInput, 'messages' | 'm
   metadata?: UnknownRecord
 }
 
+/** Events emitted by {@link ChatGPTClient.send}: text deltas, identifiers, raw protocol events, and terminal completion. */
 export type SendEvent =
   | { type: 'delta'; text: string }
   | { type: 'meta'; conversationId: string; messageId: string | null }
   | { type: 'event'; event: string | null; data: unknown }
   | { type: 'done'; conversationId: string | null }
 
+/** In-memory upload content and metadata, bounded by the configured upload byte limit. */
 export interface UploadFileOptions {
   bytes: Uint8Array | ArrayBuffer
   fileName: string
@@ -134,6 +137,7 @@ export interface UploadFileOptions {
   signal?: AbortSignal
 }
 
+/** Dependencies and finite runtime settings for constructing a {@link ChatGPTClient}. */
 export interface ChatGPTClientOptions {
   auth: Auth
   baseUrl?: string
@@ -149,11 +153,18 @@ export interface ChatGPTClientOptions {
   integrityProvider?: (prepare: PrepareRequirements, options: { solver: IntegritySolver; signal?: AbortSignal }) => Promise<IntegrityResult>
 }
 
+/** Client options that may load authentication from the desktop auth store. */
 export interface CreateClientOptions extends Omit<ChatGPTClientOptions, 'auth'> {
   auth?: Auth
   authPath?: string
 }
 
+/**
+ * High-level client for conversations, catalogued private routes, streams, and file transfers.
+ *
+ * This is an unofficial protocol client. Call {@link ChatGPTClient.close} when finished to stop
+ * owned timers, and use `AbortSignal` on operations that may outlive the caller.
+ */
 export class ChatGPTClient {
   readonly auth: Auth
   readonly http: Http
@@ -201,6 +212,7 @@ export class ChatGPTClient {
     this.routes = createRouteApi((name, args, callOptions) => this.call(name, args, callOptions))
   }
 
+  /** Loads desktop authentication when needed and creates a configured client. */
   static async create(options: CreateClientOptions = {}): Promise<ChatGPTClient> {
     const auth = options.auth ?? (await AuthClass.load({
       ...(options.authPath === undefined ? {} : { path: options.authPath }),
@@ -214,6 +226,7 @@ export class ChatGPTClient {
     return this.http.baseUrl
   }
 
+  /** Calls a catalogued private route, validating path and unused arguments before transport. */
   async call<Name extends RouteName>(
     name: Name,
     args: RouteArguments = {},
@@ -306,6 +319,7 @@ export class ChatGPTClient {
     return this
   }
 
+  /** Stops the optional heartbeat owned by this client. */
   close(): void {
     this.stopHeartbeat()
   }
@@ -455,6 +469,7 @@ export class ChatGPTClient {
     }
   }
 
+  /** Starts a turn and yields bounded decoded events until completion or cancellation. */
   async *send(options: StartTurnOptions = {}): AsyncGenerator<SendEvent> {
     const response = await this.startTurn(options)
     let previousFullText = ''
@@ -513,6 +528,7 @@ export class ChatGPTClient {
     yield { type: 'done', conversationId }
   }
 
+  /** Uploads bytes and finalizes an attachment without forwarding account headers to signed URLs. */
   async uploadFile(options: UploadFileOptions): Promise<Attachment> {
     const bytes = options.bytes instanceof Uint8Array ? options.bytes : new Uint8Array(options.bytes)
     if (bytes.byteLength > this.http.config.limits.uploadBytes) {
@@ -604,6 +620,7 @@ export class ChatGPTClient {
     })) yield record
   }
 
+  /** Downloads a file into memory up to the configured download byte limit. */
   async downloadFile(fileId: string, options: { signal?: AbortSignal } = {}): Promise<{ info: UnknownRecord; bytes: Uint8Array }> {
     const infoValue = await this.call('getFileDownloadUrl', { file_id: fileId }, { signal: options.signal })
     if (!isRecord(infoValue)) throw new ProtocolError(`Invalid download metadata for ${fileId}`, { code: 'INVALID_DOWNLOAD_RESPONSE' })
@@ -691,6 +708,7 @@ export class ChatGPTClient {
     return this.call('ecosystemCallMcp', body)
   }
 
+  /** Returns the active message chain and rejects cyclic conversation mappings. */
   static messageChain(conversation: Conversation, options: { from?: string } = {}): ConversationMessage[] {
     const chain: ConversationMessage[] = []
     const mapping = conversation.mapping ?? {}
@@ -717,6 +735,7 @@ export class ChatGPTClient {
     }).join('')
   }
 
+  /** Paginates conversation summaries lazily with a page size from 1 through 100. */
   async *iterateConversations(options: { pageSize?: number; signal?: AbortSignal } & UnknownRecord = {}): AsyncGenerator<UnknownRecord> {
     const { pageSize = 50, signal, ...filters } = options
     if (!Number.isSafeInteger(pageSize) || pageSize < 1 || pageSize > 100) throw new RangeError('pageSize must be an integer between 1 and 100')

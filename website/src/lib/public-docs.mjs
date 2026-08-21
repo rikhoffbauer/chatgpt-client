@@ -1,3 +1,4 @@
+import { constants } from 'node:fs'
 import { lstat, open, opendir, realpath, stat } from 'node:fs/promises'
 import { isAbsolute, join, relative, sep } from 'node:path'
 
@@ -49,8 +50,10 @@ function isInside(parent, candidate) {
 }
 
 async function readBoundedText(path, maximumBytes) {
-  const handle = await open(path, 'r')
+  const handle = await open(path, constants.O_RDONLY | constants.O_NONBLOCK)
   try {
+    const metadata = await handle.stat()
+    if (!metadata.isFile()) throw new Error(`Documentation entries must be regular files or directories: ${path}`)
     const chunks = []
     let totalBytes = 0
     while (totalBytes <= maximumBytes) {
@@ -76,10 +79,10 @@ export async function assertPublicDocsBoundary(repoRoot) {
   const docsPath = join(repoRoot, 'docs')
   const docsMetadata = await lstat(docsPath)
   if (docsMetadata.isSymbolicLink()) throw new Error('The docs root must not be a symlink')
+  if (!docsMetadata.isDirectory()) throw new Error('The docs root must be a regular directory')
 
   const docsRealPath = await realpath(docsPath)
   const directories = [{ path: docsPath, relativePath: '' }]
-  const visitedDirectories = new Set([docsRealPath])
   let entryCount = 0
 
   while (directories.length > 0) {
@@ -109,12 +112,14 @@ export async function assertPublicDocsBoundary(repoRoot) {
         resolvedMetadata = await stat(path)
       }
 
+      if (!resolvedMetadata.isDirectory() && !resolvedMetadata.isFile()) {
+        throw new Error(`Documentation entries must be regular files or directories: ${relativePath}`)
+      }
+
       if (resolvedMetadata.isDirectory()) {
-        const resolvedDirectory = await realpath(resolvedPath)
-        if (!visitedDirectories.has(resolvedDirectory)) {
-          visitedDirectories.add(resolvedDirectory)
-          directories.push({ path, relativePath })
-        }
+        // Validate directory symlinks above, but enumerate every physical directory
+        // exactly once so aliases cannot mask nested entries through visit order.
+        if (!metadata.isSymbolicLink()) directories.push({ path, relativePath })
         continue
       }
 

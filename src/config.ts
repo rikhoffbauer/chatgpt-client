@@ -6,6 +6,7 @@ import type { IntegritySolver, Persona } from './types.js'
 export const PROD_API_BASE = 'https://chatgpt.com/backend-api'
 export const DEV_API_BASE = 'http://localhost:8000/api'
 
+/** Bounded retry policy used for idempotent transport operations. */
 export interface RetryPolicy {
   maxAttempts: number
   baseDelayMs: number
@@ -13,6 +14,7 @@ export interface RetryPolicy {
   retryStatuses: ReadonlySet<number>
 }
 
+/** Finite deadlines and byte/queue caps applied by the runtime client. */
 export interface RuntimeLimits {
   requestTimeoutMs: number
   connectTimeoutMs: number
@@ -24,6 +26,7 @@ export interface RuntimeLimits {
   downloadBytes: number
 }
 
+/** Fully resolved client configuration after overrides, environment, and defaults. */
 export interface ClientConfig {
   baseUrl: string
   authPath: string
@@ -59,6 +62,7 @@ export function resolveApiBase(override?: string): string {
   return (process.env.CODEX_API_ENDPOINT ?? '').toLowerCase() === 'localhost' ? DEV_API_BASE : PROD_API_BASE
 }
 
+/** Resolves configuration with programmatic overrides taking precedence over environment variables. */
 export function defaultConfig(overrides: Partial<Omit<ClientConfig, 'retry' | 'limits'>> & {
   retry?: Partial<RetryPolicy>
   limits?: Partial<RuntimeLimits>

@@ -1,3 +1,12 @@
+/**
+ * Public package surface for the high-level client, authentication, local app-server,
+ * advanced transport primitives, and unstable protocol compatibility helpers.
+ *
+ * Start with {@link ChatGPTClient}, {@link Auth}, or {@link AppServer}. Exports backed by
+ * `src/protocol/` are lower-level compatibility surfaces and may change with the private protocol.
+ *
+ * @packageDocumentation
+ */
 export { deadlineSignal, sleep } from './abort.js'
 export type { Deadline } from './abort.js'
 export { AppServer, APP_SERVER_ARGS, APP_SERVER_METHODS, APP_SERVER_NOTIFICATIONS, DEFAULT_CODEX_BIN } from './appserver.js'

@@ -12,7 +12,7 @@ const { site, base } = resolvePagesUrl(process.env.PUBLIC_SITE_URL)
 const repository = process.env.GITHUB_REPOSITORY
 const editLink = repository === undefined
   ? {}
-  : { editLink: { baseUrl: `https://github.com/${repository}/edit/main/docs/` } }
+  : { editLink: { baseUrl: `https://github.com/${repository}/edit/master/docs/` } }
 
 export default defineConfig({
   site,
@@ -69,7 +69,13 @@ export default defineConfig({
         starlightLlmsTxt(),
         starlightDotMd(),
         starlightCopyButton(),
-        starlightLinksValidator(),
+        starlightLinksValidator({
+          // Root-authored pages are loaded from outside Astro's in-tree content
+          // directory, so the plugin cannot derive their public IDs correctly.
+          // Generated TypeDoc pages remain fully validated.
+          errorOnRelativeLinks: false,
+          exclude: ({ file }) => file.includes('/docs/') && !file.includes('/website/src/content/docs/'),
+        }),
       ],
     }),
   ],
