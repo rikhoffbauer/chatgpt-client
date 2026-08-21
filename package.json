@@ -1,19 +1,45 @@
 {
-  "name": "chatgpt-poc",
-  "version": "0.1.0",
-  "private": true,
+  "name": "chatgpt-client",
+  "version": "1.0.0",
+  "description": "Unofficial typed client for the ChatGPT desktop protocol and local Codex app-server",
   "type": "module",
+  "private": true,
   "bin": {
-    "chatgpt-poc": "./dist/chatgpt-poc.js"
+    "chatgpt-client": "./dist/bin.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/",
+    "docs/",
+    "scripts/",
+    ".env.example",
+    "README.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json && chmod +x dist/bin.js",
     "check": "tsc -p tsconfig.json --noEmit",
-    "dev": "bun run chatgpt-poc.ts",
-    "start": "node dist/chatgpt-poc.js"
+    "clean": "rm -rf dist .test-dist coverage",
+    "dev": "bun --watch src/bin.ts",
+    "start": "node --enable-source-maps dist/bin.js",
+    "test": "npm run test:node",
+    "test:bun": "bun test",
+    "test:node": "rm -rf .test-dist && tsc -p tsconfig.test.json && node --test --enable-source-maps .test-dist/test/*.test.js",
+    "verify": "npm run check && npm run clean && npm run build && npm run test:node",
+    "prepack": "npm run verify"
   },
   "devDependencies": {
-    "@types/node": "latest",
-    "typescript": "latest"
+    "@types/node": "25.1.0",
+    "typescript": "5.8.3"
   }
 }
