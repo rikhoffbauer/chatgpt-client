@@ -7,3 +7,6 @@ coverage/
 .env.*
 !.env.example
 .DS_Store
+auth.json
+auth_*.json
+*_auth.json
