@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "check:boundary": "node scripts/check-public-docs.mjs",
+    "check:boundary": "node --test test/*.test.mjs && node scripts/check-public-docs.mjs",
     "check": "npm run check:boundary && rm -rf .astro dist src/content/docs/api && astro check && astro build",
     "build": "npm run check:boundary && rm -rf .astro dist src/content/docs/api && astro build",
     "serve": "astro preview"

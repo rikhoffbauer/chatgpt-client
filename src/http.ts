@@ -19,6 +19,7 @@ export const DESKTOP_UA = (version = '1.0.0'): string => `Codex Desktop/${versio
 export type QueryValue = string | number | boolean | null | JsonValue[] | UnknownRecord | undefined
 export type Query = Record<string, QueryValue>
 
+/** Advanced request controls. `sendAuth: false` is required for external signed URLs; retries default to idempotent methods only. */
 export interface RequestOptions {
   query?: Query
   body?: unknown
@@ -35,6 +36,7 @@ export interface StreamOptions extends RequestOptions {
   format?: StreamFormat
 }
 
+/** Finite cancellation, deadline, and byte-bound options for consuming a response body. */
 export interface ResponseReadOptions {
   maxBytes?: number
   operation?: string
@@ -42,6 +44,7 @@ export interface ResponseReadOptions {
   timeoutMs?: number
 }
 
+/** Dependencies, authentication, persona, and finite runtime settings for {@link Http}. */
 export interface HttpOptions {
   auth: Auth
   baseUrl?: string
@@ -71,6 +74,7 @@ export function expandPath(template: string, params: Record<string, unknown> = {
   return path
 }
 
+/** Encodes scalar, repeated, and JSON query values while omitting nullish entries. */
 export function buildQuery(query: Query | undefined): string {
   const params = new URLSearchParams()
   for (const [key, value] of Object.entries(query ?? {})) {
@@ -84,6 +88,10 @@ export function buildQuery(query: Query | undefined): string {
   return params.toString()
 }
 
+/**
+ * Low-level authenticated transport with token refresh, finite deadlines, bounded bodies, and idempotent retries.
+ * Use `sendAuth: false` whenever a request targets an external signed URL.
+ */
 export class Http {
   readonly auth: Auth
   readonly baseUrl: string
@@ -153,6 +161,7 @@ export class Http {
     return headers
   }
 
+  /** Sends one request, refreshing auth once on 401 and retrying only when allowed by the bounded policy. */
   async request(method: HttpMethod, path: string, options: RequestOptions = {}): Promise<Response> {
     const url = this.url(path, options.query)
     const retryPolicy = this.config.retry
@@ -208,6 +217,7 @@ export class Http {
     throw lastError ?? new Error('HTTP request failed without an error')
   }
 
+  /** Reads a bounded response body, throws {@link HttpError} for non-success status, and decodes JSON when possible. */
   async json<T = unknown>(method: HttpMethod, path: string, options: RequestOptions = {}): Promise<T> {
     const response = await this.request(method, path, options)
     const text = await this.readText(response, {
@@ -244,6 +254,7 @@ export class Http {
     return this.json<T>('DELETE', path, options)
   }
 
+  /** Reads response bytes with a finite deadline and configured or explicit maximum size. */
   async readBytes(response: Response, options: ResponseReadOptions = {}): Promise<Uint8Array> {
     const timeoutMs = options.timeoutMs ?? this.config.limits.requestTimeoutMs
     const deadline = deadlineSignal(options.operation ?? 'HTTP response body', timeoutMs, options.signal)

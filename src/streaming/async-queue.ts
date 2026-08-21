@@ -5,6 +5,10 @@ interface Waiter<T> {
   reject: (error: unknown) => void
 }
 
+/**
+ * Bounded async iterator queue. Overflow fails the queue with {@link QueueOverflowError};
+ * `close()` drains buffered values, while `fail()` discards them and rejects consumers.
+ */
 export class AsyncQueue<T> implements AsyncIterable<T>, AsyncIterator<T> {
   readonly name: string
   readonly maxSize: number

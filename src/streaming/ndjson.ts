@@ -2,12 +2,15 @@ import { ProtocolError } from '../errors.js'
 import type { JsonValue } from '../types.js'
 import { readLines, type LineReaderOptions } from './lines.js'
 
+/** Line-reader limits plus strict invalid-record handling. */
 export interface NdjsonOptions extends LineReaderOptions {
   strict?: boolean
 }
 
+/** Parsed JSON, or the original bounded line when strict mode is disabled. */
 export type NdjsonRecord = JsonValue | { raw: string }
 
+/** Parses bounded NDJSON records and throws `INVALID_NDJSON` in strict mode. */
 export async function* ndjson(response: Response, options: NdjsonOptions = {}): AsyncGenerator<NdjsonRecord> {
   for await (const line of readLines(response, options)) {
     const trimmed = line.trim()

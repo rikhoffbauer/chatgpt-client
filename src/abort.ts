@@ -1,10 +1,12 @@
 import { TimeoutError } from './errors.js'
 
+/** A composed timeout/parent signal. Always call {@link Deadline.cleanup} when the operation finishes. */
 export interface Deadline {
   signal: AbortSignal
   cleanup(): void
 }
 
+/** Creates an abort signal that inherits a parent signal and aborts with {@link TimeoutError} after a finite timeout. */
 export function deadlineSignal(operation: string, timeoutMs: number, parent?: AbortSignal): Deadline {
   const controller = new AbortController()
   let timer: NodeJS.Timeout | undefined
@@ -29,6 +31,7 @@ export function deadlineSignal(operation: string, timeoutMs: number, parent?: Ab
   }
 }
 
+/** Waits for the requested delay, rejecting immediately or during the wait when `signal` aborts. */
 export async function sleep(ms: number, signal?: AbortSignal): Promise<void> {
   if (ms <= 0) return
   signal?.throwIfAborted()

@@ -152,6 +152,9 @@ test('documentation workflow configures, uploads, and deploys GitHub Pages', asy
   assert.match(workflow, /actions\/configure-pages@/)
   assert.match(workflow, /actions\/upload-pages-artifact@/)
   assert.match(workflow, /actions\/deploy-pages@/)
+  assert.match(workflow, /build:\n\s+permissions:\n\s+contents:\s+read\n\s+pages:\s+read/)
+  assert.match(workflow, /deploy:\n\s+permissions:\n\s+pages:\s+write\n\s+id-token:\s+write/)
+  assert.doesNotMatch(workflow.split('jobs:')[0] ?? '', /pages:\s+write|id-token:\s+write/)
 })
 
 test('built website boundary rejects a child symlink', async (context) => {

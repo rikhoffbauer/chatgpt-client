@@ -1,6 +1,6 @@
 import { constants } from 'node:fs'
 import { lstat, open, opendir, realpath, stat } from 'node:fs/promises'
-import { isAbsolute, join, relative, sep } from 'node:path'
+import { isAbsolute, join, normalize, relative, sep } from 'node:path'
 
 export const PUBLIC_DOC_PATTERNS = Object.freeze([
   'index.mdx',
@@ -19,6 +19,9 @@ const INTERNAL_PATHS = [
 ]
 const MAX_DOC_ENTRIES = 10_000
 const MAX_PUBLIC_ENTRY_BYTES = 1024 * 1024
+const MARKDOWN_LINK = /\[[^\]]*\]\(([^)]+)\)/g
+const FRONTMATTER_LINK = /^\s*link:\s*([^#\s]+)\s*$/gm
+const GENERATED_ROUTES = new Set(['/api/'])
 
 function normalizeRelativePath(relativePath) {
   const normalized = relativePath.replaceAll('\\', '/')
@@ -69,6 +72,39 @@ async function readBoundedText(path, maximumBytes) {
   }
 }
 
+function routeForPublicDoc(relativePath) {
+  if (relativePath === 'index.mdx') return '/'
+  return `/${relativePath.replace(/\.mdx?$/, '').replace(/\/index$/, '')}/`
+}
+
+function normalizeRoute(value, sourceRoute) {
+  const raw = value.trim().replace(/^<|>$/g, '').split(/[?#]/, 1)[0]
+  if (raw === '' || /^(?:[a-z][a-z0-9+.-]*:|#)/i.test(value.trim())) return undefined
+  const route = raw.startsWith('/')
+    ? raw
+    : join(sourceRoute, '..', raw)
+  const normalized = `/${normalize(route).replaceAll('\\', '/').replace(/^\/+/, '')}`
+  return normalized.endsWith('/') ? normalized : `${normalized}/`
+}
+
+/** Validates links between allowlisted authored pages and generated API entry points. */
+export function assertPublicDocLinks(entries) {
+  const routes = new Set([...GENERATED_ROUTES, ...entries.map(({ relativePath }) => routeForPublicDoc(relativePath))])
+  for (const { relativePath, contents } of entries) {
+    const sourceRoute = routeForPublicDoc(relativePath)
+    const links = [
+      ...Array.from(contents.matchAll(MARKDOWN_LINK), (match) => match[1]),
+      ...Array.from(contents.matchAll(FRONTMATTER_LINK), (match) => match[1]),
+    ]
+    for (const link of links) {
+      const route = normalizeRoute(link, sourceRoute)
+      if (route === undefined) continue
+      const accepted = routes.has(route) || (route.startsWith('/api/') && routes.has('/api/'))
+      if (!accepted) throw new Error(`Broken public documentation link in ${relativePath}: ${link}`)
+    }
+  }
+}
+
 export async function assertPublicDocsBoundary(repoRoot) {
   for (const internalPath of INTERNAL_PATHS) {
     if (isPublicDoc(internalPath)) {
@@ -83,6 +119,7 @@ export async function assertPublicDocsBoundary(repoRoot) {
 
   const docsRealPath = await realpath(docsPath)
   const directories = [{ path: docsPath, relativePath: '' }]
+  const publicEntries = []
   let entryCount = 0
 
   while (directories.length > 0) {
@@ -132,6 +169,10 @@ export async function assertPublicDocsBoundary(repoRoot) {
         if (!isPublicDoc(targetPath)) {
           throw new Error(`Public symlink aliases internal documentation: ${relativePath}`)
         }
+        publicEntries.push({
+          relativePath,
+          contents: await readBoundedText(path, MAX_PUBLIC_ENTRY_BYTES),
+        })
       }
     }
   }
@@ -142,4 +183,5 @@ export async function assertPublicDocsBoundary(repoRoot) {
     throw error
   })
   if (entryContents.trim() === '') throw new Error('Missing public entry content: docs/index.mdx is empty')
+  assertPublicDocLinks(publicEntries)
 }

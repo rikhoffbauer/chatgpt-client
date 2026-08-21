@@ -28,6 +28,8 @@ Uploads reject payloads above `limits.uploadBytes`. The client requests an uploa
 ## Download bytes
 
 ```ts
+import { writeFile } from 'node:fs/promises'
+
 const { info, bytes: downloaded } = await client.downloadFile(fileId)
 await writeFile('./download.bin', downloaded)
 ```

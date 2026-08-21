@@ -3,6 +3,7 @@ import type { JsonValue, UnknownRecord } from './types.js'
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error' | 'silent'
 
+/** Minimal structured logger accepted by client transports and process integrations. */
 export interface Logger {
   debug(message: string, fields?: UnknownRecord): void
   info(message: string, fields?: UnknownRecord): void
@@ -10,6 +11,7 @@ export interface Logger {
   error(message: string, fields?: UnknownRecord): void
 }
 
+/** Logger implementation that intentionally discards all messages. */
 export const noopLogger: Logger = {
   debug() {},
   info() {},
@@ -40,6 +42,7 @@ function sanitize(value: unknown, key = ''): JsonValue {
   return String(value)
 }
 
+/** Stderr logger that filters by level and redacts credential-like fields and URL query values. */
 export class ConsoleLogger implements Logger {
   readonly level: LogLevel
   readonly json: boolean
@@ -77,6 +80,7 @@ export class ConsoleLogger implements Logger {
   }
 }
 
+/** Logs an unknown error as a sanitized message field. */
 export function logError(logger: Logger, message: string, error: unknown, fields: UnknownRecord = {}): void {
   logger.error(message, { ...fields, error: errorMessage(error) })
 }

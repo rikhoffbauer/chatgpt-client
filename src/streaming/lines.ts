@@ -1,10 +1,12 @@
 import { ProtocolError } from '../errors.js'
 
+/** Cancellation and per-line UTF-8 byte limit for {@link readLines}. */
 export interface LineReaderOptions {
   maxLineBytes?: number
   signal?: AbortSignal
 }
 
+/** Iterates CRLF/LF text lines, cancels the reader on abort or failure, and rejects oversized lines. */
 export async function* readLines(
   source: Response | ReadableStream<Uint8Array>,
   options: LineReaderOptions = {},

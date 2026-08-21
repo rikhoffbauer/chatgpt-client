@@ -4,6 +4,7 @@ import { ProtocolError } from './errors.js'
 import { AsyncQueue } from './streaming/async-queue.js'
 import type { JsonValue, UnknownRecord } from './types.js'
 
+/** Callback, cancellation, finite connection timeout, and bounded message queue options. */
 export interface ConversationSocketOptions {
   onMessage?: (message: unknown) => void
   onError?: (error: unknown) => void
@@ -13,12 +14,14 @@ export interface ConversationSocketOptions {
   queueSize?: number
 }
 
+/** Owned conversation WebSocket and bounded async message iterator; call `close()` when finished. */
 export interface ConversationSocket {
   socket: WebSocket
   close(code?: number, reason?: string): void
   messages(): AsyncIterable<unknown>
 }
 
+/** Opens the private conversation realtime channel with a finite handshake deadline and bounded queue. */
 export async function openConversationSocket(
   client: ChatGPTClient,
   options: ConversationSocketOptions = {},
@@ -107,6 +110,7 @@ export async function openConversationSocket(
   }
 }
 
+/** Builds the finite-buffer, finite-duration PCM16 dictation session configuration. */
 export const DICTATION_SESSION_CONFIG = (sampleRateHz = 24_000): UnknownRecord => ({
   type: 'session.start',
   config: {
@@ -122,6 +126,7 @@ export const DICTATION_SESSION_CONFIG = (sampleRateHz = 24_000): UnknownRecord =
   },
 })
 
+/** Audio rate, callbacks, cancellation, and finite connection timeout for dictation. */
 export interface DictationOptions {
   sampleRateHz?: number
   onTranscript?: (text: string, event: unknown) => void
@@ -130,6 +135,7 @@ export interface DictationOptions {
   connectTimeoutMs?: number
 }
 
+/** Owned PCM16 dictation stream; call `stop()` to end the session and close its socket. */
 export interface DictationStream {
   socket: WebSocket
   sendAudio(pcm16: Uint8Array): void
@@ -137,6 +143,7 @@ export interface DictationStream {
   stop(): void
 }
 
+/** Opens a dictation WebSocket, validates sample rate, and applies a finite handshake deadline. */
 export async function openDictationStream(client: ChatGPTClient, options: DictationOptions = {}): Promise<DictationStream> {
   const sampleRateHz = options.sampleRateHz ?? 24_000
   if (!Number.isSafeInteger(sampleRateHz) || sampleRateHz < 8_000 || sampleRateHz > 96_000) {

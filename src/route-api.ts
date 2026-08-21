@@ -2,6 +2,7 @@ import { ProtocolError } from './errors.js'
 import { ROUTES, type RouteArgumentsFor, type RouteName, type RouteRequiresArguments } from './routes.js'
 import type { HeaderInput, UnknownRecord } from './types.js'
 
+/** Per-route headers, cancellation signal, and finite request timeout. */
 export interface RouteCallOptions {
   headers?: HeaderInput
   signal?: AbortSignal
@@ -15,6 +16,7 @@ export type RouteMethod<Name extends RouteName> = RouteRequiresArguments<Name> e
   ? (args: RouteArgumentsFor<Name>, options?: RouteCallOptions) => Promise<RouteResult<Name>>
   : (args?: RouteArgumentsFor<Name>, options?: RouteCallOptions) => Promise<RouteResult<Name>>
 
+/** Typed methods generated from the private route catalog. Response values remain unknown unless explicitly modeled. */
 export type RouteApi = {
   [Name in RouteName]: RouteMethod<Name>
 }
@@ -25,6 +27,7 @@ export type RouteInvoker = <Name extends RouteName>(
   options?: RouteCallOptions,
 ) => Promise<RouteResult<Name>>
 
+/** Creates a lazily cached proxy over the catalog and rejects unknown route properties. */
 export function createRouteApi(invoke: RouteInvoker): RouteApi {
   const cache = new Map<RouteName, RouteApi[RouteName]>()
   return new Proxy(Object.create(null) as RouteApi, {

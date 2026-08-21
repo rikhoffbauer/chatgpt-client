@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import test from 'node:test'
-import { PUBLIC_DOC_PATTERNS, assertPublicDocsBoundary, isPublicDoc } from '../src/lib/public-docs.mjs'
+import { PUBLIC_DOC_PATTERNS, assertPublicDocLinks, assertPublicDocsBoundary, isPublicDoc } from '../src/lib/public-docs.mjs'
 
 const PROCESS_OPTIONS = { encoding: 'utf8', killSignal: 'SIGKILL', maxBuffer: 64 * 1024, timeout: 5_000 }
 
@@ -24,6 +24,19 @@ test('publishes only explicitly approved documentation sections', () => {
   assert.equal(isPublicDoc('guides/files.txt'), false)
   assert.equal(isPublicDoc('superpowers/plans/internal.md'), false)
   assert.equal(isPublicDoc('verification.md'), false)
+})
+
+test('validates root, relative, and generated API documentation links', () => {
+  assert.doesNotThrow(() => assertPublicDocLinks([
+    { relativePath: 'index.mdx', contents: '[Guide](/guides/files/) [API](/api/classes/chatgptclient/)' },
+    { relativePath: 'guides/files.md', contents: '[Files](./files/)' },
+  ]))
+})
+
+test('rejects a broken authored documentation link', () => {
+  assert.throws(() => assertPublicDocLinks([
+    { relativePath: 'index.mdx', contents: '[Missing](/guides/missing/)' },
+  ]), /Broken public documentation link/)
 })
 
 test('accepts a valid public documentation tree', async (context) => {

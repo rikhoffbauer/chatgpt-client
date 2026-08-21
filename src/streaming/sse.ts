@@ -8,12 +8,14 @@ export interface SseEvent {
   retry: number | null
 }
 
+/** Cancellation plus finite line and aggregate event byte limits. */
 export interface SseOptions {
   maxLineBytes?: number
   maxEventBytes?: number
   signal?: AbortSignal
 }
 
+/** Parses a bounded Server-Sent Events response, preserving event ID and retry metadata. */
 export async function* sseEvents(response: Response, options: SseOptions = {}): AsyncGenerator<SseEvent> {
   const maxEventBytes = options.maxEventBytes ?? 8 * 1024 * 1024
   let event: string | null = null
