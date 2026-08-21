@@ -74,7 +74,7 @@ export default defineConfig({
           // directory, so the plugin cannot derive their public IDs correctly.
           // Generated TypeDoc pages remain fully validated.
           errorOnRelativeLinks: false,
-          exclude: ({ file }) => file.includes('/docs/') && !file.includes('/website/src/content/docs/'),
+          exclude: ({ slug }) => !slug.startsWith('api'),
         }),
       ],
     }),
