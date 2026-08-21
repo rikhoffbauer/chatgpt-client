@@ -9,6 +9,7 @@ import { noopLogger } from './logger.js'
 import type { Fetch, UnknownRecord } from './types.js'
 
 export const OAUTH_TOKEN_URL = 'https://auth.openai.com/oauth/token'
+// public openai codex cli client id, see https://github.com/openai/codex/blob/2aaefa32b0762491d1340675a6082fad26bbb57f/codex-rs/login/src/auth/manager.rs#L1678
 export const OAUTH_CLIENT_ID = 'app_EMoamEEZ73f0CkXaXp7hrann'
 
 export interface JwtPayload extends UnknownRecord {
