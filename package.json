@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@types/node": "25.1.0",
+    "serve": "^14.2.6",
     "typescript": "5.8.3"
   }
 }

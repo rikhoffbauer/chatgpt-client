@@ -12,6 +12,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/starlight": "^0.37.6",
+    "@types/node": "25.1.0",
     "astro": "^5.18.2",
     "starlight-copy-button": "https://github.com/dionysuzx/starlight-copy-button/archive/d570fcab6824127f80076eb419f39fb4fbd9de09.tar.gz",
     "starlight-dot-md": "^0.2.1",

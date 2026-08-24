@@ -144,11 +144,20 @@ test('website content and TypeDoc configurations retain repository boundaries', 
   assert.match(contentConfig, /pattern:\s*(?:PUBLIC_DOC_PATTERNS|\[\.\.\.PUBLIC_DOC_PATTERNS\])/)
   assert.match(contentConfig, /base:\s*['"]\.\.\/docs['"]/)
   assert.match(astroConfig, /entryPoints:\s*\[\s*['"]\.\.\/src\/index\.ts['"]\s*\]/)
+  assert.match(astroConfig, /tsconfig:\s*['"]\.\/typedoc\.tsconfig\.json['"]/)
+
+  const typeDocConfig = await readRepoFile('website/typedoc.tsconfig.json')
+  assert.match(typeDocConfig, /\"typeRoots\":\s*\[\s*\"\.\/node_modules\/@types\"/)
+
+  const websitePackage = await readJson('website/package.json')
+  const websiteDevDependencies = websitePackage.devDependencies as Record<string, string>
+  assert.equal(websiteDevDependencies['@types/node'], '25.1.0')
 })
 
 test('documentation workflow configures, uploads, and deploys GitHub Pages', async () => {
   const workflow = await readRepoFile('.github/workflows/docs.yml')
 
+  assert.match(workflow, /npm ci --prefix website/)
   assert.match(workflow, /actions\/configure-pages@/)
   assert.match(workflow, /actions\/upload-pages-artifact@/)
   assert.match(workflow, /actions\/deploy-pages@/)

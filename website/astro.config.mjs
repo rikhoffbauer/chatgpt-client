@@ -63,7 +63,7 @@ export default defineConfig({
       plugins: [
         starlightTypeDoc({
           entryPoints: ['../src/index.ts'],
-          tsconfig: '../tsconfig.json',
+          tsconfig: './typedoc.tsconfig.json',
           sidebar: { label: 'TypeScript API reference' },
         }),
         starlightLlmsTxt(),

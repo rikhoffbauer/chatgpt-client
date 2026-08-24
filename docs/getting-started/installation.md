@@ -23,9 +23,8 @@ In a monorepo, reference the checkout as a workspace/file dependency. During dev
 
 ```sh
 npm config get registry
-./scripts/fix-bun-npm-registry.sh --install
-bun install
-bun run verify
+./scripts/fix-bun-npm-registry.sh --install -- install
+./scripts/fix-bun-npm-registry.sh -- run verify
 ```
 
 The registry helper is required only when the effective npm registry is a nested URL missing its trailing slash.
