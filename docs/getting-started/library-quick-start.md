@@ -76,4 +76,4 @@ The endpoints are also available through the advanced route facade as `client.ro
 - **Advanced:** route catalog/facade, raw HTTP, realtime sockets, and bounded streaming primitives.
 - **Protocol compatibility:** browser, integrity, proof-of-work, and Turnstile exports. These are unstable and security-sensitive; isolate their use.
 
-Continue with [conversations and streaming](/guides/conversations-streaming/) and [cancellation and limits](/guides/cancellation-limits/).
+Continue with [conversations and streaming](../guides/conversations-streaming/) and [cancellation and limits](../guides/cancellation-limits/).

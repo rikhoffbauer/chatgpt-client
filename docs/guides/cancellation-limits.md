@@ -28,7 +28,7 @@ You can also use `deadlineSignal(operation, timeoutMs, parentSignal)` when compo
 
 ## Default bounds
 
-The client provides finite defaults for request and connection timeouts, response bodies, stream lines/events, async queues, uploads, and downloads. Configure them through `ChatGPTClient` or the variables in [environment reference](/reference/environment/).
+The client provides finite defaults for request and connection timeouts, response bodies, stream lines/events, async queues, uploads, and downloads. Configure them through `ChatGPTClient` or the variables in [environment reference](../reference/environment/).
 
 Automatic HTTP retries are bounded and enabled only for idempotent methods by default. A non-idempotent operation must explicitly opt in only when its endpoint provides suitable idempotency semantics.
 

@@ -35,7 +35,7 @@ const client = await ChatGPTClient.create({
 })
 ```
 
-Use [environment variables and defaults](/reference/environment/) for the full list.
+Use [environment variables and defaults](../reference/environment/) for the full list.
 
 :::danger[Protect credentials]
 Never log or commit access tokens, refresh tokens, ID tokens, account IDs, auth files, or signed blob URLs. Use `serializeError()` for structured output; HTTP URLs redact credential-like query parameters.

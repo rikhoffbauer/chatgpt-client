@@ -97,6 +97,9 @@ export function assertPublicDocLinks(entries) {
       ...Array.from(contents.matchAll(FRONTMATTER_LINK), (match) => match[1]),
     ]
     for (const link of links) {
+      if (link.trim().startsWith('/')) {
+        throw new Error(`Documentation links must be relative for subpath deployments in ${relativePath}: ${link}`)
+      }
       const route = normalizeRoute(link, sourceRoute)
       if (route === undefined) continue
       const accepted = routes.has(route) || (route.startsWith('/api/') && routes.has('/api/'))

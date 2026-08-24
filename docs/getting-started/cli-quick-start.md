@@ -34,4 +34,4 @@ chatgpt-client routes wham
 chatgpt-client api getConversation --conversation_id=<id> --json
 ```
 
-The CLI refuses to overwrite exported or downloaded files. See the complete [CLI command reference](/reference/cli/).
+The CLI refuses to overwrite exported or downloaded files. See the complete [CLI command reference](../reference/cli/).

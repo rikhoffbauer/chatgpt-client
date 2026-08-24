@@ -26,16 +26,22 @@ test('publishes only explicitly approved documentation sections', () => {
   assert.equal(isPublicDoc('verification.md'), false)
 })
 
-test('validates root, relative, and generated API documentation links', () => {
+test('validates relative and generated API documentation links', () => {
   assert.doesNotThrow(() => assertPublicDocLinks([
-    { relativePath: 'index.mdx', contents: '[Guide](/guides/files/) [API](/api/classes/chatgptclient/)' },
+    { relativePath: 'index.mdx', contents: '[Guide](./guides/files/) [API](./api/classes/chatgptclient/)' },
     { relativePath: 'guides/files.md', contents: '[Files](./files/)' },
   ]))
 })
 
+test('rejects root-relative documentation links that bypass a deployed site base path', () => {
+  assert.throws(() => assertPublicDocLinks([
+    { relativePath: 'index.mdx', contents: '[Guide](/guides/files/)' },
+  ]), /must be relative/)
+})
+
 test('rejects a broken authored documentation link', () => {
   assert.throws(() => assertPublicDocLinks([
-    { relativePath: 'index.mdx', contents: '[Missing](/guides/missing/)' },
+    { relativePath: 'index.mdx', contents: '[Missing](./guides/missing/)' },
   ]), /Broken public documentation link/)
 })
 
