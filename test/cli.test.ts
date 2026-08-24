@@ -11,21 +11,21 @@ test('CLI parser preserves repeated attachments and -- separator', () => {
 })
 
 test('compiled CLI lists routes without authentication', () => {
-  const binary = fileURLToPath(new URL('../src/bin.js', import.meta.url))
+  const binary = fileURLToPath(new URL('../dist/bin.js', import.meta.url))
   const result = spawnSync(process.execPath, [binary, 'routes', 'wham'], { encoding: 'utf8' })
   assert.equal(result.status, 0, result.stderr)
   assert.match(result.stdout, /whamListTasks/)
 })
 
 test('compiled CLI help lists user memory commands', () => {
-  const binary = fileURLToPath(new URL('../src/bin.js', import.meta.url))
+  const binary = fileURLToPath(new URL('../dist/bin.js', import.meta.url))
   const result = spawnSync(process.execPath, [binary, '--help'], { encoding: 'utf8' })
   assert.equal(result.status, 0, result.stderr)
   assert.match(result.stdout, /memories \| memory-summary/)
 })
 
 test('compiled CLI reports its version', () => {
-  const binary = fileURLToPath(new URL('../src/bin.js', import.meta.url))
+  const binary = fileURLToPath(new URL('../dist/bin.js', import.meta.url))
   const result = spawnSync(process.execPath, [binary, '--version'], { encoding: 'utf8' })
   assert.equal(result.status, 0, result.stderr)
   assert.equal(result.stdout.trim(), '1.0.0')
