@@ -1,78 +1,117 @@
-// @ts-nocheck
-// WebSocket surfaces: the conversation push channel and the dictation stream.
-// Uses Node 22's global WebSocket, so there are still no dependencies.
+import { deadlineSignal } from './abort.js'
+import type { ChatGPTClient } from './client.js'
+import { ProtocolError } from './errors.js'
+import { AsyncQueue } from './streaming/async-queue.js'
+import type { JsonValue, UnknownRecord } from './types.js'
 
-/**
- * Conversation push channel.
- *
- * GET /celsius/ws/user returns a pre-signed `websocket_url`. The app opens it and receives
- * the same turn events it would otherwise get over SSE, which is how a turn started on one
- * device keeps streaming on another. Messages arrive as `{type, body}` where `body` is a
- * base64-encoded SSE payload for conversation traffic.
- */
-export async function openConversationSocket(client, { onMessage, onError, onClose } = {}) {
-  const { websocket_url: url } = await client.getConversationWebSocketUrl()
-  if (!url) throw new Error('No websocket_url returned by /celsius/ws/user')
+/** Callback, cancellation, finite connection timeout, and bounded message queue options. */
+export interface ConversationSocketOptions {
+  onMessage?: (message: unknown) => void
+  onError?: (error: unknown) => void
+  onClose?: (event: CloseEvent) => void
+  signal?: AbortSignal
+  connectTimeoutMs?: number
+  queueSize?: number
+}
 
-  const ws = new WebSocket(url)
-  const queue = []
-  let resolveNext = null
-  let closed = false
+/** Owned conversation WebSocket and bounded async message iterator; call `close()` when finished. */
+export interface ConversationSocket {
+  socket: WebSocket
+  close(code?: number, reason?: string): void
+  messages(): AsyncIterable<unknown>
+}
 
-  const push = (value) => {
-    if (resolveNext) {
-      resolveNext(value)
-      resolveNext = null
-    } else {
-      queue.push(value)
-    }
+/** Opens the private conversation realtime channel with a finite handshake deadline and bounded queue. */
+export async function openConversationSocket(
+  client: ChatGPTClient,
+  options: ConversationSocketOptions = {},
+): Promise<ConversationSocket> {
+  const value = await client.call('getConversationWebSocketUrl', {}, { signal: options.signal })
+  const url = isRecord(value) && typeof value.websocket_url === 'string' ? value.websocket_url : null
+  if (url === null) throw new ProtocolError('No websocket_url returned by /celsius/ws/user', { code: 'WEBSOCKET_URL_MISSING' })
+
+  const socket = new WebSocket(url)
+  const queue = new AsyncQueue<unknown>({
+    name: 'conversation WebSocket messages',
+    maxSize: options.queueSize ?? client.http.config.limits.queueSize,
+  })
+  const deadline = deadlineSignal('Conversation WebSocket connection', options.connectTimeoutMs ?? client.http.config.limits.connectTimeoutMs, options.signal)
+
+  const onMessage = (event: MessageEvent): void => {
+    void decodeWebSocketData(event.data).then((raw) => {
+      let payload: unknown = raw
+      if (typeof raw === 'string') {
+        try {
+          payload = JSON.parse(raw) as unknown
+        } catch {
+          payload = raw
+        }
+      }
+      if (isRecord(payload) && typeof payload.body === 'string') {
+        try {
+          payload = { ...payload, decoded: Buffer.from(payload.body, 'base64').toString('utf8') }
+        } catch {
+          // Keep the original payload when the body is not valid base64.
+        }
+      }
+      options.onMessage?.(payload)
+      queue.push(payload)
+    }).catch((error: unknown) => queue.fail(error))
+  }
+  const onError = (): void => {
+    const error = new ProtocolError('Conversation WebSocket error', { code: 'WEBSOCKET_ERROR' })
+    options.onError?.(error)
+    queue.fail(error)
+  }
+  const onClose = (event: CloseEvent): void => {
+    options.onClose?.(event)
+    queue.close()
+  }
+  const onAbort = (): void => {
+    queue.fail(options.signal?.reason)
+    socket.close(1_000, 'aborted')
   }
 
-  ws.addEventListener('message', (ev) => {
-    let payload = ev.data
-    try {
-      payload = JSON.parse(ev.data)
-    } catch {
-      /* keep as text */
-    }
-    // conversation frames wrap a base64 SSE body
-    if (payload && typeof payload === 'object' && typeof payload.body === 'string') {
-      try {
-        payload = { ...payload, decoded: Buffer.from(payload.body, 'base64').toString('utf8') }
-      } catch {
-        /* not base64 */
-      }
-    }
-    onMessage?.(payload)
-    push(payload)
-  })
-  ws.addEventListener('error', (ev) => onError?.(ev))
-  ws.addEventListener('close', () => {
-    closed = true
-    onClose?.()
-    push(null)
-  })
+  socket.addEventListener('message', onMessage)
+  socket.addEventListener('error', onError)
+  socket.addEventListener('close', onClose)
+  options.signal?.addEventListener('abort', onAbort, { once: true })
 
-  await new Promise((resolve, reject) => {
-    ws.addEventListener('open', resolve, { once: true })
-    ws.addEventListener('error', reject, { once: true })
-  })
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const open = (): void => resolve()
+      const error = (): void => reject(new ProtocolError('Conversation WebSocket failed to open', { code: 'WEBSOCKET_CONNECT_FAILED' }))
+      const abort = (): void => reject(deadline.signal.reason)
+      socket.addEventListener('open', open, { once: true })
+      socket.addEventListener('error', error, { once: true })
+      deadline.signal.addEventListener('abort', abort, { once: true })
+    })
+  } catch (error) {
+    socket.close()
+    queue.fail(error)
+    throw error
+  } finally {
+    deadline.cleanup()
+  }
 
   return {
-    socket: ws,
-    close: () => ws.close(),
-    async *messages() {
-      while (!closed || queue.length) {
-        const next = queue.length ? queue.shift() : await new Promise((r) => (resolveNext = r))
-        if (next === null) return
-        yield next
-      }
+    socket,
+    close(code, reason): void {
+      socket.removeEventListener('message', onMessage)
+      socket.removeEventListener('error', onError)
+      socket.removeEventListener('close', onClose)
+      options.signal?.removeEventListener('abort', onAbort)
+      queue.close()
+      socket.close(code, reason)
+    },
+    messages(): AsyncIterable<unknown> {
+      return queue
     },
   }
 }
 
-// app-initial-*.js : the dictation session bootstrap
-export const DICTATION_SESSION_CONFIG = (sampleRateHz = 24000) => ({
+/** Builds the finite-buffer, finite-duration PCM16 dictation session configuration. */
+export const DICTATION_SESSION_CONFIG = (sampleRateHz = 24_000): UnknownRecord => ({
   type: 'session.start',
   config: {
     input_audio_format: 'pcm16',
@@ -87,51 +126,100 @@ export const DICTATION_SESSION_CONFIG = (sampleRateHz = 24000) => ({
   },
 })
 
-/**
- * Dictation (speech-to-text) stream.
- *
- * POST /codex/dictation-stream-connect-info returns the socket URL; the app authenticates with
- * the `openai-bearer.<token>` subprotocol rather than a header, because browsers cannot set
- * headers on a WebSocket handshake. Feed it raw PCM16 frames with `sendAudio`.
- */
-export async function openDictationStream(client, { sampleRateHz = 24000, onTranscript, onEvent } = {}) {
-  const info = await client.getDictationConnectInfo()
-  const url = info?.url ?? info?.websocket_url ?? info?.connect_url
-  if (!url) throw new Error(`No dictation url in /codex/dictation-stream-connect-info response: ${JSON.stringify(info)}`)
+/** Audio rate, callbacks, cancellation, and finite connection timeout for dictation. */
+export interface DictationOptions {
+  sampleRateHz?: number
+  onTranscript?: (text: string, event: unknown) => void
+  onEvent?: (event: unknown) => void
+  signal?: AbortSignal
+  connectTimeoutMs?: number
+}
+
+/** Owned PCM16 dictation stream; call `stop()` to end the session and close its socket. */
+export interface DictationStream {
+  socket: WebSocket
+  sendAudio(pcm16: Uint8Array): void
+  commit(): void
+  stop(): void
+}
+
+/** Opens a dictation WebSocket, validates sample rate, and applies a finite handshake deadline. */
+export async function openDictationStream(client: ChatGPTClient, options: DictationOptions = {}): Promise<DictationStream> {
+  const sampleRateHz = options.sampleRateHz ?? 24_000
+  if (!Number.isSafeInteger(sampleRateHz) || sampleRateHz < 8_000 || sampleRateHz > 96_000) {
+    throw new RangeError('sampleRateHz must be an integer between 8000 and 96000')
+  }
+  const info = await client.call('getDictationConnectInfo', {}, { signal: options.signal })
+  const url = isRecord(info)
+    ? [info.url, info.websocket_url, info.connect_url].find((candidate): candidate is string => typeof candidate === 'string' && candidate !== '')
+    : undefined
+  if (url === undefined) throw new ProtocolError('Dictation connect response did not contain a WebSocket URL', { code: 'DICTATION_URL_MISSING' })
 
   const protocols = ['chatgpt-dictation', `openai-bearer.${client.auth.accessToken}`]
-  const ws = new WebSocket(url, protocols)
+  const socket = new WebSocket(url, protocols)
+  const deadline = deadlineSignal('Dictation WebSocket connection', options.connectTimeoutMs ?? client.http.config.limits.connectTimeoutMs, options.signal)
+  const onAbort = (): void => socket.close(1_000, 'aborted')
+  options.signal?.addEventListener('abort', onAbort, { once: true })
 
-  await new Promise((resolve, reject) => {
-    ws.addEventListener('open', resolve, { once: true })
-    ws.addEventListener('error', reject, { once: true })
+  try {
+    await new Promise<void>((resolve, reject) => {
+      socket.addEventListener('open', () => resolve(), { once: true })
+      socket.addEventListener('error', () => reject(new ProtocolError('Dictation WebSocket failed to open', { code: 'DICTATION_CONNECT_FAILED' })), { once: true })
+      deadline.signal.addEventListener('abort', () => reject(deadline.signal.reason), { once: true })
+    })
+  } catch (error) {
+    socket.close()
+    throw error
+  } finally {
+    deadline.cleanup()
+  }
+
+  socket.addEventListener('message', (event) => {
+    void decodeWebSocketData(event.data).then((raw) => {
+      let payload: unknown = raw
+      if (typeof raw === 'string') {
+        try {
+          payload = JSON.parse(raw) as JsonValue
+        } catch {
+          payload = raw
+        }
+      }
+      options.onEvent?.(payload)
+      if (isRecord(payload)) {
+        const text = typeof payload.transcript === 'string' ? payload.transcript : typeof payload.text === 'string' ? payload.text : null
+        if (text !== null) options.onTranscript?.(text, payload)
+      }
+    }).catch(() => undefined)
   })
-
-  ws.addEventListener('message', (ev) => {
-    let payload = ev.data
-    try {
-      payload = JSON.parse(ev.data)
-    } catch {
-      /* binary or text */
-    }
-    onEvent?.(payload)
-    const text = payload?.transcript ?? payload?.text
-    if (text && onTranscript) onTranscript(text, payload)
-  })
-
-  ws.send(JSON.stringify(DICTATION_SESSION_CONFIG(sampleRateHz)))
+  socket.send(JSON.stringify(DICTATION_SESSION_CONFIG(sampleRateHz)))
 
   return {
-    socket: ws,
-    /** @param {Uint8Array} pcm16 little-endian mono samples at `sampleRateHz` */
-    sendAudio: (pcm16) => ws.send(pcm16),
-    commit: () => ws.send(JSON.stringify({ type: 'session.commit' })),
-    stop: () => {
+    socket,
+    sendAudio(pcm16): void {
+      if (socket.readyState !== WebSocket.OPEN) throw new ProtocolError('Dictation WebSocket is not open', { code: 'DICTATION_NOT_OPEN' })
+      socket.send(pcm16)
+    },
+    commit(): void {
+      socket.send(JSON.stringify({ type: 'session.commit' }))
+    },
+    stop(): void {
+      options.signal?.removeEventListener('abort', onAbort)
       try {
-        ws.send(JSON.stringify({ type: 'session.stop' }))
+        if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ type: 'session.stop' }))
       } finally {
-        ws.close()
+        socket.close()
       }
     },
   }
+}
+
+async function decodeWebSocketData(data: unknown): Promise<string | ArrayBuffer> {
+  if (typeof data === 'string' || data instanceof ArrayBuffer) return data
+  if (data instanceof Blob) return data.arrayBuffer()
+  if (ArrayBuffer.isView(data)) return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength)
+  return String(data)
+}
+
+function isRecord(value: unknown): value is UnknownRecord {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }

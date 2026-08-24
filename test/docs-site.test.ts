@@ -103,15 +103,12 @@ async function assertBuiltWebsiteBoundary(distPath: string): Promise<void> {
   }
 }
 
-test('root package delegates documentation commands using the invoking package manager', async () => {
+  test('root package delegates documentation commands using the invoking package manager', async () => {
   const packageJson = await readJson('package.json')
   const scripts = packageJson.scripts as Record<string, string>
 
   assert.deepEqual(
-    Object.fromEntries(['dev', 'check', 'build', 'serve'].map((command) => [
-      `docs:${command}`,
-      scripts[`docs:${command}`],
-    ])),
+    Object.fromEntries(['docs:dev', 'docs:check', 'docs:build', 'docs:serve'].map((name) => [name, scripts[name]])),
     {
       'docs:dev': 'cd website && "$npm_execpath" run dev',
       'docs:check': 'cd website && "$npm_execpath" run check',

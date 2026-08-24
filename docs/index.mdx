@@ -1,0 +1,35 @@
+---
+title: ChatGPT Client
+description: Typed, bounded access to the ChatGPT desktop protocol and local Codex app-server.
+template: splash
+hero:
+  tagline: An unofficial strict-TypeScript client and CLI with explicit deadlines, cancellation, and resource limits.
+  actions:
+    - text: Install from source
+      link: /getting-started/installation/
+      icon: right-arrow
+      variant: primary
+    - text: Library quick start
+      link: /getting-started/library-quick-start/
+      icon: open-book
+---
+
+:::caution[Unofficial protocol client]
+This project is not an OpenAI-supported SDK. Private backend routes may change without notice, and route coverage does not imply that an account is authorized to use a feature.
+:::
+
+## Choose a path
+
+- **Use the TypeScript library:** Create a client, call typed routes, stream conversations, and transfer files while retaining explicit lifecycle control.
+- **Use the CLI:** Inspect models and history, send messages, upload or download files, and call catalogued routes from a shell.
+- **Control local Codex:** Start the bundled Codex app-server, issue bounded JSON-RPC requests, and consume turn notifications.
+
+## What the project guarantees
+
+- A dependency-free runtime and strict TypeScript surface.
+- Finite request, connection, queue, parser, response, upload, and download limits.
+- Cancellation for network, streaming, realtime, and local process operations where applicable.
+- Auth and account headers are not forwarded to external signed upload or download URLs.
+- Automatic retries are bounded and limited to idempotent operations unless explicitly enabled.
+
+Start with [installation and requirements](/getting-started/installation/) or browse the generated [TypeScript API reference](/api/).

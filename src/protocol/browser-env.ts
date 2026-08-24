@@ -1,47 +1,45 @@
-// @ts-nocheck
-// A minimal browser-ish global object for the Turnstile VM to walk.
-//
-// The dx program pokes at DOM/BOM surfaces through opcode 6 (property get) and
-// opcode 7 (call). Anything it touches that we do not model comes back
-// `undefined`, which the VM handles (opcode 23 explicitly branches on it), so
-// this only has to be plausible, not complete.
-
 import { randomUUID, webcrypto } from 'node:crypto'
+import type { UnknownRecord } from '../types.js'
 
 const CHROME_VERSION = '140.0.0.0'
-const CHROME_MAJOR = CHROME_VERSION.split('.')[0]
+const CHROME_MAJOR = CHROME_VERSION.split('.')[0] ?? '140'
 export const USER_AGENT = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${CHROME_VERSION} Safari/537.36`
 
-const noop = () => undefined
-const el = (extra = {}) => ({
-  getAttribute: () => null,
-  setAttribute: noop,
-  appendChild: noop,
-  removeChild: noop,
-  addEventListener: noop,
-  removeEventListener: noop,
-  getBoundingClientRect: () => ({ x: 0, y: 0, width: 0, height: 0, top: 0, left: 0, right: 0, bottom: 0 }),
-  style: {},
-  children: [],
-  childNodes: [],
-  ...extra,
-})
+const noop = (): undefined => undefined
 
-export function createWindow({ href = 'https://chatgpt.com/' } = {}) {
+function element(extra: UnknownRecord = {}): UnknownRecord {
+  return {
+    getAttribute: () => null,
+    setAttribute: noop,
+    appendChild: noop,
+    removeChild: noop,
+    addEventListener: noop,
+    removeEventListener: noop,
+    getBoundingClientRect: () => ({ x: 0, y: 0, width: 0, height: 0, top: 0, left: 0, right: 0, bottom: 0 }),
+    style: {},
+    children: [],
+    childNodes: [],
+    ...extra,
+  }
+}
+
+export interface BrowserEnvironmentOptions {
+  href?: string
+}
+
+export function createWindow(options: BrowserEnvironmentOptions = {}): UnknownRecord {
+  const href = options.href ?? 'https://chatgpt.com/'
   const url = new URL(href)
   const timeOrigin = Date.now() - Math.floor(performance.now())
-
   const scripts = [
     { src: 'https://chatgpt.com/assets/root-index.js', type: 'module', async: false, defer: false },
     { src: 'https://cdn.oaistatic.com/assets/c/1a2b3c4d/_next.js', type: 'text/javascript', async: true, defer: false },
   ]
-
-  const documentElement = el({ getAttribute: (name) => (name === 'data-build' ? 'prod-1a2b3c4d' : null), lang: 'en-US' })
-
-  const document = {
+  const documentElement = element({ getAttribute: (name: unknown) => name === 'data-build' ? 'prod-1a2b3c4d' : null, lang: 'en-US' })
+  const document: UnknownRecord = {
     documentElement,
-    head: el(),
-    body: el({ clientWidth: 1512, clientHeight: 856 }),
+    head: element(),
+    body: element({ clientWidth: 1512, clientHeight: 856 }),
     scripts,
     cookie: '',
     referrer: '',
@@ -54,24 +52,19 @@ export function createWindow({ href = 'https://chatgpt.com/' } = {}) {
     characterSet: 'UTF-8',
     contentType: 'text/html',
     hasFocus: () => true,
-    createElement: (tag) =>
-      el({
-        tagName: String(tag).toUpperCase(),
-        // canvas fingerprinting attempts land here
-        getContext: () => null,
-      }),
-    createTextNode: () => el(),
+    createElement: (tag: unknown) => element({ tagName: String(tag).toUpperCase(), getContext: () => null }),
+    createTextNode: () => element(),
     querySelector: () => null,
     querySelectorAll: () => [],
     getElementById: () => null,
-    getElementsByTagName: (tag) => (String(tag).toLowerCase() === 'script' ? scripts : []),
+    getElementsByTagName: (tag: unknown) => String(tag).toLowerCase() === 'script' ? scripts : [],
     addEventListener: noop,
     removeEventListener: noop,
     dispatchEvent: () => true,
     evaluate: undefined,
   }
 
-  const navigator = {
+  const navigator: UnknownRecord = {
     userAgent: USER_AGENT,
     appVersion: USER_AGENT.replace('Mozilla/', ''),
     appName: 'Netscape',
@@ -112,43 +105,27 @@ export function createWindow({ href = 'https://chatgpt.com/' } = {}) {
     mediaDevices: {},
     serviceWorker: {},
   }
-  // dya() picks a random key off Object.getPrototypeOf(navigator) — give it one
   Object.setPrototypeOf(navigator, { constructor: function Navigator() {}, toString: () => '[object Navigator]' })
 
-  const screen = {
-    width: 1512,
-    height: 982,
-    availWidth: 1512,
-    availHeight: 944,
-    availLeft: 0,
-    availTop: 38,
-    colorDepth: 30,
-    pixelDepth: 30,
-    orientation: { angle: 0, type: 'landscape-primary' },
-  }
-
-  const storage = () => {
-    const map = new Map()
+  const storage = (): UnknownRecord => {
+    const values = new Map<string, string>()
     return {
-      getItem: (k) => (map.has(k) ? map.get(k) : null),
-      setItem: (k, v) => map.set(k, String(v)),
-      removeItem: (k) => map.delete(k),
-      clear: () => map.clear(),
-      key: (i) => [...map.keys()][i] ?? null,
-      get length() {
-        return map.size
-      },
+      getItem: (key: unknown) => values.get(String(key)) ?? null,
+      setItem: (key: unknown, value: unknown) => values.set(String(key), String(value)),
+      removeItem: (key: unknown) => values.delete(String(key)),
+      clear: () => values.clear(),
+      key: (index: unknown) => [...values.keys()][Number(index)] ?? null,
+      get length() { return values.size },
     }
   }
 
-  const perf = {
+  const perf: UnknownRecord = {
     now: () => performance.now(),
     timeOrigin,
     memory: { jsHeapSizeLimit: 4_294_705_152, totalJSHeapSize: 48_000_000, usedJSHeapSize: 32_000_000 },
-    getEntriesByType: (type) =>
-      type === 'navigation'
-        ? [{ type: 'navigate', duration: 812.4, domComplete: 780.1, loadEventEnd: 812.4, transferSize: 41_233 }]
-        : [],
+    getEntriesByType: (type: unknown) => type === 'navigation'
+      ? [{ type: 'navigate', duration: 812.4, domComplete: 780.1, loadEventEnd: 812.4, transferSize: 41_233 }]
+      : [],
     getEntries: () => [],
     mark: noop,
     measure: noop,
@@ -169,10 +146,20 @@ export function createWindow({ href = 'https://chatgpt.com/' } = {}) {
     toString: () => href,
   }
 
-  const win = {
+  const win: UnknownRecord = {
     document,
     navigator,
-    screen,
+    screen: {
+      width: 1512,
+      height: 982,
+      availWidth: 1512,
+      availHeight: 944,
+      availLeft: 0,
+      availTop: 38,
+      colorDepth: 30,
+      pixelDepth: 30,
+      orientation: { angle: 0, type: 'landscape-primary' },
+    },
     location,
     performance: perf,
     history: { length: 2, scrollRestoration: 'auto', state: null },
@@ -192,7 +179,6 @@ export function createWindow({ href = 'https://chatgpt.com/' } = {}) {
     crossOriginIsolated: false,
     closed: false,
     name: '',
-    // JS built-ins the program may reach for through the global
     Object,
     Array,
     String,
@@ -217,22 +203,26 @@ export function createWindow({ href = 'https://chatgpt.com/' } = {}) {
     TextDecoder,
     Uint8Array,
     ArrayBuffer,
-    atob: (s) => Buffer.from(s, 'base64').toString('binary'),
-    btoa: (s) => Buffer.from(s, 'binary').toString('base64'),
-    setTimeout: (...a) => setTimeout(...a),
-    clearTimeout: (...a) => clearTimeout(...a),
-    setInterval: (...a) => setInterval(...a),
-    clearInterval: (...a) => clearInterval(...a),
-    queueMicrotask: (...a) => queueMicrotask(...a),
-    requestAnimationFrame: (cb) => setTimeout(() => cb(performance.now()), 16),
+    atob: (value: unknown) => Buffer.from(String(value), 'base64').toString('binary'),
+    btoa: (value: unknown) => Buffer.from(String(value), 'binary').toString('base64'),
+    setTimeout,
+    clearTimeout,
+    setInterval,
+    clearInterval,
+    queueMicrotask,
+    requestAnimationFrame: (callback: (timestamp: number) => void) => setTimeout(() => callback(performance.now()), 16),
     cancelAnimationFrame: clearTimeout,
-    requestIdleCallback: (cb) => setTimeout(() => cb({ didTimeout: false, timeRemaining: () => 50 }), 1),
+    requestIdleCallback: (callback: (deadline: { didTimeout: boolean; timeRemaining(): number }) => void) => setTimeout(() => callback({ didTimeout: false, timeRemaining: () => 50 }), 1),
     addEventListener: noop,
     removeEventListener: noop,
     dispatchEvent: () => true,
-    matchMedia: (query) => ({ matches: /prefers-color-scheme:\s*dark/.test(query), media: query, addListener: noop, addEventListener: noop }),
+    matchMedia: (query: unknown) => ({ matches: /prefers-color-scheme:\s*dark/.test(String(query)), media: String(query), addListener: noop, addEventListener: noop }),
     getComputedStyle: () => ({ getPropertyValue: () => '' }),
-    crypto: { randomUUID, getRandomValues: (arr) => webcrypto.getRandomValues(arr), subtle: webcrypto.subtle },
+    crypto: {
+      randomUUID,
+      getRandomValues: (array: Uint8Array) => webcrypto.getRandomValues(array),
+      subtle: webcrypto.subtle,
+    },
     chrome: { runtime: {}, loadTimes: () => ({}), csi: () => ({}), app: { isInstalled: false } },
     indexedDB: {},
     caches: undefined,
@@ -257,7 +247,6 @@ export function createWindow({ href = 'https://chatgpt.com/' } = {}) {
   win.parent = win
   win.frames = win
   win.globalThis = win
-  win.document.defaultView = win
-
+  document.defaultView = win
   return win
 }

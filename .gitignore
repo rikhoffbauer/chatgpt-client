@@ -11,4 +11,9 @@ dist/
 auth.json
 *_auth.json
 auth_*.json
-
+coverage/
+.DS_Store
+website/dist/
+website/.astro/
+website/node_modules/
+website/src/content/docs/api/
