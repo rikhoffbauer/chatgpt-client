@@ -1,133 +1,398 @@
-// @ts-nocheck
-// The client itself: every route in routes.js becomes a method, plus the composite flows
-// the app builds by hand (chat turns, file uploads, share links, message trees).
-
 import { randomUUID } from 'node:crypto'
-import { Auth } from './auth.js'
-import { Http, HttpError, expandPath, sseEvents, ndjson, resolveApiBase } from './http.js'
-import { prepareIntegrity, SENTINEL_HEADERS } from './sentinel.js'
-import { ROUTES, routePathParams } from './routes.js'
+import type { Auth } from './auth.js'
+import { Auth as AuthClass } from './auth.js'
+import { defaultConfig, resolveApiBase } from './config.js'
+import { HttpError, ProtocolError } from './errors.js'
+import { Http, expandPath, type HttpOptions, type Query } from './http.js'
+import { createBrowserFetch, type BrowserFetch } from './protocol/browser-fetch.js'
+import type { Logger } from './logger.js'
+import { noopLogger } from './logger.js'
+import { createRouteApi, type RouteApi, type RouteArguments, type RouteCallOptions, type RouteResult } from './route-api.js'
+import { ROUTES, routePathParams, type RouteName } from './routes.js'
+import { ndjson, type NdjsonRecord } from './streaming/ndjson.js'
+import { sseEvents } from './streaming/sse.js'
+import type { IntegritySolver, JsonValue, Persona, UnknownRecord } from './types.js'
+import {
+  prepareIntegrity as defaultPrepareIntegrity,
+  SENTINEL_HEADERS,
+  type IntegrityResult,
+  type PrepareRequirements,
+} from './protocol/sentinel.js'
 
-export { HttpError, SENTINEL_HEADERS }
+export { HttpError, SENTINEL_HEADERS, ROUTES, resolveApiBase }
 
-const HEARTBEAT_MS = 60_000 // app-initial-*.js : NSSu
+const HEARTBEAT_MS = 60_000
+const DEFAULT_MODEL_CACHE_MS = 5 * 60_000
 
+export interface Attachment {
+  file_id: string
+  asset_pointer?: string
+  content_type?: string
+  size_bytes?: number
+  width?: number
+  height?: number
+  name?: string
+  mime_type?: string
+  [key: string]: unknown
+}
+
+export interface MessageContent {
+  content_type: string
+  parts?: unknown[]
+  [key: string]: unknown
+}
+
+export interface ConversationMessage {
+  id?: string
+  author?: { role?: string; name?: string | null; metadata?: UnknownRecord }
+  content?: MessageContent
+  metadata?: UnknownRecord
+  [key: string]: unknown
+}
+
+export interface ConversationNode {
+  parent?: string | null
+  message?: ConversationMessage | null
+  [key: string]: unknown
+}
+
+export interface Conversation {
+  id?: string
+  title?: string
+  current_node?: string
+  mapping?: Record<string, ConversationNode>
+  [key: string]: unknown
+}
+
+export interface ModelInfo {
+  slug?: string
+  title?: string
+  [key: string]: unknown
+}
+
+export interface ModelsResponse {
+  models?: ModelInfo[]
+  [key: string]: unknown
+}
+
+export interface ConversationListResponse {
+  total?: number
+  items?: Array<UnknownRecord & { id?: string; title?: string; update_time?: string }>
+  [key: string]: unknown
+}
+
+/** One memory saved by ChatGPT for the current user. */
+export interface UserMemory {
+  id: string
+  content: string
+  updated_at: string
+  gizmo_id: string | null
+  status: string
+  conversation_id: string | null
+  created_timestamp: number | null
+  last_updated: UnknownRecord | null
+  labels: unknown[] | null
+  [key: string]: unknown
+}
+
+/** The current user's saved ChatGPT memories and server-side token accounting. */
+export interface UserMemoriesResponse {
+  memories: UserMemory[]
+  memory_max_tokens: number
+  memory_num_tokens: number
+  [key: string]: unknown
+}
+
+/** A suggested prompt shown alongside an About You summary section. */
+export interface UserMemorySummaryFollowUp {
+  preview: string
+  prompt: string
+  action: string
+  [key: string]: unknown
+}
+
+/** One section in ChatGPT's generated About You summary. */
+export interface UserMemorySummarySection {
+  id: string
+  title: string
+  description: string
+  followUps?: UserMemorySummaryFollowUp[]
+  [key: string]: unknown
+}
+
+/** ChatGPT's generated About You summary for the current user. */
+export interface UserMemorySummaryResponse {
+  sections: UserMemorySummarySection[]
+  generatedAtIso: string
+  emptyStateMessage: string
+  sourceChecksum: string
+  [key: string]: unknown
+}
+
+export interface UserMessageOptions {
+  attachments?: Attachment[]
+  metadata?: UnknownRecord
+}
+
+export interface TurnRequestInput {
+  messages: ConversationMessage[]
+  model: string
+  parentMessageId: string
+  conversationId?: string
+  action?: string
+  gizmoId?: string
+  conversationOrigin?: string
+  conversationMode?: UnknownRecord
+  executionTarget?: string
+  systemHints?: JsonValue
+  thinkingEffort?: string
+  serviceTier?: string
+  localFunctionSignatures?: JsonValue
+  historyAndTrainingDisabled?: boolean
+  hideFromHistory?: boolean
+  branchingFromConversationId?: string
+  branchingFromMessageId?: string
+  supportedEncodings?: string[]
+  extra?: UnknownRecord
+}
+
+/** Options for starting or resuming a conversation turn. Pass `signal` to cancel preparation and streaming. */
+export interface StartTurnOptions extends Omit<TurnRequestInput, 'messages' | 'model' | 'parentMessageId'> {
+  text?: string
+  message?: ConversationMessage
+  messages?: ConversationMessage[]
+  model?: string
+  parentMessageId?: string
+  signal?: AbortSignal
+  integrity?: IntegrityResult
+  attachments?: Attachment[]
+  metadata?: UnknownRecord
+}
+
+/** Events emitted by {@link ChatGPTClient.send}: text deltas, identifiers, raw protocol events, and terminal completion. */
+export type SendEvent =
+  | { type: 'delta'; text: string }
+  | { type: 'meta'; conversationId: string; messageId: string | null }
+  | { type: 'event'; event: string | null; data: unknown }
+  | { type: 'done'; conversationId: string | null }
+
+/** In-memory upload content and metadata, bounded by the configured upload byte limit. */
+export interface UploadFileOptions {
+  bytes: Uint8Array | ArrayBuffer
+  fileName: string
+  contentType?: string
+  useCase?: string
+  resetRateLimits?: boolean
+  signal?: AbortSignal
+}
+
+/** Dependencies and finite runtime settings for constructing a {@link ChatGPTClient}. */
+export interface ChatGPTClientOptions {
+  auth: Auth
+  baseUrl?: string
+  solver?: IntegritySolver
+  persona?: Persona
+  appVersion?: string
+  fetchImpl?: HttpOptions['fetchImpl']
+  logger?: Logger
+  config?: HttpOptions['config']
+  strictRouteArgs?: boolean
+  prepareFailureMode?: 'continue' | 'throw'
+  /** Uses an isolated real-Chrome renderer when Cloudflare blocks a same-origin request. */
+  browserFallback?: boolean
+  modelCacheMs?: number
+  integrityProvider?: (prepare: PrepareRequirements, options: { solver: IntegritySolver; signal?: AbortSignal }) => Promise<IntegrityResult>
+}
+
+/** Client options that may load authentication from the desktop auth store. */
+export interface CreateClientOptions extends Omit<ChatGPTClientOptions, 'auth'> {
+  auth?: Auth
+  authPath?: string
+}
+
+/**
+ * High-level client for conversations, catalogued private routes, streams, and file transfers.
+ *
+ * This is an unofficial protocol client. Call {@link ChatGPTClient.close} when finished to stop
+ * owned timers, and use `AbortSignal` on operations that may outlive the caller.
+ */
 export class ChatGPTClient {
-  /**
-   * @param {object} opts
-   * @param {import('./auth.js').Auth} opts.auth
-   * @param {string} [opts.baseUrl]
-   * @param {'node'|'chrome'} [opts.solver] how to answer a turnstile challenge
-   * @param {'browser'|'desktop'} [opts.persona]
-   */
-  constructor({ auth, baseUrl, solver = 'node', persona = 'browser' } = {}) {
-    this.auth = auth
-    this.solver = solver
-    this.http = new Http({ auth, baseUrl, persona })
-    this._heartbeat = null
+  readonly auth: Auth
+  readonly http: Http
+  readonly routes: RouteApi
+  readonly solver: IntegritySolver
+
+  private readonly logger: Logger
+  private readonly strictRouteArgs: boolean
+  private readonly prepareFailureMode: 'continue' | 'throw'
+  private readonly modelCacheMs: number
+  private readonly integrityProvider: NonNullable<ChatGPTClientOptions['integrityProvider']>
+  private readonly browserFetch?: BrowserFetch
+  private heartbeat?: NodeJS.Timeout
+  private modelCache?: { value: string; expiresAt: number }
+
+  constructor(options: ChatGPTClientOptions) {
+    this.auth = options.auth
+    this.logger = options.logger ?? noopLogger
+    const config = defaultConfig({
+      ...options.config,
+      ...(options.baseUrl === undefined ? {} : { baseUrl: options.baseUrl }),
+      ...(options.solver === undefined ? {} : { solver: options.solver }),
+      ...(options.persona === undefined ? {} : { persona: options.persona }),
+      ...(options.appVersion === undefined ? {} : { appVersion: options.appVersion }),
+    })
+    this.solver = config.solver
+    this.browserFetch = options.browserFallback === false
+      ? undefined
+      : createBrowserFetch({ maxResponseBytes: config.limits.responseBodyBytes })
+    this.http = new Http({
+      auth: options.auth,
+      baseUrl: config.baseUrl,
+      persona: config.persona,
+      appVersion: config.appVersion,
+      ...(options.fetchImpl === undefined ? {} : { fetchImpl: options.fetchImpl }),
+      logger: this.logger,
+      browserFetch: this.browserFetch,
+      config: {
+        ...options.config,
+        statePath: config.statePath,
+        authPath: config.authPath,
+        retry: config.retry,
+        limits: config.limits,
+      },
+    })
+    this.strictRouteArgs = options.strictRouteArgs ?? true
+    this.prepareFailureMode = options.prepareFailureMode ?? 'continue'
+    this.modelCacheMs = options.modelCacheMs ?? DEFAULT_MODEL_CACHE_MS
+    this.integrityProvider = options.integrityProvider ?? defaultPrepareIntegrity
+    this.routes = createRouteApi((name, args, callOptions) => this.call(name, args, callOptions))
   }
 
-  static async create(opts = {}) {
-    const auth = opts.auth ?? (await Auth.load())
-    return new ChatGPTClient({ ...opts, auth })
+  /** Loads desktop authentication when needed and creates a configured client. */
+  static async create(options: CreateClientOptions = {}): Promise<ChatGPTClient> {
+    const auth = options.auth ?? (await AuthClass.load({
+      ...(options.authPath === undefined ? {} : { path: options.authPath }),
+      ...(options.fetchImpl === undefined ? {} : { fetchImpl: options.fetchImpl }),
+      ...(options.logger === undefined ? {} : { logger: options.logger }),
+    }))
+    return new ChatGPTClient({ ...options, auth })
   }
 
-  get baseUrl() {
+  get baseUrl(): string {
     return this.http.baseUrl
   }
 
-  // -------------------------------------------------------------------------
-  // generic route invocation (also what the generated methods below go through)
-  // -------------------------------------------------------------------------
-
-  /** Call any route by catalog name: `client.call('getConversation', {conversation_id})`. */
-  async call(name, args = {}, opts = {}) {
+  /** Calls a catalogued private route, validating path and unused arguments before transport. */
+  async call<Name extends RouteName>(
+    name: Name,
+    args: RouteArguments = {},
+    options: RouteCallOptions = {},
+  ): Promise<RouteResult<Name>> {
     const route = ROUTES[name]
-    if (!route) throw new Error(`Unknown route: ${name}`)
-
-    const rest = { ...args }
-    const pathParams = {}
+    const rest: UnknownRecord = { ...args }
+    const pathParams: Record<string, unknown> = {}
     for (const key of routePathParams(route.path)) {
       pathParams[key] = rest[key]
       delete rest[key]
     }
-    const query = {}
-    for (const key of route.query ?? []) {
-      if (key in rest) {
-        query[key] = rest[key]
-        delete rest[key]
-      }
-    }
 
-    let body
-    if (Array.isArray(route.body)) {
-      body = {}
-      for (const key of route.body) {
+    const query: Query = {}
+    if ('query' in route) {
+      for (const key of route.query) {
         if (key in rest) {
-          body[key] = rest[key]
+          query[key] = rest[key] as Query[string]
           delete rest[key]
         }
       }
-    } else if (route.body === true) {
-      body = rest
+    }
+
+    let body: unknown
+    if ('body' in route && Array.isArray(route.body)) {
+      const selected: UnknownRecord = {}
+      for (const key of route.body) {
+        if (key in rest) {
+          selected[key] = rest[key]
+          delete rest[key]
+        }
+      }
+      body = selected
+    } else if ('body' in route && route.body === true) {
+      body = { ...rest }
+      for (const key of Object.keys(rest)) delete rest[key]
     } else if (route.method !== 'GET' && route.method !== 'DELETE') {
-      body = {} // POST/PATCH with no declared body still sends `{}`, as the renderer does
+      body = {}
+    }
+
+    const unused = Object.keys(rest)
+    if (this.strictRouteArgs && unused.length > 0) {
+      throw new ProtocolError(`Unused argument(s) for route ${name}: ${unused.join(', ')}`, {
+        code: 'UNUSED_ROUTE_ARGUMENT',
+        details: { route: name, unused },
+      })
     }
 
     const path = expandPath(route.path, pathParams)
-    const headers = { ...route.headers, ...opts.headers }
-    const request = { query, body, headers, signal: opts.signal }
+    const headers = { ...('headers' in route ? route.headers : {}), ...options.headers }
+    const request = {
+      query,
+      body,
+      headers,
+      ...(options.signal === undefined ? {} : { signal: options.signal }),
+      ...(options.timeoutMs === undefined ? {} : { timeoutMs: options.timeoutMs }),
+    }
 
-    if (route.stream) return this.http.stream(route.method, path, { ...request, format: route.stream })
-    return this.http.json(route.method, path, request)
+    if ('stream' in route) {
+      return (await this.http.stream(route.method, path, { ...request, format: route.stream })) as RouteResult<Name>
+    }
+    return (await this.http.json(route.method, path, request)) as RouteResult<Name>
   }
 
-  /** Escape hatch for a route not in the catalog. */
-  raw(method, path, opts = {}) {
-    return this.http.json(method, path, opts)
+  raw<T = unknown>(method: Parameters<Http['json']>[0], path: string, options: Parameters<Http['json']>[2] = {}): Promise<T> {
+    return this.http.json<T>(method, path, options)
   }
 
-  // -------------------------------------------------------------------------
-  // integrity
-  // -------------------------------------------------------------------------
-
-  /** Run the sentinel handshake and return the headers a turn needs. */
-  prepareIntegrity({ solver = this.solver } = {}) {
-    return prepareIntegrity((body) => this.prepareChatRequirements(body), { solver })
+  async prepareIntegrity(options: { solver?: IntegritySolver; signal?: AbortSignal } = {}): Promise<IntegrityResult> {
+    const prepare: PrepareRequirements = async (body) => this.call('prepareChatRequirements', body, { signal: options.signal })
+    return this.integrityProvider(prepare, {
+      solver: options.solver ?? this.solver,
+      ...(options.signal === undefined ? {} : { signal: options.signal }),
+    })
   }
 
-  /** The app pings /sentinel/heartbeat every 60 s while a window is focused. */
-  startHeartbeat(intervalMs = HEARTBEAT_MS) {
+  startHeartbeat(intervalMs = HEARTBEAT_MS): this {
+    if (!Number.isSafeInteger(intervalMs) || intervalMs < 1_000) throw new RangeError('Heartbeat interval must be at least 1000 ms')
     this.stopHeartbeat()
-    this._heartbeat = setInterval(() => {
-      this.sentinelHeartbeat().catch(() => {})
+    this.heartbeat = setInterval(() => {
+      void this.call('sentinelHeartbeat').catch((error: unknown) => this.logger.warn('Sentinel heartbeat failed', { error }))
     }, intervalMs)
-    this._heartbeat.unref?.()
+    this.heartbeat.unref()
     return this
   }
 
-  stopHeartbeat() {
-    if (this._heartbeat) clearInterval(this._heartbeat)
-    this._heartbeat = null
+  stopHeartbeat(): this {
+    if (this.heartbeat !== undefined) clearInterval(this.heartbeat)
+    this.heartbeat = undefined
     return this
   }
 
-  // -------------------------------------------------------------------------
-  // chat turns
-  // -------------------------------------------------------------------------
+  /** Stops the optional heartbeat owned by this client. */
+  close(): void {
+    this.stopHeartbeat()
+    void this.browserFetch?.close().catch(() => undefined)
+  }
 
-  /** Hka(): a user message node. `attachments` are asset pointers from uploadFile(). */
-  userMessage(text, { attachments = [], metadata = {} } = {}) {
-    const content = attachments.length
+  userMessage(text: string, options: UserMessageOptions = {}): ConversationMessage {
+    const attachments = options.attachments ?? []
+    const content: MessageContent = attachments.length > 0
       ? {
           content_type: 'multimodal_text',
           parts: [
-            ...attachments.map((a) => ({
-              asset_pointer: a.asset_pointer ?? `file-service://${a.file_id}`,
-              content_type: a.content_type ?? 'image_asset_pointer',
-              size_bytes: a.size_bytes,
-              width: a.width,
-              height: a.height,
+            ...attachments.map((attachment) => ({
+              asset_pointer: attachment.asset_pointer ?? `file-service://${attachment.file_id}`,
+              content_type: attachment.content_type ?? 'image_asset_pointer',
+              ...(attachment.size_bytes === undefined ? {} : { size_bytes: attachment.size_bytes }),
+              ...(attachment.width === undefined ? {} : { width: attachment.width }),
+              ...(attachment.height === undefined ? {} : { height: attachment.height }),
             })),
             text,
           ],
@@ -138,14 +403,23 @@ export class ChatGPTClient {
       author: { metadata: {}, name: null, role: 'user' },
       channel: null,
       content,
-      create_time: Date.now() / 1000,
+      create_time: Date.now() / 1_000,
       end_turn: null,
       id: randomUUID(),
       metadata: {
         selected_all_github_repos: false,
         serialization_metadata: { custom_symbol_offsets: [] },
-        ...(attachments.length ? { attachments: attachments.map((a) => ({ id: a.file_id, name: a.name, size: a.size_bytes, mime_type: a.mime_type })) } : {}),
-        ...metadata,
+        ...(attachments.length === 0
+          ? {}
+          : {
+              attachments: attachments.map((attachment) => ({
+                id: attachment.file_id,
+                name: attachment.name,
+                size: attachment.size_bytes,
+                mime_type: attachment.mime_type,
+              })),
+            }),
+        ...options.metadata,
       },
       recipient: 'all',
       status: 'finished_successfully',
@@ -154,363 +428,495 @@ export class ChatGPTClient {
     }
   }
 
-  /** zka(): the /f/conversation request body. */
-  turnRequest({
-    messages,
-    model,
-    parentMessageId,
-    conversationId,
-    action = 'next',
-    gizmoId,
-    conversationOrigin,
-    conversationMode,
-    executionTarget,
-    systemHints,
-    thinkingEffort,
-    serviceTier,
-    localFunctionSignatures,
-    historyAndTrainingDisabled,
-    hideFromHistory,
-    branchingFromConversationId,
-    branchingFromMessageId,
-    supportedEncodings = ['v1'],
-    extra = {},
-  }) {
+  turnRequest(input: TurnRequestInput): UnknownRecord {
     return {
-      action,
-      ...(conversationId ? { conversation_id: conversationId } : {}),
-      ...(branchingFromConversationId ? { branching_from_conversation_id: branchingFromConversationId } : {}),
-      ...(branchingFromMessageId ? { branching_from_message_id: branchingFromMessageId } : {}),
-      ...(conversationOrigin ? { conversation_origin: conversationOrigin } : {}),
-      ...(gizmoId ? { gizmo_id: gizmoId, conversation_mode: conversationMode ?? { kind: 'gizmo_interaction', gizmo_id: gizmoId } } : {}),
-      ...(conversationMode && !gizmoId ? { conversation_mode: conversationMode } : {}),
-      ...(executionTarget ? { conversation_execution_target: executionTarget } : {}),
-      ...(systemHints ? { system_hints: systemHints } : {}),
-      ...(thinkingEffort ? { thinking_effort: thinkingEffort } : {}),
-      ...(serviceTier ? { service_tier: serviceTier } : {}),
-      ...(localFunctionSignatures ? { local_function_signatures: localFunctionSignatures } : {}),
-      ...(historyAndTrainingDisabled != null ? { history_and_training_disabled: historyAndTrainingDisabled } : {}),
-      ...(hideFromHistory != null ? { hide_from_history: hideFromHistory } : {}),
+      action: input.action ?? 'next',
+      ...(input.conversationId === undefined ? {} : { conversation_id: input.conversationId }),
+      ...(input.branchingFromConversationId === undefined ? {} : { branching_from_conversation_id: input.branchingFromConversationId }),
+      ...(input.branchingFromMessageId === undefined ? {} : { branching_from_message_id: input.branchingFromMessageId }),
+      ...(input.conversationOrigin === undefined ? {} : { conversation_origin: input.conversationOrigin }),
+      ...(input.gizmoId === undefined
+        ? {}
+        : {
+            gizmo_id: input.gizmoId,
+            conversation_mode: input.conversationMode ?? { kind: 'gizmo_interaction', gizmo_id: input.gizmoId },
+          }),
+      ...(input.conversationMode === undefined || input.gizmoId !== undefined ? {} : { conversation_mode: input.conversationMode }),
+      ...(input.executionTarget === undefined ? {} : { conversation_execution_target: input.executionTarget }),
+      ...(input.systemHints === undefined ? {} : { system_hints: input.systemHints }),
+      ...(input.thinkingEffort === undefined ? {} : { thinking_effort: input.thinkingEffort }),
+      ...(input.serviceTier === undefined ? {} : { service_tier: input.serviceTier }),
+      ...(input.localFunctionSignatures === undefined ? {} : { local_function_signatures: input.localFunctionSignatures }),
+      ...(input.historyAndTrainingDisabled === undefined ? {} : { history_and_training_disabled: input.historyAndTrainingDisabled }),
+      ...(input.hideFromHistory === undefined ? {} : { hide_from_history: input.hideFromHistory }),
       consumer_lockdown_mode_disabled: true,
-      messages,
-      model,
-      parent_message_id: parentMessageId,
-      supported_encodings: supportedEncodings,
+      messages: input.messages,
+      model: input.model,
+      parent_message_id: input.parentMessageId,
+      supported_encodings: input.supportedEncodings ?? ['v1'],
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       timezone_offset_min: new Date().getTimezoneOffset(),
-      ...extra,
+      ...input.extra,
     }
   }
 
-  /** dka(): the warm-up call. Non-fatal by design — failure only flips client_prepare_state. */
-  async prepareConversationStream(body, { conduitToken = 'no-token' } = {}) {
+  async prepareConversationStream(body: UnknownRecord, options: { conduitToken?: string; signal?: AbortSignal } = {}): Promise<string | null> {
     try {
-      const res = await this.prepareConversationStreamRaw(
-        { ...body, client_prepare_state: 'sent' },
-        { headers: { 'x-conduit-token': conduitToken } },
-      )
-      return res?.conduit_token ?? null
-    } catch (err) {
-      if (process.env.POC_DEBUG) console.error('prepare failed (non-fatal):', err.message)
+      const response = await this.call('prepareConversationStreamRaw', { ...body, client_prepare_state: 'sent' }, {
+        headers: { 'x-conduit-token': options.conduitToken ?? 'no-token' },
+        ...(options.signal === undefined ? {} : { signal: options.signal }),
+      })
+      const token = isRecord(response) ? response.conduit_token : undefined
+      return typeof token === 'string' && token !== '' ? token : null
+    } catch (error) {
+      if (this.prepareFailureMode === 'throw') throw error
+      this.logger.warn('Conversation prepare request failed; continuing with client_prepare_state=failure', { error })
       return null
     }
   }
 
-  /**
-   * Full turn: sentinel -> prepare -> stream. Returns the raw SSE Response.
-   * Everything the app can set on a turn is forwarded through `turnRequest`.
-   */
-  async startTurn({ text, message, messages, conversationId, model, parentMessageId, signal, integrity, ...rest } = {}) {
-    let parent = parentMessageId
-    if (!parent && conversationId) {
-      const convo = await this.getConversation({ conversation_id: conversationId })
-      parent = convo?.current_node
+  async startTurn(options: StartTurnOptions = {}): Promise<Response> {
+    options.signal?.throwIfAborted()
+    let parentMessageId = options.parentMessageId
+    if (parentMessageId === undefined && options.conversationId !== undefined) {
+      const conversation = await this.call('getConversation', { conversation_id: options.conversationId }, { signal: options.signal })
+      const currentNode = isRecord(conversation) ? conversation.current_node : undefined
+      if (typeof currentNode === 'string') parentMessageId = currentNode
     }
-    parent ??= randomUUID()
+    parentMessageId ??= randomUUID()
 
-    const msgs = messages ?? [message ?? this.userMessage(text, rest)]
-    const chosenModel = model ?? (await this.defaultModel())
-    const body = this.turnRequest({ ...rest, messages: msgs, model: chosenModel, parentMessageId: parent, conversationId })
+    const messages = options.messages ?? [options.message ?? this.userMessage(options.text ?? '', {
+      attachments: options.attachments,
+      metadata: options.metadata,
+    })]
+    if (messages.length === 0) throw new ProtocolError('A turn must contain at least one message', { code: 'EMPTY_TURN' })
+    const model = options.model ?? (await this.defaultModel({ signal: options.signal }))
+    const body = this.turnRequest({ ...options, messages, model, parentMessageId })
+    const integrity = options.integrity ?? (await this.prepareIntegrity({ signal: options.signal }))
+    const conduitToken = await this.prepareConversationStream(body, { signal: options.signal })
 
-    const sentinel = integrity ?? (await this.prepareIntegrity())
-    const conduitToken = await this.prepareConversationStream(body)
-
-    const res = await this.conversationStream(
-      { ...body, client_prepare_state: conduitToken ? 'success' : 'failure' },
-      {
-        headers: {
-          ...sentinel.headers,
-          ...(conduitToken ? { 'x-conduit-token': conduitToken } : {}),
-        },
-        signal,
+    return this.call('conversationStream', { ...body, client_prepare_state: conduitToken === null ? 'failure' : 'success' }, {
+      headers: {
+        ...integrity.headers,
+        ...(conduitToken === null ? {} : { 'x-conduit-token': conduitToken }),
       },
-    )
-    return res
-  }
-
-  /** Reconnect to an in-flight turn (POST /f/conversation/resume). */
-  resumeTurn(body, { conduitToken, signal } = {}) {
-    return this.resumeConversationStream(body, {
-      headers: conduitToken ? { 'x-conduit-token': conduitToken } : {},
-      signal,
+      ...(options.signal === undefined ? {} : { signal: options.signal }),
     })
   }
 
-  /** Decoded turn events: `{event, data}` with `data` parsed when it is JSON. */
-  async *streamEvents(res) {
-    for await (const { event, data } of sseEvents(res)) {
-      if (data === '[DONE]') return
-      let parsed
+  resumeTurn(body: UnknownRecord, options: { conduitToken?: string; signal?: AbortSignal } = {}): Promise<Response> {
+    return this.call('resumeConversationStream', body, {
+      headers: options.conduitToken === undefined ? {} : { 'x-conduit-token': options.conduitToken },
+      ...(options.signal === undefined ? {} : { signal: options.signal }),
+    })
+  }
+
+  async *streamEvents(response: Response, options: { signal?: AbortSignal } = {}): AsyncGenerator<{ event: string | null; data: unknown }> {
+    for await (const item of sseEvents(response, {
+      maxLineBytes: this.http.config.limits.streamLineBytes,
+      maxEventBytes: this.http.config.limits.streamEventBytes,
+      ...(options.signal === undefined ? {} : { signal: options.signal }),
+    })) {
+      if (item.data === '[DONE]') return
       try {
-        parsed = JSON.parse(data)
+        yield { event: item.event, data: JSON.parse(item.data) as unknown }
       } catch {
-        parsed = data
+        yield { event: item.event, data: item.data }
       }
-      yield { event, data: parsed }
     }
   }
 
-  /**
-   * Highest-level send: yields `{type}` records.
-   *   {type:'delta', text}      assistant text as it arrives
-   *   {type:'meta', conversationId, messageId}
-   *   {type:'event', event, data} everything else, for callers that want it
-   * Handles both the classic full-message encoding and the compact v1 patch encoding.
-   */
-  async *send(opts) {
-    const res = await this.startTurn(opts)
-    let printed = ''
+  /** Starts a turn and yields bounded decoded events until completion or cancellation. */
+  async *send(options: StartTurnOptions = {}): AsyncGenerator<SendEvent> {
+    const response = await this.startTurn(options)
+    let previousFullText = ''
     let lastPath = ''
-    let conversationId = opts.conversationId ?? null
+    let conversationId = options.conversationId ?? null
 
-    const emitPatch = function* (path, value) {
-      if (typeof value !== 'string') return
-      if (path === '' || /\/parts\/\d+$/.test(path)) yield { type: 'delta', text: value }
-    }
-
-    for await (const { event, data: obj } of this.streamEvents(res)) {
-      if (typeof obj !== 'object' || obj === null) {
-        yield { type: 'event', event, data: obj }
+    for await (const { event, data } of this.streamEvents(response, { signal: options.signal })) {
+      if (!isRecord(data)) {
+        yield { type: 'event', event, data }
         continue
       }
-      const cid = obj.conversation_id ?? obj.v?.conversation_id
-      if (cid && cid !== conversationId) {
-        conversationId = cid
-        yield { type: 'meta', conversationId, messageId: obj.message_id ?? obj.v?.message?.id ?? null }
+
+      const nested = isRecord(data.v) ? data.v : undefined
+      const candidateConversationId = data.conversation_id ?? nested?.conversation_id
+      if (typeof candidateConversationId === 'string' && candidateConversationId !== conversationId) {
+        conversationId = candidateConversationId
+        const nestedMessage = isRecord(nested?.message) ? nested.message : undefined
+        const messageId = typeof data.message_id === 'string'
+          ? data.message_id
+          : typeof nestedMessage?.id === 'string'
+            ? nestedMessage.id
+            : null
+        yield { type: 'meta', conversationId, messageId }
       }
 
-      // classic encoding: a whole message object per tick
-      const msg = obj.message ?? obj.v?.message
-      if (msg?.author?.role === 'assistant' && msg.content?.content_type === 'text') {
-        const full = (msg.content.parts ?? []).join('')
-        if (full.startsWith(printed)) {
-          const delta = full.slice(printed.length)
-          printed = full
-          if (delta) yield { type: 'delta', text: delta }
+      const messageValue = isRecord(data.message) ? data.message : isRecord(nested?.message) ? nested.message : undefined
+      if (messageValue !== undefined && isRecord(messageValue.author) && messageValue.author.role === 'assistant' && isRecord(messageValue.content)) {
+        const parts = messageValue.content.parts
+        if (messageValue.content.content_type === 'text' && Array.isArray(parts)) {
+          const full = parts.filter((part): part is string => typeof part === 'string').join('')
+          if (full.startsWith(previousFullText)) {
+            const delta = full.slice(previousFullText.length)
+            previousFullText = full
+            if (delta !== '') yield { type: 'delta', text: delta }
+          } else {
+            previousFullText = full
+          }
+          continue
         }
-        continue
       }
 
-      // v1 delta encoding: {p, o, v}, an omitted `p` repeating the previous path
-      if (typeof obj.p === 'string') lastPath = obj.p
-      const path = typeof obj.p === 'string' ? obj.p : lastPath
-      if (typeof obj.v === 'string') {
-        yield* emitPatch(path, obj.v)
-      } else if (Array.isArray(obj.v)) {
-        for (const patch of obj.v) yield* emitPatch(patch?.p ?? path, patch?.v)
+      if (typeof data.p === 'string') lastPath = data.p
+      const path = typeof data.p === 'string' ? data.p : lastPath
+      if (typeof data.v === 'string') {
+        if (isTextPatch(path)) yield { type: 'delta', text: data.v }
+      } else if (Array.isArray(data.v)) {
+        for (const patch of data.v) {
+          if (!isRecord(patch) || typeof patch.v !== 'string') continue
+          const patchPath = typeof patch.p === 'string' ? patch.p : path
+          if (isTextPatch(patchPath)) yield { type: 'delta', text: patch.v }
+        }
       } else {
-        yield { type: 'event', event, data: obj }
+        yield { type: 'event', event, data }
       }
     }
     yield { type: 'done', conversationId }
   }
 
-  // -------------------------------------------------------------------------
-  // files
-  // -------------------------------------------------------------------------
+  /** Uploads bytes and finalizes an attachment without forwarding account headers to signed URLs. */
+  async uploadFile(options: UploadFileOptions): Promise<Attachment> {
+    const bytes = options.bytes instanceof Uint8Array ? options.bytes : new Uint8Array(options.bytes)
+    if (bytes.byteLength > this.http.config.limits.uploadBytes) {
+      throw new ProtocolError(`Upload exceeds ${this.http.config.limits.uploadBytes} bytes`, {
+        code: 'UPLOAD_TOO_LARGE',
+        details: { bytes: bytes.byteLength, maxBytes: this.http.config.limits.uploadBytes },
+      })
+    }
+    if (options.fileName.trim() === '') throw new ProtocolError('fileName cannot be empty', { code: 'INVALID_FILE_NAME' })
 
-  /**
-   * The app's three-step upload (app-initial-*.js: Vbs / uploadFileBytes / finalizeFileUpload):
-   *   1. POST /files                      -> {file_id, upload_url}
-   *   2. PUT the bytes to upload_url      (Azure blob, or one of two Estuary variants)
-   *   3. POST /files/{file_id}/uploaded   -> the asset the message can reference
-   */
-  async uploadFile({ bytes, fileName, contentType = 'application/octet-stream', useCase = 'codex', resetRateLimits = false }) {
-    const data = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes)
-    const created = await this.createFile({
-      file_name: fileName,
-      file_size: data.byteLength,
-      use_case: useCase,
+    const created = await this.call('createFile', {
+      file_name: options.fileName,
+      file_size: bytes.byteLength,
+      use_case: options.useCase ?? 'codex',
       timezone_offset_min: new Date().getTimezoneOffset(),
-      reset_rate_limits: resetRateLimits,
+      reset_rate_limits: options.resetRateLimits ?? false,
+    }, { signal: options.signal })
+    if (!isRecord(created) || typeof created.file_id !== 'string' || typeof created.upload_url !== 'string') {
+      throw new ProtocolError('File creation response omitted file_id or upload_url', { code: 'INVALID_FILE_CREATE_RESPONSE' })
+    }
+
+    await this.uploadFileBytes({
+      uploadUrl: created.upload_url,
+      bytes,
+      contentType: options.contentType ?? 'application/octet-stream',
+      fileName: options.fileName,
+      signal: options.signal,
     })
-    await this.uploadFileBytes({ uploadUrl: created.upload_url, bytes: data, contentType, fileName })
-    const finalized = await this.finalizeFileUpload({ file_id: created.file_id })
-    return { file_id: created.file_id, ...finalized }
+    const finalized = await this.call('finalizeFileUpload', { file_id: created.file_id }, { signal: options.signal })
+    return { file_id: created.file_id, ...(isRecord(finalized) ? finalized : {}) }
   }
 
-  /** Step 2 on its own — the URL shape decides which of the three transports is used. */
-  async uploadFileBytes({ uploadUrl, bytes, contentType, fileName = 'upload.bin' }) {
-    const url = new URL(uploadUrl, 'https://chatgpt.com')
-
-    // Estuary multipart variant
+  async uploadFileBytes(options: {
+    uploadUrl: string
+    bytes: Uint8Array
+    contentType: string
+    fileName?: string
+    signal?: AbortSignal
+  }): Promise<void> {
+    const url = new URL(options.uploadUrl, 'https://chatgpt.com')
     if (url.pathname.endsWith('/estuary/upload_content_bytes')) {
-      const boundary = `----codex-estuary-${randomUUID()}`
-      const head = Buffer.from(
-        `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${fileName}"\r\n` +
-          `Content-Type: ${contentType}\r\n\r\n`,
-        'utf8',
-      )
-      const tail = Buffer.from(`\r\n--${boundary}--\r\n`, 'utf8')
-      const res = await this.http.request('POST', uploadUrl, {
-        body: Buffer.concat([head, Buffer.from(bytes), tail]),
-        raw: true,
-        headers: { 'Content-Type': `multipart/form-data; boundary=${boundary}` },
+      const form = new FormData()
+      form.append('file', new Blob([options.bytes], { type: options.contentType }), options.fileName ?? 'upload.bin')
+      const response = await this.http.request('POST', options.uploadUrl, {
+        body: form,
+        rawBody: true,
+        retry: false,
+        ...(options.signal === undefined ? {} : { signal: options.signal }),
       })
-      if (!res.ok) throw new HttpError('POST', uploadUrl, res.status, await res.text())
+      if (!response.ok) {
+        const text = await this.http.readText(response, { operation: 'file upload error body', ...(options.signal === undefined ? {} : { signal: options.signal }) })
+        throw new HttpError({ method: 'POST', url: options.uploadUrl, status: response.status, bodyPreview: text.slice(0, 1_200) })
+      }
       return
     }
 
-    // _ya(): the finalize variant carries the real destination in ?upload_url=
-    let target = uploadUrl
+    let target = options.uploadUrl
     if (url.pathname.endsWith('/estuary/upload_content_and_finalize')) {
       const inner = url.searchParams.get('upload_url')
-      if (inner == null) throw new Error('ChatGPT Estuary upload URL is missing upload_url')
+      if (inner === null) throw new ProtocolError('Estuary upload URL is missing upload_url', { code: 'INVALID_UPLOAD_URL' })
       target = inner
     } else if (url.pathname.includes('/estuary/')) {
-      throw new Error(`Unsupported ChatGPT Estuary upload URL: ${url.pathname}`)
+      throw new ProtocolError(`Unsupported Estuary upload URL: ${url.pathname}`, { code: 'UNSUPPORTED_UPLOAD_URL' })
     }
 
-    // Azure blob PUT. The app base64s the body because it crosses the IPC bridge and sets
-    // x-codex-base64; in-process we can send the bytes directly.
-    const res = await this.http.request('PUT', target, {
-      body: Buffer.from(bytes),
-      raw: true,
+    const response = await this.http.request('PUT', target, {
+      body: options.bytes,
+      rawBody: true,
+      sendAuth: false,
       headers: {
-        'Content-Type': contentType,
+        'Content-Type': options.contentType,
         'x-ms-blob-type': 'BlockBlob',
         'x-ms-version': '2020-04-08',
-        ...(contentType ? { 'x-ms-blob-content-type': contentType } : {}),
-        // the blob endpoint rejects our auth headers
-        Authorization: undefined,
-        'ChatGPT-Account-Id': undefined,
-        Origin: undefined,
-        Referer: undefined,
+        'x-ms-blob-content-type': options.contentType,
       },
+      ...(options.signal === undefined ? {} : { signal: options.signal }),
     })
-    if (!res.ok) throw new HttpError('PUT', target, res.status, await res.text())
+    if (!response.ok) {
+      const text = await this.http.readText(response, { operation: 'file upload error body', ...(options.signal === undefined ? {} : { signal: options.signal }) })
+      throw new HttpError({ method: 'PUT', url: target, status: response.status, bodyPreview: text.slice(0, 1_200) })
+    }
   }
 
-  /** NDJSON progress stream used when a file has to be processed after upload. */
-  async *processUpload(body) {
-    const res = await this.processFileUploadStream(body)
-    for await (const record of ndjson(res)) yield record
+  async *processUpload(body: UnknownRecord, options: { signal?: AbortSignal } = {}): AsyncGenerator<NdjsonRecord> {
+    const response = await this.call('processFileUploadStream', body, { signal: options.signal })
+    for await (const record of ndjson(response, {
+      maxLineBytes: this.http.config.limits.streamLineBytes,
+      ...(options.signal === undefined ? {} : { signal: options.signal }),
+    })) yield record
   }
 
-  /** Fetch an uploaded/generated file's bytes. */
-  async downloadFile(fileId) {
-    const info = await this.getFileDownloadUrl({ file_id: fileId })
-    const url = info?.download_url ?? info?.url
-    if (!url) throw new Error(`No download url for ${fileId}`)
-    const res = await fetch(url)
-    if (!res.ok) throw new Error(`GET ${url} -> ${res.status}`)
-    return { info, bytes: new Uint8Array(await res.arrayBuffer()) }
+  /** Downloads a file into memory up to the configured download byte limit. */
+  async downloadFile(fileId: string, options: { signal?: AbortSignal } = {}): Promise<{ info: UnknownRecord; bytes: Uint8Array }> {
+    const infoValue = await this.call('getFileDownloadUrl', { file_id: fileId }, { signal: options.signal })
+    if (!isRecord(infoValue)) throw new ProtocolError(`Invalid download metadata for ${fileId}`, { code: 'INVALID_DOWNLOAD_RESPONSE' })
+    const url = typeof infoValue.download_url === 'string' ? infoValue.download_url : typeof infoValue.url === 'string' ? infoValue.url : null
+    if (url === null) throw new ProtocolError(`No download URL for ${fileId}`, { code: 'DOWNLOAD_URL_MISSING' })
+    const response = await this.http.request('GET', url, {
+      sendAuth: false,
+      retry: true,
+      ...(options.signal === undefined ? {} : { signal: options.signal }),
+    })
+    if (!response.ok) {
+      const text = await this.http.readText(response, { operation: 'file download error body', ...(options.signal === undefined ? {} : { signal: options.signal }) })
+      throw new HttpError({ method: 'GET', url, status: response.status, bodyPreview: text.slice(0, 1_200) })
+    }
+    const bytes = await this.http.readBytes(response, {
+      maxBytes: this.http.config.limits.downloadBytes,
+      operation: `download ${fileId}`,
+      ...(options.signal === undefined ? {} : { signal: options.signal }),
+    })
+    return { info: infoValue, bytes }
   }
 
-  // -------------------------------------------------------------------------
-  // conveniences over the raw routes
-  // -------------------------------------------------------------------------
-
-  async defaultModel() {
-    const models = await this.getModels({ history_and_training_disabled: false })
-    const list = models?.models ?? []
-    return list.find((m) => m.slug?.startsWith('gpt-5'))?.slug ?? list[0]?.slug ?? 'gpt-5'
+  async defaultModel(options: { signal?: AbortSignal; refresh?: boolean } = {}): Promise<string> {
+    if (options.refresh !== true && this.modelCache !== undefined && this.modelCache.expiresAt > Date.now()) return this.modelCache.value
+    const response = await this.call('getModels', { history_and_training_disabled: false }, { signal: options.signal })
+    const models = isRecord(response) && Array.isArray(response.models) ? response.models : []
+    const entries = models.filter(isRecord)
+    const preferred = entries.find((model) => typeof model.slug === 'string' && model.slug.startsWith('gpt-5'))
+    const fallback = entries.find((model) => typeof model.slug === 'string')
+    const value = typeof preferred?.slug === 'string' ? preferred.slug : typeof fallback?.slug === 'string' ? fallback.slug : 'gpt-5'
+    this.modelCache = { value, expiresAt: Date.now() + this.modelCacheMs }
+    return value
   }
 
-  setConversationArchived(conversationId, isArchived = true) {
-    return this.patchConversation({ conversation_id: conversationId, is_archived: isArchived })
+  /** Gets memory entries and token accounting for the current user. */
+  async getUserMemories(options: { signal?: AbortSignal } = {}): Promise<UserMemoriesResponse> {
+    const response = await this.call('getUserMemories', { include_memory_entries: true }, { signal: options.signal })
+    if (
+      !isRecord(response) ||
+      !Array.isArray(response.memories) ||
+      typeof response.memory_max_tokens !== 'number' ||
+      typeof response.memory_num_tokens !== 'number'
+    ) {
+      throw new ProtocolError('User memories response is invalid', { code: 'INVALID_MEMORIES_RESPONSE' })
+    }
+    const memories = response.memories.map((memory, index): UserMemory => parseUserMemory(memory, index))
+    return {
+      ...response,
+      memories,
+      memory_max_tokens: response.memory_max_tokens,
+      memory_num_tokens: response.memory_num_tokens,
+    }
   }
 
-  setConversationStarred(conversationId, isStarred = true) {
-    return this.patchConversation({ conversation_id: conversationId, is_starred: isStarred })
+  /** Generates ChatGPT's sectioned About You summary for the current user. */
+  async getUserMemorySummary(options: { signal?: AbortSignal } = {}): Promise<UserMemorySummaryResponse> {
+    const response = await this.call('getUserMemorySummary', {}, { signal: options.signal })
+    if (
+      !isRecord(response) ||
+      !Array.isArray(response.sections) ||
+      typeof response.generatedAtIso !== 'string' ||
+      typeof response.emptyStateMessage !== 'string' ||
+      typeof response.sourceChecksum !== 'string'
+    ) {
+      throw new ProtocolError('User memory summary response is invalid', { code: 'INVALID_MEMORY_SUMMARY_RESPONSE' })
+    }
+    const sections = response.sections.map((section, index): UserMemorySummarySection => parseMemorySummarySection(section, index))
+    return {
+      ...response,
+      sections,
+      generatedAtIso: response.generatedAtIso,
+      emptyStateMessage: response.emptyStateMessage,
+      sourceChecksum: response.sourceChecksum,
+    }
   }
 
-  setConversationVisible(conversationId, visible) {
-    return this.patchConversation({ conversation_id: conversationId, is_visible: visible })
+  setConversationArchived(conversationId: string, isArchived = true): Promise<unknown> {
+    return this.call('patchConversation', { conversation_id: conversationId, is_archived: isArchived })
   }
 
-  setPinnedItem(itemType, itemId, pinned = true) {
-    return pinned ? this.addPin({ item_type: itemType, item_id: itemId }) : this.removePin({ item_type: itemType, item_id: itemId })
+  setConversationStarred(conversationId: string, isStarred = true): Promise<unknown> {
+    return this.call('patchConversation', { conversation_id: conversationId, is_starred: isStarred })
   }
 
-  setAccountVoice(voice) {
-    return this.patchAccountUserSetting({ feature: 'voice_name', value: voice })
+  setConversationVisible(conversationId: string, visible: boolean): Promise<unknown> {
+    return this.call('patchConversation', { conversation_id: conversationId, is_visible: visible })
   }
 
-  setUltraEffortEnabled(enabled) {
-    return this.patchAccountUserSetting({ feature: 'model_picker_persists_ultra_effort', value: enabled })
+  setPinnedItem(itemType: string, itemId: string, pinned = true): Promise<unknown> {
+    return pinned
+      ? this.call('addPin', { item_type: itemType, item_id: itemId })
+      : this.call('removePin', { item_type: itemType, item_id: itemId })
   }
 
-  optOutOfTrustedContactPrompts() {
-    return this.patchAccountUserSetting({ feature: 'trusted_contacts_opted_out_at', value: true })
+  setAccountVoice(voice: string): Promise<unknown> {
+    return this.call('patchAccountUserSetting', { feature: 'voice_name', value: voice })
   }
 
-  share(conversationId, { v2 = true, ...rest } = {}) {
+  setUltraEffortEnabled(enabled: boolean): Promise<unknown> {
+    return this.call('patchAccountUserSetting', { feature: 'model_picker_persists_ultra_effort', value: enabled })
+  }
+
+  optOutOfTrustedContactPrompts(): Promise<unknown> {
+    return this.call('patchAccountUserSetting', { feature: 'trusted_contacts_opted_out_at', value: true })
+  }
+
+  share(conversationId: string, options: UnknownRecord & { v2?: boolean } = {}): Promise<unknown> {
+    const { v2 = true, ...rest } = options
     const body = { conversation_id: conversationId, is_anonymous: true, ...rest }
-    return v2 ? this.createShareLinkV2(body) : this.createShareLink(body)
+    return v2 ? this.call('createShareLinkV2', body) : this.call('createShareLink', body)
   }
 
-  /**
-   * `/wham/apps` is an MCP host behind one endpoint: the body is a JSON-RPC envelope
-   * rather than a plain payload, so both calls are wrapped here.
-   */
-  async listAppTools(params = {}) {
-    return this.whamApps({ id: 1, jsonrpc: '2.0', method: 'tools/list', params })
+  listAppTools(params: UnknownRecord = {}): Promise<unknown> {
+    return this.call('whamApps', { id: 1, jsonrpc: '2.0', method: 'tools/list', params })
   }
 
-  async callAppTool(name, args = {}, { id = 1 } = {}) {
-    return this.whamApps({ id, jsonrpc: '2.0', method: 'tools/call', params: { name, arguments: args } })
+  callAppTool(name: string, args: UnknownRecord = {}, options: { id?: number | string } = {}): Promise<unknown> {
+    return this.call('whamApps', {
+      id: options.id ?? 1,
+      jsonrpc: '2.0',
+      method: 'tools/call',
+      params: { name, arguments: args },
+    })
   }
 
-  /** The other MCP host — connectors reachable from a normal (non-work) chat. */
-  async callConnectorMcp(body) {
-    return this.ecosystemCallMcp(body)
+  callConnectorMcp(body: UnknownRecord): Promise<unknown> {
+    return this.call('ecosystemCallMcp', body)
   }
 
-  /** Walk a conversation's message tree from current_node back to the root. */
-  static messageChain(conversation, { from } = {}) {
-    const chain = []
-    const mapping = conversation?.mapping ?? {}
-    for (let node = from ?? conversation?.current_node; node; node = mapping[node]?.parent) {
-      const msg = mapping[node]?.message
-      if (msg) chain.unshift(msg)
+  /** Returns the active message chain and rejects cyclic conversation mappings. */
+  static messageChain(conversation: Conversation, options: { from?: string } = {}): ConversationMessage[] {
+    const chain: ConversationMessage[] = []
+    const mapping = conversation.mapping ?? {}
+    const seen = new Set<string>()
+    let node = options.from ?? conversation.current_node
+    while (node !== undefined && node !== null && node !== '') {
+      if (seen.has(node)) throw new ProtocolError(`Conversation mapping contains a cycle at ${node}`, { code: 'CONVERSATION_CYCLE' })
+      seen.add(node)
+      const current = mapping[node]
+      if (current === undefined) break
+      if (current.message !== undefined && current.message !== null) chain.unshift(current.message)
+      node = current.parent ?? undefined
     }
     return chain
   }
 
-  static renderParts(parts) {
-    return (parts ?? [])
-      .map((p) => (typeof p === 'string' ? p : `<${p.content_type ?? 'asset'}: ${p.asset_pointer ?? ''}>`))
-      .join('')
+  static renderParts(parts: unknown[] | undefined): string {
+    return (parts ?? []).map((part) => {
+      if (typeof part === 'string') return part
+      if (!isRecord(part)) return '<asset>'
+      const contentType = typeof part.content_type === 'string' ? part.content_type : 'asset'
+      const pointer = typeof part.asset_pointer === 'string' ? part.asset_pointer : ''
+      return `<${contentType}: ${pointer}>`
+    }).join('')
   }
 
-  /** Every conversation, paging until the server stops returning items. */
-  async *iterateConversations({ pageSize = 50, ...filters } = {}) {
+  /** Paginates conversation summaries lazily with a page size from 1 through 100. */
+  async *iterateConversations(options: { pageSize?: number; signal?: AbortSignal } & UnknownRecord = {}): AsyncGenerator<UnknownRecord> {
+    const { pageSize = 50, signal, ...filters } = options
+    if (!Number.isSafeInteger(pageSize) || pageSize < 1 || pageSize > 100) throw new RangeError('pageSize must be an integer between 1 and 100')
     for (let offset = 0; ; offset += pageSize) {
-      const page = await this.listConversations({ limit: pageSize, offset, order: 'updated', ...filters })
-      const items = page?.items ?? []
+      signal?.throwIfAborted()
+      const response = await this.call('listConversations', { limit: pageSize, offset, order: 'updated', ...filters }, { signal })
+      const items = isRecord(response) && Array.isArray(response.items) ? response.items.filter(isRecord) : []
       for (const item of items) yield item
       if (items.length < pageSize) return
     }
   }
 }
 
-// Attach one method per catalogued route.
-for (const name of Object.keys(ROUTES)) {
-  if (name in ChatGPTClient.prototype) throw new Error(`Route name collides with a client method: ${name}`)
-  ChatGPTClient.prototype[name] = function (args, opts) {
-    return this.call(name, args, opts)
+function parseUserMemory(value: unknown, index: number): UserMemory {
+  if (
+    !isRecord(value) ||
+    typeof value.id !== 'string' ||
+    typeof value.content !== 'string' ||
+    typeof value.updated_at !== 'string' ||
+    !(typeof value.gizmo_id === 'string' || value.gizmo_id === null) ||
+    typeof value.status !== 'string' ||
+    !(typeof value.conversation_id === 'string' || value.conversation_id === null) ||
+    !(typeof value.created_timestamp === 'number' || value.created_timestamp === null) ||
+    !(isRecord(value.last_updated) || value.last_updated === null) ||
+    !(Array.isArray(value.labels) || value.labels === null)
+  ) {
+    throw new ProtocolError(`User memory at index ${index} is invalid`, { code: 'INVALID_MEMORY', details: { index } })
+  }
+  return {
+    ...value,
+    id: value.id,
+    content: value.content,
+    updated_at: value.updated_at,
+    gizmo_id: value.gizmo_id,
+    status: value.status,
+    conversation_id: value.conversation_id,
+    created_timestamp: value.created_timestamp,
+    last_updated: value.last_updated,
+    labels: value.labels,
   }
 }
 
-export { resolveApiBase, ROUTES }
+function parseMemorySummarySection(value: unknown, index: number): UserMemorySummarySection {
+  if (!isRecord(value) || typeof value.id !== 'string' || typeof value.title !== 'string' || typeof value.description !== 'string') {
+    throw new ProtocolError(`User memory summary section at index ${index} is invalid`, {
+      code: 'INVALID_MEMORY_SUMMARY_SECTION',
+      details: { index },
+    })
+  }
+  if (value.followUps !== undefined && !Array.isArray(value.followUps)) {
+    throw new ProtocolError(`User memory summary follow-ups at section ${index} are invalid`, {
+      code: 'INVALID_MEMORY_SUMMARY_FOLLOW_UPS',
+      details: { index },
+    })
+  }
+  const followUps = value.followUps?.map((followUp, followUpIndex): UserMemorySummaryFollowUp => {
+    if (
+      !isRecord(followUp) ||
+      typeof followUp.preview !== 'string' ||
+      typeof followUp.prompt !== 'string' ||
+      typeof followUp.action !== 'string'
+    ) {
+      throw new ProtocolError(`User memory summary follow-up ${followUpIndex} at section ${index} is invalid`, {
+        code: 'INVALID_MEMORY_SUMMARY_FOLLOW_UP',
+        details: { index, followUpIndex },
+      })
+    }
+    return { ...followUp, preview: followUp.preview, prompt: followUp.prompt, action: followUp.action }
+  })
+  return {
+    ...value,
+    id: value.id,
+    title: value.title,
+    description: value.description,
+    ...(followUps === undefined ? {} : { followUps }),
+  }
+}
+
+function isTextPatch(path: string): boolean {
+  return path === '' || /\/parts\/\d+$/.test(path)
+}
+
+function isRecord(value: unknown): value is UnknownRecord {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}

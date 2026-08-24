@@ -1,4 +1,14 @@
-// @ts-nocheck
+import type { HeaderInput, HttpMethod, JsonValue, StreamFormat, UnknownRecord } from './types.js'
+
+export interface RouteDefinition {
+  method: HttpMethod
+  path: string
+  query?: readonly string[]
+  body?: boolean | readonly string[]
+  stream?: StreamFormat
+  headers?: HeaderInput
+}
+
 // Declarative catalog of every backend-api route the app's renderer can call.
 //
 // Extracted from webview/assets/app-initial-*.js (the `safeGet/safePost/safePatch/safeDelete/
@@ -15,8 +25,8 @@
 //   stream  'sse' | 'ndjson' — returns a Response instead of parsed JSON
 //   headers extra static headers
 //
-// client.js turns each entry into a method of the same name, so anything listed here is
-// callable as `client.<name>({...})` and from the CLI as `api <name> --key=value`.
+// `createRouteApi` turns each entry into a method of the same name, so anything listed here is
+// callable as `client.routes.<name>({...})` and from the CLI as `api <name> --key=value`.
 
 export const ROUTES = {
   // ---------------------------------------------------------------------------
@@ -142,6 +152,8 @@ export const ROUTES = {
   // settings & account
   // ---------------------------------------------------------------------------
   getUserSettings: { method: 'GET', path: '/settings/user' },
+  getUserMemories: { method: 'GET', path: '/memories', query: ['include_memory_entries'] },
+  getUserMemorySummary: { method: 'POST', path: '/memories/about_you/summary' },
   getVoices: { method: 'GET', path: '/settings/voices' },
   patchAccountUserSetting: { method: 'PATCH', path: '/settings/account_user_setting', query: ['feature', 'value'] },
   accountsCheck: { method: 'GET', path: '/accounts/check/{version}' },
@@ -270,11 +282,42 @@ export const ROUTES = {
   whamApps: { method: 'POST', path: '/wham/apps', body: true },
   whamGoogleDriveUpload: { method: 'POST', path: '/wham/apps/google_drive/upload', body: true },
   whamAnalyticsEvents: { method: 'POST', path: '/wham/analytics-events/events', body: true },
-}
-
+} as const satisfies Record<string, RouteDefinition>
 /** Route names grouped for `--help` output, in catalog order. */
 export const ROUTE_NAMES = Object.keys(ROUTES)
 
-export function routePathParams(template) {
-  return [...template.matchAll(/\{(\w+)\}/g)].map((m) => m[1])
+export function routePathParams(template: string): string[] {
+  return [...template.matchAll(/\{(\w+)\}/g)].flatMap((match) => match[1] === undefined ? [] : [match[1]])
 }
+
+export type RouteName = keyof typeof ROUTES
+export type Route = (typeof ROUTES)[RouteName]
+
+
+export type RoutePathParameter<Path extends string> =
+  Path extends `${string}{${infer Parameter}}${infer Rest}`
+    ? Parameter | RoutePathParameter<Rest>
+    : never
+
+type RouteQueryKey<Definition> = Definition extends { query: readonly (infer Key extends string)[] } ? Key : never
+type RouteBodyKey<Definition> = Definition extends { body: readonly (infer Key extends string)[] } ? Key : never
+type RoutePathArguments<Definition extends RouteDefinition> = {
+  [Key in RoutePathParameter<Definition['path']>]: string | number
+}
+type RouteQueryArguments<Definition> = {
+  [Key in RouteQueryKey<Definition>]?: JsonValue | undefined
+}
+type RouteBodyArguments<Definition> = Definition extends { body: true }
+  ? UnknownRecord
+  : { [Key in RouteBodyKey<Definition>]?: JsonValue | undefined }
+type Simplify<Value> = { [Key in keyof Value]: Value[Key] } & {}
+
+/** Arguments inferred from a catalog entry. Path parameters are required; query/body fields are optional. */
+export type RouteArgumentsFor<Name extends RouteName> = Simplify<
+  RoutePathArguments<(typeof ROUTES)[Name]> &
+  RouteQueryArguments<(typeof ROUTES)[Name]> &
+  RouteBodyArguments<(typeof ROUTES)[Name]>
+>
+
+export type RouteRequiresArguments<Name extends RouteName> =
+  [RoutePathParameter<(typeof ROUTES)[Name]['path']>] extends [never] ? false : true

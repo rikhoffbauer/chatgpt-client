@@ -1,235 +1,240 @@
-# chatgpt-poc
+# ChatGPT Desktop Client
 
-A complete client for the protocol behind `/Applications/ChatGPT.app` (the Electron app formerly
-shipped as Codex). It speaks to `https://chatgpt.com/backend-api` exactly the way the app does:
-same credentials, same header persona, same anti-abuse handshake, same streaming formats — plus a
-bridge to the local `codex app-server` binary for the half of the app that never touches HTTP.
+An unofficial, strict-TypeScript client and CLI for the protocol surfaces used by the ChatGPT desktop application and its local Codex `app-server` process.
 
-Bun 1.3+ or Node.js 22+, zero runtime dependencies. The source is TypeScript and compiles to Node-compatible ESM. Everything below is built on `fetch`, `WebSocket`, `node:crypto`,
-`node:child_process` and `node:readline`.
+This repository turns the original exploratory client into a bounded, testable implementation with explicit lifecycle management. It is not an OpenAI-supported SDK. Private backend routes can change without notice and may require account features that are not enabled for every user.
 
-## Credentials
+## What is implemented
 
-Tokens are read from `~/.codex/auth.json`, the store the app itself writes after OAuth login. The
-client reads it programmatically, keeps the tokens in memory, never prints them, and never writes
-the file back — so the app's own session stays intact. If the access token is within 60s of expiry
-(or a request comes back 401), it refreshes against `https://auth.openai.com/oauth/token` in memory
-and replays the request once.
+- Typed `ChatGPTClient` with 151 catalogued backend routes.
+- Higher-level conversation send/stream, upload, download, sharing, and history helpers.
+- OAuth token loading and refresh with concurrent-refresh deduplication.
+- Deadlines, cancellation, bounded retries, response-size limits, and redacted errors.
+- Bounded SSE, NDJSON, line, WebSocket, and JSON-RPC queues.
+- Local Codex `app-server` client with request timeouts and deterministic process shutdown.
+- Node and Chrome integrity adapters isolated under `src/protocol/`.
+- Dependency-free runtime; TypeScript and Node type declarations are development-only.
+- Offline tests for transport, streaming, client routing, CLI behavior, and app-server lifecycle.
 
-`ChatGPT-Account-Id` is not stored anywhere; it comes from the access token's own JWT claim
-`["https://api.openai.com/auth"].chatgpt_account_id`.
+## Requirements
 
-## Quick start
+- macOS for the default ChatGPT/Codex desktop integration.
+- Node.js 22 or newer for the verified build.
+- Bun 1.3 or newer for the preferred development workflow.
+- A signed-in ChatGPT or Codex installation providing `~/.codex/auth.json`.
 
-```sh
-bun run chatgpt-poc.ts whoami
-bun run chatgpt-poc.ts list --limit 10
-bun run chatgpt-poc.ts send "what is the capital of Sweden"
-bun run chatgpt-poc.ts send -c <conversation-id> -m gpt-5-5-thinking "and Norway?"
-```
+## Install
 
-## Architecture
-
-The app is three layers deep, and this client collapses them into one process:
-
-```
-React webview (zero network I/O)
-      │  Electron IPC
-main process fetch wrapper  ── strips marker headers, injects real credentials
-      │  HTTPS
-https://chatgpt.com/backend-api
-
-Rust `codex` binary ── owns OAuth tokens, serves app-server JSON-RPC over stdio
-```
-
-The renderer never holds a token. It sets marker headers (`X-OpenAI-Attach-Auth: 1`,
-`X-OpenAI-Attach-DeviceCheck-Token: 1`, …) and the main process swaps them for
-`Authorization: Bearer …`, `ChatGPT-Account-Id`, and the User-Agent before the request leaves.
-
-### Modules
-
-| file | what it owns |
-| --- | --- |
-| `src/auth.js` | `~/.codex/auth.json`, refresh, JWT claims, account id, device id |
-| `src/http.js` | request core, header personas, query building, SSE + NDJSON decoders |
-| `src/sentinel.js` | the integrity handshake: fingerprint, proof-of-work, turnstile dispatch |
-| `src/turnstile.js` | the `dx` challenge VM, ported from the app bundle |
-| `src/browser-env.js` | the minimal fake `window` the VM runs against |
-| `src/chrome-solver.js` | headless-Chrome fallback solver |
-| `src/routes.js` | declarative catalog of all 151 backend-api endpoints |
-| `src/client.js` | generated per-route methods plus the composite flows |
-| `src/realtime.js` | `/celsius/ws/user` push channel, dictation stream |
-| `src/appserver.js` | JSON-RPC bridge to the local `codex app-server` |
-| `src/cli.js` | the command line |
-| `src/index.js` | barrel export for library use |
-
-### Base URL
-
-`CODEX_API_BASE_URL` wins if set. Otherwise `CODEX_API_ENDPOINT=localhost` selects
-`http://localhost:8000/api`; the default is `https://chatgpt.com/backend-api`. `--base-url` overrides
-all of it.
-
-### Personas
-
-Two header identities, matching the two the app uses:
-
-- **browser** (default, `--persona browser`) — `originator: Codex Browser`, a Chrome 140 UA and the
-  matching `sec-ch-ua` set. This persona must solve sentinel challenges.
-- **desktop** (`--persona desktop`) — `originator: Codex Desktop`. The real app pairs this with an
-  Apple DeviceCheck attestation, which bypasses sentinel entirely. Without a signed binary you
-  cannot mint that token, so this persona is here for completeness rather than for use.
-
-## The anti-abuse handshake
-
-Despite the name people use for it, "turnstile" here is **not** Cloudflare — it is OpenAI's own
-`sentinel` system. A chat turn is gated on it:
-
-1. Build a 25-slot browser fingerprint array (`p`), base64 it behind the `gAAAAAC` prefix.
-2. `POST /sentinel/chat-requirements/prepare` with that `p`.
-3. The response asks for a proof-of-work (FNV-1a + murmur3 over a seed until the hash clears a
-   difficulty prefix) and often a `dx` payload — an XOR-encrypted program for a small register
-   machine that must run against a browser-shaped `window` and return a token.
-4. `POST /f/conversation/prepare` with the answers, receive a `conduit_token`.
-5. `POST /f/conversation` with that token and `client_prepare_state: 'success'`.
-
-`src/turnstile.js` interprets the VM in-process against the synthetic window in
-`src/browser-env.js`. When a challenge reaches for something that fake window doesn't have, pass
-`--solver chrome` and the whole thing is evaluated in a real headless Chrome instead.
-
-## Streaming
-
-Turn responses are SSE. The app requests `supported_encodings: ['v1']`, which switches deltas to
-compact JSON patches — `{p, o, v}` where `p` is a JSON-pointer path, `o` the operation, `v` the
-value, and an omitted `p` means "same path as last time". `client.send()` decodes that into a plain
-stream of `{type: 'delta' | 'meta' | 'event' | 'done'}`. `client.streamEvents(res)` gives you the
-raw events instead, and `send --raw` prints them.
-
-File-processing responses are NDJSON rather than SSE; `client.processUpload()` handles those.
-
-## Commands
-
-```
-conversations
-  list [--limit N] [--offset N] [--archived] [--starred] [--project ID]
-  read <id> [--json]              search <query>
-  send [-c ID] [-m MODEL] [--project ID] [--effort E] [--temporary]
-       [--attach FILE]... [--raw] [--json] <text>
-  rename <id> <title>             branch <id> <message_id>
-  archive <id> [--undo]           star <id> [--undo]           delete <id>
-  share <id> [--v1]               files <id>                   export <id> [--out FILE]
-
-account & config
-  whoami | models | settings | usage | pins
-
-files
-  upload <file> [--use-case codex]        download <file_id> [--out FILE]
-
-realtime
-  watch                          stream the /celsius/ws/user push channel
-
-app-server (local codex agent, JSON-RPC over stdio)
-  agent methods                  list every RPC method
-  agent call <method> [json]     one request
-  agent threads                  thread/list
-
-generic
-  api <route> [--key value|--key=value]...   call any catalogued endpoint
-  routes [filter]                            list the endpoint catalog
-
-global flags: --solver node|chrome   --base-url URL   --json   --persona browser|desktop
-```
-
-## The route catalog
-
-`src/routes.js` lists every endpoint the renderer can reach — 151 of them, covering conversations,
-streaming, models, files and library, projects and gizmos, sharing and pins, account and billing,
-connectors, the ecosystem/MCP surface, the Codex desktop surfaces, and the whole `/wham/*` cloud
-("work mode") surface: tasks, turns, environments, PRs, remote control, profiles, usage.
-
-Every path in the catalog was verified to appear verbatim in the shipped bundles
-(`webview/assets/app-initial-*.js` and `.vite/build/*.js`) — nothing here is guessed. Verbs come from
-the `safeGet` / `safePost` / `safePatch` / `safeDelete` / `streamPost` call site of each one.
-
-Each entry becomes a client method of the same name and a CLI subcommand:
+The project has no runtime dependencies.
 
 ```sh
-bun run chatgpt-poc.ts routes wham          # filter the catalog
-bun run chatgpt-poc.ts api getUserSettings
-bun run chatgpt-poc.ts api whamListTasks --limit=5
-bun run chatgpt-poc.ts api getConversation --conversation_id=<id>
+npm config get registry
+./scripts/fix-bun-npm-registry.sh --install
+bun install
+bun run verify
 ```
 
-Path `{placeholders}` are filled from the argument object, declared `query` keys become the query
-string, and everything left over becomes the JSON body.
+The registry helper adds a missing trailing slash to the effective npm registry in the environment before invoking npm/Bun. This matters for nested Artifactory npm registry paths.
 
-Two endpoints are MCP hosts rather than plain REST — `/wham/apps` and `/ecosystem/call_mcp` take a
-JSON-RPC envelope. `client.listAppTools()` and `client.callAppTool(name, args)` wrap the first.
+Node-only verification is also supported:
 
-## Uploads
-
-`client.uploadFile({bytes, fileName})` runs the full three-step dance: `POST /files` to register,
-then a body upload, then `POST /files/{id}/uploaded` to finalize. The middle step has three shapes
-depending on what the server hands back — an Azure Blob `PUT` with `x-ms-blob-type: BlockBlob` (auth
-headers suppressed, since the SAS URL carries its own), or one of two OpenAI "Estuary" variants
-(multipart `upload_content_bytes`, or `upload_content_and_finalize`). `send --attach FILE` uploads
-and attaches in one step.
-
-## Realtime
-
-- `openConversationSocket(client)` — `GET /celsius/ws/user` returns a `websocket_url`; the socket
-  then pushes base64-wrapped frames which the helper decodes. This is how the app learns about
-  conversations changing in other clients. `watch` prints the stream.
-- `openDictationStream(client)` — the voice-input socket, opened with the subprotocols
-  `['chatgpt-dictation', 'openai-bearer.<token>']`.
-
-## The local app-server
-
-Not everything the app does is HTTP. Local agent work — threads, turns with tool calls, sandboxed
-exec, config, MCP app hosting — goes to the Rust binary the app spawns:
-
-```
-codex -c features.code_mode_host=true app-server --analytics-default-enabled
+```sh
+npm install
+npm run verify
 ```
 
-It speaks newline-delimited JSON-RPC 2.0 over stdio (**not** Content-Length framed, despite looking
-like LSP), handshaking `initialize` → `initialized`. `src/appserver.js` wraps it:
+## CLI
 
-```js
-const server = await AppServer.start()
-server.onRequest(async (method) => ({ decision: 'decline' }))   // approval prompts
-for await (const msg of server.runTurn({ threadId, input })) console.log(msg.method)
-await server.close()
+Build and link the executable:
+
+```sh
+bun run build
+bun link
+chatgpt-client --help
 ```
 
-`APP_SERVER_METHODS` lists the RPCs it exports and `APP_SERVER_NOTIFICATIONS` the ones it pushes.
-Set `CODEX_BIN` to point at a different binary.
+Run from source while developing:
 
-## Library use
+```sh
+bun run src/bin.ts routes
+bun run src/bin.ts whoami --json
+bun run src/bin.ts list --limit 10
+bun run src/bin.ts send --json-stream "Explain bounded queues"
+```
 
-```js
-import { Auth, ChatGPTClient } from './src/index.ts'
+Common operations:
 
-const client = new ChatGPTClient({ auth: await Auth.load(), solver: 'node' })
-for await (const chunk of client.send({ text: 'hello' })) {
-  if (chunk.type === 'delta') process.stdout.write(chunk.text)
+```sh
+chatgpt-client models
+chatgpt-client read <conversation-id>
+chatgpt-client send -c <conversation-id> -m <model> "Continue"
+chatgpt-client send --attach ./notes.md "Summarize the attachment"
+chatgpt-client upload ./document.pdf
+chatgpt-client download <file-id> --out ./document.pdf
+chatgpt-client routes wham
+chatgpt-client api getConversation --conversation_id=<id> --json
+chatgpt-client agent methods
+chatgpt-client agent threads --limit 20
+```
+
+The CLI refuses to overwrite exported or downloaded files. `--json` emits structured output and structured errors. `--json-stream` emits one JSON object per streamed event and avoids buffering the full answer.
+
+## Library usage
+
+```ts
+import { ChatGPTClient } from 'chatgpt-client'
+
+const client = await ChatGPTClient.create()
+
+try {
+  const models = await client.routes.getModels({
+    history_and_training_disabled: false,
+  })
+
+  for await (const event of client.send({
+    text: 'Give me three concrete uses for AbortSignal.',
+  })) {
+    if (event.type === 'delta') process.stdout.write(event.text)
+  }
+
+  console.log(models)
+} finally {
+  client.close()
 }
 ```
 
-## Scope
+Path parameters are inferred as required by the route facade:
 
-This is a reverse-engineering exercise against the user's own account and their own installed app.
-It reads local credentials that already exist on the machine; it does not obtain, store, or transmit
-new ones. The sentinel work exists to make a legitimate first-party client interoperable, and every
-request it makes is one the installed app would make with the same account.
-
-
-## TypeScript development
-
-```sh
-bun install
-bun run check
-bun run build
-bun run chatgpt-poc.ts routes
+```ts
+await client.routes.getConversation({ conversation_id: 'conversation-id' })
+await client.routes.patchConversation({
+  conversation_id: 'conversation-id',
+  is_starred: true,
+})
 ```
 
-The generated `dist/` tree is Node.js-compatible ESM. Dynamic protocol payloads and the reverse-engineered challenge VM intentionally retain permissive internal typing; public module boundaries compile to declarations.
+The generic `call` API remains available for protocol exploration while retaining runtime validation:
+
+```ts
+const result = await client.call('whamListTasks', {
+  limit: 20,
+  status: 'active',
+})
+```
+
+Unknown route names and unused arguments fail explicitly.
+
+## Cancellation and deadlines
+
+Every network, stream, WebSocket, and app-server operation accepts an `AbortSignal` where applicable.
+
+```ts
+const controller = new AbortController()
+const timer = setTimeout(() => controller.abort(new Error('cancelled')), 10_000)
+
+try {
+  for await (const event of client.send({
+    text: 'Long request',
+    signal: controller.signal,
+  })) {
+    // consume events
+  }
+} finally {
+  clearTimeout(timer)
+}
+```
+
+Default limits are deliberately finite. Override them through `ChatGPTClient` configuration or environment variables.
+
+## Configuration
+
+| Variable | Default | Purpose |
+|---|---:|---|
+| `CODEX_AUTH_PATH` | `~/.codex/auth.json` | Auth token store |
+| `CODEX_API_BASE_URL` | `https://chatgpt.com/backend-api` | Explicit backend base URL |
+| `CODEX_API_ENDPOINT=localhost` | unset | Use `http://localhost:8000/api` |
+| `CODEX_BIN` | ChatGPT app bundle, then `PATH` | Local Codex executable |
+| `CHATGPT_DESKTOP_CLIENT_STATE_PATH` | XDG config path | Persistent device ID |
+| `CHATGPT_CLIENT_REQUEST_TIMEOUT_MS` | `60000` | Per-request deadline |
+| `CHATGPT_CLIENT_CONNECT_TIMEOUT_MS` | `15000` | Realtime connection deadline |
+| `CHATGPT_CLIENT_RETRY_ATTEMPTS` | `3` | Idempotent request attempts |
+| `CHATGPT_CLIENT_RETRY_BASE_MS` | `250` | Initial retry delay |
+| `CHATGPT_CLIENT_RETRY_MAX_MS` | `5000` | Maximum retry delay |
+| `CHATGPT_CLIENT_RESPONSE_BYTES` | `8388608` | Buffered response limit |
+| `CHATGPT_CLIENT_STREAM_LINE_BYTES` | `2097152` | Stream line limit |
+| `CHATGPT_CLIENT_STREAM_EVENT_BYTES` | `8388608` | SSE event limit |
+| `CHATGPT_CLIENT_QUEUE_SIZE` | `1024` | Async queue limit |
+| `CHATGPT_CLIENT_UPLOAD_BYTES` | `536870912` | Upload limit |
+| `CHATGPT_CLIENT_DOWNLOAD_BYTES` | `536870912` | Download limit |
+
+See [`.env.example`](.env.example) for copyable values.
+
+## Local app-server
+
+```ts
+import { AppServer } from 'chatgpt-client'
+
+const server = await AppServer.start()
+
+server.onRequest(async (method) => {
+  // Approval-like requests are denied unless the embedding application
+  // implements an explicit policy.
+  return { decision: 'decline', method }
+})
+
+try {
+  const threads = await server.request('thread/list', { pageSize: 20 })
+  console.log(threads)
+} finally {
+  await server.close()
+}
+```
+
+Pending requests fail when the child process exits. Output lines, pending requests, notification queues, and shutdown time are bounded.
+
+## Development
+
+```sh
+bun run check
+bun test
+bun run build
+bun run verify
+```
+
+The repository also carries a Node-based test path used for portability and CI-equivalent verification:
+
+```sh
+npm run test:node
+```
+
+Project layout:
+
+```text
+src/
+  auth.ts             token loading and refresh
+  http.ts             bounded HTTP transport
+  client.ts           high-level client
+  routes.ts           declarative route catalog
+  route-api.ts        typed route facade
+  realtime.ts         conversation and dictation sockets
+  appserver.ts        local JSON-RPC process client
+  streaming/          bounded line, SSE, NDJSON, and queue primitives
+  protocol/           isolated integrity/browser compatibility adapters
+  cli.ts              CLI commands and argument validation
+test/                  offline integration and unit tests
+docs/                  architecture and implementation criteria
+```
+
+## Operational boundaries
+
+- Do not commit `~/.codex/auth.json`, access tokens, refresh tokens, signed upload URLs, or exported account data.
+- External signed blob URLs are requested with `sendAuth: false`; ChatGPT bearer/account headers are not forwarded.
+- Only idempotent HTTP methods retry by default. Callers must explicitly opt in to retry other operations.
+- Integrity adapters exist only to preserve compatibility with the protocol already represented by this project. They are isolated because they are unstable and security-sensitive.
+- Route coverage does not imply account authorization or API stability.
+
+See [SECURITY.md](SECURITY.md), the [published architecture guide](docs/project/architecture.md), [docs/implementation-plan.md](docs/implementation-plan.md), and [docs/verification.md](docs/verification.md).
+
+## License
+
+MIT. See [LICENSE](LICENSE).

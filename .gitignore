@@ -1,4 +1,16 @@
 node_modules/
 dist/
-.poc-state.json
+.test-dist/
+coverage/
 *.log
+.env
+.env.*
+!.env.example
+.DS_Store
+auth.json
+auth_*.json
+*_auth.json
+website/dist/
+website/.astro/
+website/node_modules/
+website/src/content/docs/api/
