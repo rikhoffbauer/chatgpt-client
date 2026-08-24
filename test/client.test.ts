@@ -143,6 +143,79 @@ test('send decodes classic and compact stream events', async () => {
   ])
 })
 
+test('send emits generated image assets from image-generation tool messages', async () => {
+  const sse = [
+    'data: {"conversation_id":"c1","v":{"message":{"id":"tool-1","author":{"role":"tool"},"content":{"content_type":"multimodal_text","parts":[{"content_type":"image_asset_pointer","asset_pointer":"sediment://file_generated_1","mime_type":"image/png","size_bytes":1234,"width":1024,"height":1024,"metadata":{"generation":{"orientation":"square"}}},{"asset_pointer":"file-service://file_generated_2","mime_type":"image/webp","width":768,"height":1024}]},"metadata":{"async_task_type":"image_gen"}}}}\n\n',
+    'data: [DONE]\n\n',
+  ].join('')
+  class TestClient extends ChatGPTClient {
+    override async startTurn(_options: StartTurnOptions = {}): Promise<Response> {
+      return new Response(sse, { headers: { 'content-type': 'text/event-stream' } })
+    }
+  }
+  const client = new TestClient({
+    auth: new Auth({ accessToken: jwt() }),
+    fetchImpl: async () => Response.json({}),
+    config: { statePath: join(tmpdir(), `chatgpt-client-test-${crypto.randomUUID()}.json`) },
+    integrityProvider: async () => ({ headers: {}, requirements: {}, requirementsKey: 'test' }),
+  })
+
+  const events = []
+  for await (const event of client.send({ text: 'generate an image' })) events.push(event)
+
+  assert.deepEqual(events, [
+    { type: 'meta', conversationId: 'c1', messageId: 'tool-1' },
+    {
+      type: 'image',
+      image: {
+        file_id: 'file_generated_1',
+        asset_pointer: 'sediment://file_generated_1',
+        content_type: 'image_asset_pointer',
+        mime_type: 'image/png',
+        size_bytes: 1234,
+        width: 1024,
+        height: 1024,
+        metadata: { generation: { orientation: 'square' } },
+      },
+    },
+    {
+      type: 'image',
+      image: {
+        file_id: 'file_generated_2',
+        asset_pointer: 'file-service://file_generated_2',
+        content_type: 'image_asset_pointer',
+        mime_type: 'image/webp',
+        width: 768,
+        height: 1024,
+      },
+    },
+    { type: 'done', conversationId: 'c1' },
+  ])
+})
+
+test('send does not classify unrelated tool image pointers as generated output', async () => {
+  const sse = [
+    'data: {"conversation_id":"c1","v":{"message":{"author":{"role":"tool"},"content":{"content_type":"multimodal_text","parts":[{"content_type":"image_asset_pointer","asset_pointer":"sediment://file_search_result"}]},"metadata":{"async_task_type":"file_search"}}}}\n\n',
+    'data: [DONE]\n\n',
+  ].join('')
+  class TestClient extends ChatGPTClient {
+    override async startTurn(_options: StartTurnOptions = {}): Promise<Response> {
+      return new Response(sse, { headers: { 'content-type': 'text/event-stream' } })
+    }
+  }
+  const client = new TestClient({
+    auth: new Auth({ accessToken: jwt() }),
+    fetchImpl: async () => Response.json({}),
+    config: { statePath: join(tmpdir(), `chatgpt-client-test-${crypto.randomUUID()}.json`) },
+    integrityProvider: async () => ({ headers: {}, requirements: {}, requirementsKey: 'test' }),
+  })
+
+  const events = []
+  for await (const event of client.send({ text: 'search for an image' })) events.push(event)
+
+  assert.equal(events.some((event) => event.type === 'image'), false)
+})
+
 test('blob upload never forwards ChatGPT credentials', async () => {
   const captures: Array<{ url: string; headers: Headers; method: string }> = []
   const client = createClient(async (input, init) => {

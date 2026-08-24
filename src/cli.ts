@@ -2,7 +2,7 @@ import { basename, extname } from 'node:path'
 import { readFile, stat, writeFile } from 'node:fs/promises'
 import { AppServer, APP_SERVER_METHODS } from './appserver.js'
 import { Auth, decodeJwtPayload } from './auth.js'
-import { ChatGPTClient, type Conversation } from './client.js'
+import { ChatGPTClient, type Conversation, type GeneratedImage } from './client.js'
 import { defaultConfig } from './config.js'
 import { ProtocolError, serializeError } from './errors.js'
 import { ConsoleLogger, type LogLevel } from './logger.js'
@@ -460,6 +460,7 @@ async function commandSend(client: ChatGPTClient, context: CommandContext): Prom
 
   let conversationId: string | null = null
   const chunks: string[] = []
+  const images: GeneratedImage[] = []
   let totalBytes = 0
   for await (const event of client.send(options)) {
     if (event.type === 'delta') {
@@ -470,9 +471,17 @@ async function commandSend(client: ChatGPTClient, context: CommandContext): Prom
         }
         chunks.push(event.text)
       } else process.stdout.write(event.text)
+    } else if (event.type === 'image') {
+      if (context.json) {
+        totalBytes += Buffer.byteLength(JSON.stringify(event.image), 'utf8')
+        if (totalBytes > client.http.config.limits.responseBodyBytes) {
+          throw new ProtocolError('JSON output exceeded the configured response limit; use --json-stream', { code: 'OUTPUT_TOO_LARGE' })
+        }
+        images.push(event.image)
+      } else process.stdout.write(`\n[generated image: ${event.image.file_id}]\n`)
     } else if (event.type === 'meta' || event.type === 'done') conversationId = event.conversationId ?? conversationId
   }
-  if (context.json) output({ conversationId, text: chunks.join('') })
+  if (context.json) output({ conversationId, text: chunks.join(''), ...(images.length === 0 ? {} : { images }) })
   else {
     process.stdout.write('\n')
     if (conversationId !== null) error(`[conversation: ${conversationId}]`)

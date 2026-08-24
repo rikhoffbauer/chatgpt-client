@@ -29,6 +29,7 @@ export type {
   ConversationMessage,
   ConversationNode,
   CreateClientOptions,
+  GeneratedImage,
   MessageContent,
   ModelInfo,
   ModelsResponse,

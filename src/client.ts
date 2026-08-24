@@ -42,6 +42,18 @@ export interface MessageContent {
   [key: string]: unknown
 }
 
+/** A generated image reference emitted by {@link ChatGPTClient.send}. Download its bytes with {@link ChatGPTClient.downloadFile}. */
+export interface GeneratedImage {
+  file_id: string
+  asset_pointer: string
+  content_type: 'image_asset_pointer'
+  mime_type?: string
+  size_bytes?: number
+  width?: number
+  height?: number
+  metadata?: UnknownRecord
+}
+
 export interface ConversationMessage {
   id?: string
   author?: { role?: string; name?: string | null; metadata?: UnknownRecord }
@@ -169,9 +181,10 @@ export interface StartTurnOptions extends Omit<TurnRequestInput, 'messages' | 'm
   metadata?: UnknownRecord
 }
 
-/** Events emitted by {@link ChatGPTClient.send}: text deltas, identifiers, raw protocol events, and terminal completion. */
+/** Events emitted by {@link ChatGPTClient.send}: text deltas, generated images, identifiers, raw protocol events, and terminal completion. */
 export type SendEvent =
   | { type: 'delta'; text: string }
+  | { type: 'image'; image: GeneratedImage }
   | { type: 'meta'; conversationId: string; messageId: string | null }
   | { type: 'event'; event: string | null; data: unknown }
   | { type: 'done'; conversationId: string | null }
@@ -544,15 +557,32 @@ export class ChatGPTClient {
       if (typeof candidateConversationId === 'string' && candidateConversationId !== conversationId) {
         conversationId = candidateConversationId
         const nestedMessage = isRecord(nested?.message) ? nested.message : undefined
+        const rootMessage = isRecord(data.message) ? data.message : undefined
         const messageId = typeof data.message_id === 'string'
           ? data.message_id
           : typeof nestedMessage?.id === 'string'
             ? nestedMessage.id
+            : typeof rootMessage?.id === 'string'
+              ? rootMessage.id
             : null
         yield { type: 'meta', conversationId, messageId }
       }
 
       const messageValue = isRecord(data.message) ? data.message : isRecord(nested?.message) ? nested.message : undefined
+      if (messageValue !== undefined && isGeneratedImageMessage(messageValue)) {
+        const parts = messageValue.content.parts
+        let emittedImage = false
+        if (Array.isArray(parts)) {
+          for (const part of parts) {
+            const image = parseGeneratedImage(part)
+            if (image === null) continue
+            emittedImage = true
+            yield { type: 'image', image }
+          }
+        }
+        if (emittedImage) continue
+      }
+
       if (messageValue !== undefined && isRecord(messageValue.author) && messageValue.author.role === 'assistant' && isRecord(messageValue.content)) {
         const parts = messageValue.content.parts
         if (messageValue.content.content_type === 'text' && Array.isArray(parts)) {
@@ -915,6 +945,37 @@ function parseMemorySummarySection(value: unknown, index: number): UserMemorySum
 
 function isTextPatch(path: string): boolean {
   return path === '' || /\/parts\/\d+$/.test(path)
+}
+
+function isGeneratedImageMessage(message: UnknownRecord): message is UnknownRecord & { content: MessageContent } {
+  return (
+    isRecord(message.author) &&
+    message.author.role === 'tool' &&
+    isRecord(message.metadata) &&
+    message.metadata.async_task_type === 'image_gen' &&
+    isRecord(message.content)
+  )
+}
+
+function parseGeneratedImage(value: unknown): GeneratedImage | null {
+  if (
+    !isRecord(value) ||
+    (value.content_type !== undefined && value.content_type !== 'image_asset_pointer') ||
+    typeof value.asset_pointer !== 'string'
+  ) return null
+  const match = /^(?:file-service|sediment):\/\/([^/?#]+)$/.exec(value.asset_pointer)
+  const fileId = match?.[1]
+  if (fileId === undefined) return null
+  return {
+    file_id: fileId,
+    asset_pointer: value.asset_pointer,
+    content_type: 'image_asset_pointer',
+    ...(typeof value.mime_type === 'string' ? { mime_type: value.mime_type } : {}),
+    ...(typeof value.size_bytes === 'number' ? { size_bytes: value.size_bytes } : {}),
+    ...(typeof value.width === 'number' ? { width: value.width } : {}),
+    ...(typeof value.height === 'number' ? { height: value.height } : {}),
+    ...(isRecord(value.metadata) ? { metadata: value.metadata } : {}),
+  }
 }
 
 function isRecord(value: unknown): value is UnknownRecord {
