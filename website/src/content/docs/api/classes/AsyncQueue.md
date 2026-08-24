@@ -5,7 +5,7 @@ prev: false
 title: "AsyncQueue"
 ---
 
-Defined in: [src/streaming/async-queue.ts:12](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L12)
+Defined in: [src/streaming/async-queue.ts:12](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L12)
 
 Bounded async iterator queue. Overflow fails the queue with [QueueOverflowError](/api/classes/queueoverflowerror/);
 `close()` drains buffered values, while `fail()` discards them and rejects consumers.
@@ -27,7 +27,7 @@ Bounded async iterator queue. Overflow fails the queue with [QueueOverflowError]
 
 > **new AsyncQueue**\<`T`\>(`options?`): `AsyncQueue`\<`T`\>
 
-Defined in: [src/streaming/async-queue.ts:20](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L20)
+Defined in: [src/streaming/async-queue.ts:20](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L20)
 
 #### Parameters
 
@@ -51,7 +51,7 @@ Defined in: [src/streaming/async-queue.ts:20](https://github.com/rikhoffbauer/ch
 
 > `readonly` **maxSize**: `number`
 
-Defined in: [src/streaming/async-queue.ts:14](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L14)
+Defined in: [src/streaming/async-queue.ts:14](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L14)
 
 ***
 
@@ -59,7 +59,7 @@ Defined in: [src/streaming/async-queue.ts:14](https://github.com/rikhoffbauer/ch
 
 > `readonly` **name**: `string`
 
-Defined in: [src/streaming/async-queue.ts:13](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L13)
+Defined in: [src/streaming/async-queue.ts:13](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L13)
 
 ## Accessors
 
@@ -69,7 +69,7 @@ Defined in: [src/streaming/async-queue.ts:13](https://github.com/rikhoffbauer/ch
 
 > **get** **size**(): `number`
 
-Defined in: [src/streaming/async-queue.ts:26](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L26)
+Defined in: [src/streaming/async-queue.ts:26](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L26)
 
 ##### Returns
 
@@ -81,7 +81,7 @@ Defined in: [src/streaming/async-queue.ts:26](https://github.com/rikhoffbauer/ch
 
 > **\[asyncIterator\]**(): `AsyncIterator`\<`T`\>
 
-Defined in: [src/streaming/async-queue.ts:70](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L70)
+Defined in: [src/streaming/async-queue.ts:70](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L70)
 
 #### Returns
 
@@ -97,7 +97,7 @@ Defined in: [src/streaming/async-queue.ts:70](https://github.com/rikhoffbauer/ch
 
 > **close**(): `void`
 
-Defined in: [src/streaming/async-queue.ts:44](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L44)
+Defined in: [src/streaming/async-queue.ts:44](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L44)
 
 #### Returns
 
@@ -109,7 +109,7 @@ Defined in: [src/streaming/async-queue.ts:44](https://github.com/rikhoffbauer/ch
 
 > **fail**(`error`): `void`
 
-Defined in: [src/streaming/async-queue.ts:50](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L50)
+Defined in: [src/streaming/async-queue.ts:50](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L50)
 
 #### Parameters
 
@@ -127,7 +127,7 @@ Defined in: [src/streaming/async-queue.ts:50](https://github.com/rikhoffbauer/ch
 
 > **next**(): `Promise`\<`IteratorResult`\<`T`, `any`\>\>
 
-Defined in: [src/streaming/async-queue.ts:58](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L58)
+Defined in: [src/streaming/async-queue.ts:58](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L58)
 
 #### Returns
 
@@ -143,7 +143,7 @@ Defined in: [src/streaming/async-queue.ts:58](https://github.com/rikhoffbauer/ch
 
 > **push**(`value`): `void`
 
-Defined in: [src/streaming/async-queue.ts:30](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L30)
+Defined in: [src/streaming/async-queue.ts:30](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L30)
 
 #### Parameters
 
@@ -161,7 +161,7 @@ Defined in: [src/streaming/async-queue.ts:30](https://github.com/rikhoffbauer/ch
 
 > **return**(): `Promise`\<`IteratorResult`\<`T`, `any`\>\>
 
-Defined in: [src/streaming/async-queue.ts:65](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/async-queue.ts#L65)
+Defined in: [src/streaming/async-queue.ts:65](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/async-queue.ts#L65)
 
 #### Returns
 

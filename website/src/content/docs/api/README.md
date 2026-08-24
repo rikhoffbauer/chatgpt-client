@@ -50,6 +50,7 @@ Start with [ChatGPTClient](/api/classes/chatgptclient/), [Auth](/api/classes/aut
 - [DictationOptions](/api/interfaces/dictationoptions/)
 - [DictationStream](/api/interfaces/dictationstream/)
 - [Disposable](/api/interfaces/disposable/)
+- [GeneratedImage](/api/interfaces/generatedimage/)
 - [HttpOptions](/api/interfaces/httpoptions/)
 - [IntegrityResult](/api/interfaces/integrityresult/)
 - [JsonRpcNotification](/api/interfaces/jsonrpcnotification/)

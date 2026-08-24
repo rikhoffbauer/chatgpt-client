@@ -5,7 +5,7 @@ prev: false
 title: "ConversationMessage"
 ---
 
-Defined in: [src/client.ts:45](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L45)
+Defined in: [src/client.ts:57](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L57)
 
 ## Indexable
 
@@ -17,7 +17,7 @@ Defined in: [src/client.ts:45](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **author?**: `object`
 
-Defined in: [src/client.ts:47](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L47)
+Defined in: [src/client.ts:59](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L59)
 
 #### metadata?
 
@@ -37,7 +37,7 @@ Defined in: [src/client.ts:47](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **content?**: [`MessageContent`](/api/interfaces/messagecontent/)
 
-Defined in: [src/client.ts:48](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L48)
+Defined in: [src/client.ts:60](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L60)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [src/client.ts:48](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **id?**: `string`
 
-Defined in: [src/client.ts:46](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L46)
+Defined in: [src/client.ts:58](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L58)
 
 ***
 
@@ -53,4 +53,4 @@ Defined in: [src/client.ts:46](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **metadata?**: [`UnknownRecord`](/api/type-aliases/unknownrecord/)
 
-Defined in: [src/client.ts:49](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L49)
+Defined in: [src/client.ts:61](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L61)

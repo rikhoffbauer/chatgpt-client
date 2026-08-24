@@ -7,7 +7,7 @@ title: "solveInChrome"
 
 > **solveInChrome**(`dx`, `key`, `options?`): `Promise`\<`string`\>
 
-Defined in: [src/protocol/chrome-solver.ts:312](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/chrome-solver.ts#L312)
+Defined in: [src/protocol/chrome-solver.ts:316](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/chrome-solver.ts#L316)
 
 ## Parameters
 

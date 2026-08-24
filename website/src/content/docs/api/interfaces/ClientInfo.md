@@ -5,7 +5,7 @@ prev: false
 title: "ClientInfo"
 ---
 
-Defined in: [src/appserver.ts:100](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L100)
+Defined in: [src/appserver.ts:100](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L100)
 
 ## Properties
 
@@ -13,7 +13,7 @@ Defined in: [src/appserver.ts:100](https://github.com/rikhoffbauer/chatgpt-clien
 
 > **name**: `string`
 
-Defined in: [src/appserver.ts:101](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L101)
+Defined in: [src/appserver.ts:101](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L101)
 
 ***
 
@@ -21,7 +21,7 @@ Defined in: [src/appserver.ts:101](https://github.com/rikhoffbauer/chatgpt-clien
 
 > **title**: `string`
 
-Defined in: [src/appserver.ts:102](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L102)
+Defined in: [src/appserver.ts:102](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L102)
 
 ***
 
@@ -29,4 +29,4 @@ Defined in: [src/appserver.ts:102](https://github.com/rikhoffbauer/chatgpt-clien
 
 > **version**: `string`
 
-Defined in: [src/appserver.ts:103](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L103)
+Defined in: [src/appserver.ts:103](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L103)

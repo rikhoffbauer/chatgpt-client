@@ -5,7 +5,7 @@ prev: false
 title: "UploadFileOptions"
 ---
 
-Defined in: [src/client.ts:180](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L180)
+Defined in: [src/client.ts:193](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L193)
 
 In-memory upload content and metadata, bounded by the configured upload byte limit.
 
@@ -15,7 +15,7 @@ In-memory upload content and metadata, bounded by the configured upload byte lim
 
 > **bytes**: `ArrayBuffer` \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/client.ts:181](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L181)
+Defined in: [src/client.ts:194](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L194)
 
 ***
 
@@ -23,7 +23,7 @@ Defined in: [src/client.ts:181](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **contentType?**: `string`
 
-Defined in: [src/client.ts:183](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L183)
+Defined in: [src/client.ts:196](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L196)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [src/client.ts:183](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **fileName**: `string`
 
-Defined in: [src/client.ts:182](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L182)
+Defined in: [src/client.ts:195](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L195)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [src/client.ts:182](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **resetRateLimits?**: `boolean`
 
-Defined in: [src/client.ts:185](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L185)
+Defined in: [src/client.ts:198](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L198)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [src/client.ts:185](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **signal?**: `AbortSignal`
 
-Defined in: [src/client.ts:186](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L186)
+Defined in: [src/client.ts:199](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L199)
 
 ***
 
@@ -55,4 +55,4 @@ Defined in: [src/client.ts:186](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **useCase?**: `string`
 
-Defined in: [src/client.ts:184](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L184)
+Defined in: [src/client.ts:197](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L197)

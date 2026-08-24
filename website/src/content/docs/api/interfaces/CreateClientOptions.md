@@ -5,7 +5,7 @@ prev: false
 title: "CreateClientOptions"
 ---
 
-Defined in: [src/client.ts:208](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L208)
+Defined in: [src/client.ts:221](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L221)
 
 Client options that may load authentication from the desktop auth store.
 
@@ -19,7 +19,7 @@ Client options that may load authentication from the desktop auth store.
 
 > `optional` **appVersion?**: `string`
 
-Defined in: [src/client.ts:195](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L195)
+Defined in: [src/client.ts:208](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L208)
 
 #### Inherited from
 
@@ -31,7 +31,7 @@ Defined in: [src/client.ts:195](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **auth?**: [`Auth`](/api/classes/auth/)
 
-Defined in: [src/client.ts:209](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L209)
+Defined in: [src/client.ts:222](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L222)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [src/client.ts:209](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **authPath?**: `string`
 
-Defined in: [src/client.ts:210](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L210)
+Defined in: [src/client.ts:223](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L223)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [src/client.ts:210](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **baseUrl?**: `string`
 
-Defined in: [src/client.ts:192](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L192)
+Defined in: [src/client.ts:205](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L205)
 
 #### Inherited from
 
@@ -59,7 +59,7 @@ Defined in: [src/client.ts:192](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **browserFallback?**: `boolean`
 
-Defined in: [src/client.ts:202](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L202)
+Defined in: [src/client.ts:215](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L215)
 
 Uses an isolated real-Chrome renderer when Cloudflare blocks a same-origin request.
 
@@ -73,7 +73,7 @@ Uses an isolated real-Chrome renderer when Cloudflare blocks a same-origin reque
 
 > `optional` **config?**: `Partial`\<`Omit`\<[`ClientConfig`](/api/interfaces/clientconfig/), `"retry"` \| `"limits"`\>\> & `object`
 
-Defined in: [src/client.ts:198](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L198)
+Defined in: [src/client.ts:211](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L211)
 
 #### Type Declaration
 
@@ -95,7 +95,7 @@ Defined in: [src/client.ts:198](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **fetchImpl?**: [`Fetch`](/api/type-aliases/fetch/)
 
-Defined in: [src/client.ts:196](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L196)
+Defined in: [src/client.ts:209](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L209)
 
 #### Inherited from
 
@@ -107,7 +107,7 @@ Defined in: [src/client.ts:196](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **integrityProvider?**: (`prepare`, `options`) => `Promise`\<[`IntegrityResult`](/api/interfaces/integrityresult/)\>
 
-Defined in: [src/client.ts:204](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L204)
+Defined in: [src/client.ts:217](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L217)
 
 #### Parameters
 
@@ -139,7 +139,7 @@ Defined in: [src/client.ts:204](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **logger?**: [`Logger`](/api/interfaces/logger/)
 
-Defined in: [src/client.ts:197](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L197)
+Defined in: [src/client.ts:210](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L210)
 
 #### Inherited from
 
@@ -151,7 +151,7 @@ Defined in: [src/client.ts:197](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **modelCacheMs?**: `number`
 
-Defined in: [src/client.ts:203](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L203)
+Defined in: [src/client.ts:216](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L216)
 
 #### Inherited from
 
@@ -163,7 +163,7 @@ Defined in: [src/client.ts:203](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **persona?**: [`Persona`](/api/type-aliases/persona/)
 
-Defined in: [src/client.ts:194](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L194)
+Defined in: [src/client.ts:207](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L207)
 
 #### Inherited from
 
@@ -175,7 +175,7 @@ Defined in: [src/client.ts:194](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **prepareFailureMode?**: `"continue"` \| `"throw"`
 
-Defined in: [src/client.ts:200](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L200)
+Defined in: [src/client.ts:213](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L213)
 
 #### Inherited from
 
@@ -187,7 +187,7 @@ Defined in: [src/client.ts:200](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **solver?**: [`IntegritySolver`](/api/type-aliases/integritysolver/)
 
-Defined in: [src/client.ts:193](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L193)
+Defined in: [src/client.ts:206](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L206)
 
 #### Inherited from
 
@@ -199,7 +199,7 @@ Defined in: [src/client.ts:193](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **strictRouteArgs?**: `boolean`
 
-Defined in: [src/client.ts:199](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L199)
+Defined in: [src/client.ts:212](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L212)
 
 #### Inherited from
 

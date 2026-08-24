@@ -5,7 +5,7 @@ prev: false
 title: "ResponseReadOptions"
 ---
 
-Defined in: [src/http.ts:40](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L40)
+Defined in: [src/http.ts:40](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L40)
 
 Finite cancellation, deadline, and byte-bound options for consuming a response body.
 
@@ -15,7 +15,7 @@ Finite cancellation, deadline, and byte-bound options for consuming a response b
 
 > `optional` **maxBytes?**: `number`
 
-Defined in: [src/http.ts:41](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L41)
+Defined in: [src/http.ts:41](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L41)
 
 ***
 
@@ -23,7 +23,7 @@ Defined in: [src/http.ts:41](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `optional` **operation?**: `string`
 
-Defined in: [src/http.ts:42](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L42)
+Defined in: [src/http.ts:42](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L42)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [src/http.ts:42](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `optional` **signal?**: `AbortSignal`
 
-Defined in: [src/http.ts:43](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L43)
+Defined in: [src/http.ts:43](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L43)
 
 ***
 
@@ -39,4 +39,4 @@ Defined in: [src/http.ts:43](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `optional` **timeoutMs?**: `number`
 
-Defined in: [src/http.ts:44](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L44)
+Defined in: [src/http.ts:44](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L44)

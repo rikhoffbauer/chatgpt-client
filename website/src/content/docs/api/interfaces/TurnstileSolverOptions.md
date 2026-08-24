@@ -5,7 +5,7 @@ prev: false
 title: "TurnstileSolverOptions"
 ---
 
-Defined in: [src/protocol/turnstile.ts:45](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/turnstile.ts#L45)
+Defined in: [src/protocol/turnstile.ts:45](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/turnstile.ts#L45)
 
 ## Properties
 
@@ -13,7 +13,7 @@ Defined in: [src/protocol/turnstile.ts:45](https://github.com/rikhoffbauer/chatg
 
 > `optional` **maxInstructions?**: `number`
 
-Defined in: [src/protocol/turnstile.ts:48](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/turnstile.ts#L48)
+Defined in: [src/protocol/turnstile.ts:48](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/turnstile.ts#L48)
 
 ***
 
@@ -21,7 +21,7 @@ Defined in: [src/protocol/turnstile.ts:48](https://github.com/rikhoffbauer/chatg
 
 > `optional` **maxPayloadBytes?**: `number`
 
-Defined in: [src/protocol/turnstile.ts:49](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/turnstile.ts#L49)
+Defined in: [src/protocol/turnstile.ts:49](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/turnstile.ts#L49)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [src/protocol/turnstile.ts:49](https://github.com/rikhoffbauer/chatg
 
 > `optional` **timeoutMs?**: `number`
 
-Defined in: [src/protocol/turnstile.ts:47](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/turnstile.ts#L47)
+Defined in: [src/protocol/turnstile.ts:47](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/turnstile.ts#L47)
 
 ***
 
@@ -37,4 +37,4 @@ Defined in: [src/protocol/turnstile.ts:47](https://github.com/rikhoffbauer/chatg
 
 > **window**: [`UnknownRecord`](/api/type-aliases/unknownrecord/)
 
-Defined in: [src/protocol/turnstile.ts:46](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/turnstile.ts#L46)
+Defined in: [src/protocol/turnstile.ts:46](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/turnstile.ts#L46)

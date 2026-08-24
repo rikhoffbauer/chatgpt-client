@@ -5,7 +5,7 @@ prev: false
 title: "LoadAuthOptions"
 ---
 
-Defined in: [src/auth.ts:55](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L55)
+Defined in: [src/auth.ts:57](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L57)
 
 Options for loading the desktop auth store and optionally refreshing it.
 
@@ -15,7 +15,7 @@ Options for loading the desktop auth store and optionally refreshing it.
 
 > `optional` **fetchImpl?**: [`Fetch`](/api/type-aliases/fetch/)
 
-Defined in: [src/auth.ts:58](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L58)
+Defined in: [src/auth.ts:60](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L60)
 
 ***
 
@@ -23,7 +23,7 @@ Defined in: [src/auth.ts:58](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `optional` **forceRefresh?**: `boolean`
 
-Defined in: [src/auth.ts:57](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L57)
+Defined in: [src/auth.ts:59](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L59)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [src/auth.ts:57](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `optional` **logger?**: [`Logger`](/api/interfaces/logger/)
 
-Defined in: [src/auth.ts:60](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L60)
+Defined in: [src/auth.ts:62](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L62)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [src/auth.ts:60](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `optional` **path?**: `string`
 
-Defined in: [src/auth.ts:56](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L56)
+Defined in: [src/auth.ts:58](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L58)
 
 ***
 
@@ -47,4 +47,4 @@ Defined in: [src/auth.ts:56](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `optional` **refreshTimeoutMs?**: `number`
 
-Defined in: [src/auth.ts:59](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L59)
+Defined in: [src/auth.ts:61](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L61)

@@ -5,7 +5,7 @@ prev: false
 title: "AppServerRequestOptions"
 ---
 
-Defined in: [src/appserver.ts:95](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L95)
+Defined in: [src/appserver.ts:95](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L95)
 
 Cancellation and timeout controls for one JSON-RPC request.
 
@@ -15,7 +15,7 @@ Cancellation and timeout controls for one JSON-RPC request.
 
 > `optional` **signal?**: `AbortSignal`
 
-Defined in: [src/appserver.ts:97](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L97)
+Defined in: [src/appserver.ts:97](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L97)
 
 ***
 
@@ -23,4 +23,4 @@ Defined in: [src/appserver.ts:97](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **timeoutMs?**: `number`
 
-Defined in: [src/appserver.ts:96](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L96)
+Defined in: [src/appserver.ts:96](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L96)

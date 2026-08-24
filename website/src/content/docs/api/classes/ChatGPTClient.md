@@ -5,7 +5,7 @@ prev: false
 title: "ChatGPTClient"
 ---
 
-Defined in: [src/client.ts:219](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L219)
+Defined in: [src/client.ts:232](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L232)
 
 High-level client for conversations, catalogued private routes, streams, and file transfers.
 
@@ -18,7 +18,7 @@ owned timers, and use `AbortSignal` on operations that may outlive the caller.
 
 > **new ChatGPTClient**(`options`): `ChatGPTClient`
 
-Defined in: [src/client.ts:234](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L234)
+Defined in: [src/client.ts:247](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L247)
 
 #### Parameters
 
@@ -36,7 +36,7 @@ Defined in: [src/client.ts:234](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `readonly` **auth**: [`Auth`](/api/classes/auth/)
 
-Defined in: [src/client.ts:220](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L220)
+Defined in: [src/client.ts:233](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L233)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [src/client.ts:220](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `readonly` **http**: [`Http`](/api/classes/http/)
 
-Defined in: [src/client.ts:221](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L221)
+Defined in: [src/client.ts:234](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L234)
 
 ***
 
@@ -52,7 +52,7 @@ Defined in: [src/client.ts:221](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `readonly` **routes**: [`RouteApi`](/api/type-aliases/routeapi/)
 
-Defined in: [src/client.ts:222](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L222)
+Defined in: [src/client.ts:235](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L235)
 
 ***
 
@@ -60,7 +60,7 @@ Defined in: [src/client.ts:222](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `readonly` **solver**: [`IntegritySolver`](/api/type-aliases/integritysolver/)
 
-Defined in: [src/client.ts:223](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L223)
+Defined in: [src/client.ts:236](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L236)
 
 ## Accessors
 
@@ -70,7 +70,7 @@ Defined in: [src/client.ts:223](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **get** **baseUrl**(): `string`
 
-Defined in: [src/client.ts:281](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L281)
+Defined in: [src/client.ts:294](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L294)
 
 ##### Returns
 
@@ -82,7 +82,7 @@ Defined in: [src/client.ts:281](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **call**\<`Name`\>(`name`, `args?`, `options?`): `Promise`\<[`RouteResult`](/api/type-aliases/routeresult/)\<`Name`\>\>
 
-Defined in: [src/client.ts:286](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L286)
+Defined in: [src/client.ts:299](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L299)
 
 Calls a catalogued private route, validating path and unused arguments before transport.
 
@@ -116,7 +116,7 @@ Calls a catalogued private route, validating path and unused arguments before tr
 
 > **callAppTool**(`name`, `args?`, `options?`): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:797](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L797)
+Defined in: [src/client.ts:827](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L827)
 
 #### Parameters
 
@@ -144,7 +144,7 @@ Defined in: [src/client.ts:797](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **callConnectorMcp**(`body`): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:806](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L806)
+Defined in: [src/client.ts:836](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L836)
 
 #### Parameters
 
@@ -162,7 +162,7 @@ Defined in: [src/client.ts:806](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **close**(): `void`
 
-Defined in: [src/client.ts:379](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L379)
+Defined in: [src/client.ts:392](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L392)
 
 Stops the optional heartbeat owned by this client.
 
@@ -176,7 +176,7 @@ Stops the optional heartbeat owned by this client.
 
 > **defaultModel**(`options?`): `Promise`\<`string`\>
 
-Defined in: [src/client.ts:703](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L703)
+Defined in: [src/client.ts:733](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L733)
 
 #### Parameters
 
@@ -200,7 +200,7 @@ Defined in: [src/client.ts:703](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **downloadFile**(`fileId`, `options?`): `Promise`\<\{ `bytes`: `Uint8Array`; `info`: [`UnknownRecord`](/api/type-aliases/unknownrecord/); \}\>
 
-Defined in: [src/client.ts:681](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L681)
+Defined in: [src/client.ts:711](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L711)
 
 Downloads a file into memory up to the configured download byte limit.
 
@@ -226,7 +226,7 @@ Downloads a file into memory up to the configured download byte limit.
 
 > **getUserMemories**(`options?`): `Promise`\<[`UserMemoriesResponse`](/api/interfaces/usermemoriesresponse/)\>
 
-Defined in: [src/client.ts:716](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L716)
+Defined in: [src/client.ts:746](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L746)
 
 Gets memory entries and token accounting for the current user.
 
@@ -248,7 +248,7 @@ Gets memory entries and token accounting for the current user.
 
 > **getUserMemorySummary**(`options?`): `Promise`\<[`UserMemorySummaryResponse`](/api/interfaces/usermemorysummaryresponse/)\>
 
-Defined in: [src/client.ts:736](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L736)
+Defined in: [src/client.ts:766](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L766)
 
 Generates ChatGPT's sectioned About You summary for the current user.
 
@@ -270,7 +270,7 @@ Generates ChatGPT's sectioned About You summary for the current user.
 
 > **iterateConversations**(`options?`): `AsyncGenerator`\<[`UnknownRecord`](/api/type-aliases/unknownrecord/)\>
 
-Defined in: [src/client.ts:838](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L838)
+Defined in: [src/client.ts:868](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L868)
 
 Paginates conversation summaries lazily with a page size from 1 through 100.
 
@@ -290,7 +290,7 @@ Paginates conversation summaries lazily with a page size from 1 through 100.
 
 > **listAppTools**(`params?`): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:793](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L793)
+Defined in: [src/client.ts:823](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L823)
 
 #### Parameters
 
@@ -308,7 +308,7 @@ Defined in: [src/client.ts:793](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **optOutOfTrustedContactPrompts**(): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:783](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L783)
+Defined in: [src/client.ts:813](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L813)
 
 #### Returns
 
@@ -320,7 +320,7 @@ Defined in: [src/client.ts:783](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **prepareConversationStream**(`body`, `options?`): `Promise`\<`string` \| `null`\>
 
-Defined in: [src/client.ts:463](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L463)
+Defined in: [src/client.ts:476](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L476)
 
 #### Parameters
 
@@ -348,7 +348,7 @@ Defined in: [src/client.ts:463](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **prepareIntegrity**(`options?`): `Promise`\<[`IntegrityResult`](/api/interfaces/integrityresult/)\>
 
-Defined in: [src/client.ts:354](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L354)
+Defined in: [src/client.ts:367](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L367)
 
 #### Parameters
 
@@ -372,7 +372,7 @@ Defined in: [src/client.ts:354](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **processUpload**(`body`, `options?`): `AsyncGenerator`\<[`NdjsonRecord`](/api/type-aliases/ndjsonrecord/)\>
 
-Defined in: [src/client.ts:672](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L672)
+Defined in: [src/client.ts:702](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L702)
 
 #### Parameters
 
@@ -396,7 +396,7 @@ Defined in: [src/client.ts:672](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **raw**\<`T`\>(`method`, `path`, `options?`): `Promise`\<`T`\>
 
-Defined in: [src/client.ts:350](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L350)
+Defined in: [src/client.ts:363](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L363)
 
 #### Type Parameters
 
@@ -428,7 +428,7 @@ Defined in: [src/client.ts:350](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **resumeTurn**(`body`, `options?`): `Promise`\<`Response`\>
 
-Defined in: [src/client.ts:507](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L507)
+Defined in: [src/client.ts:520](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L520)
 
 #### Parameters
 
@@ -456,7 +456,7 @@ Defined in: [src/client.ts:507](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **send**(`options?`): `AsyncGenerator`\<[`SendEvent`](/api/type-aliases/sendevent/)\>
 
-Defined in: [src/client.ts:530](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L530)
+Defined in: [src/client.ts:543](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L543)
 
 Starts a turn and yields bounded decoded events until completion or cancellation.
 
@@ -476,7 +476,7 @@ Starts a turn and yields bounded decoded events until completion or cancellation
 
 > **setAccountVoice**(`voice`): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:775](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L775)
+Defined in: [src/client.ts:805](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L805)
 
 #### Parameters
 
@@ -494,7 +494,7 @@ Defined in: [src/client.ts:775](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **setConversationArchived**(`conversationId`, `isArchived?`): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:757](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L757)
+Defined in: [src/client.ts:787](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L787)
 
 #### Parameters
 
@@ -516,7 +516,7 @@ Defined in: [src/client.ts:757](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **setConversationStarred**(`conversationId`, `isStarred?`): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:761](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L761)
+Defined in: [src/client.ts:791](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L791)
 
 #### Parameters
 
@@ -538,7 +538,7 @@ Defined in: [src/client.ts:761](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **setConversationVisible**(`conversationId`, `visible`): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:765](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L765)
+Defined in: [src/client.ts:795](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L795)
 
 #### Parameters
 
@@ -560,7 +560,7 @@ Defined in: [src/client.ts:765](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **setPinnedItem**(`itemType`, `itemId`, `pinned?`): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:769](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L769)
+Defined in: [src/client.ts:799](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L799)
 
 #### Parameters
 
@@ -586,7 +586,7 @@ Defined in: [src/client.ts:769](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **setUltraEffortEnabled**(`enabled`): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:779](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L779)
+Defined in: [src/client.ts:809](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L809)
 
 #### Parameters
 
@@ -604,7 +604,7 @@ Defined in: [src/client.ts:779](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **share**(`conversationId`, `options?`): `Promise`\<`unknown`\>
 
-Defined in: [src/client.ts:787](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L787)
+Defined in: [src/client.ts:817](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L817)
 
 #### Parameters
 
@@ -626,7 +626,7 @@ Defined in: [src/client.ts:787](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **startHeartbeat**(`intervalMs?`): `this`
 
-Defined in: [src/client.ts:362](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L362)
+Defined in: [src/client.ts:375](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L375)
 
 #### Parameters
 
@@ -644,7 +644,7 @@ Defined in: [src/client.ts:362](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **startTurn**(`options?`): `Promise`\<`Response`\>
 
-Defined in: [src/client.ts:478](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L478)
+Defined in: [src/client.ts:491](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L491)
 
 #### Parameters
 
@@ -662,7 +662,7 @@ Defined in: [src/client.ts:478](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **stopHeartbeat**(): `this`
 
-Defined in: [src/client.ts:372](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L372)
+Defined in: [src/client.ts:385](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L385)
 
 #### Returns
 
@@ -674,7 +674,7 @@ Defined in: [src/client.ts:372](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **streamEvents**(`response`, `options?`): `AsyncGenerator`\<\{ `data`: `unknown`; `event`: `string` \| `null`; \}\>
 
-Defined in: [src/client.ts:514](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L514)
+Defined in: [src/client.ts:527](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L527)
 
 #### Parameters
 
@@ -698,7 +698,7 @@ Defined in: [src/client.ts:514](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **turnRequest**(`input`): [`UnknownRecord`](/api/type-aliases/unknownrecord/)
 
-Defined in: [src/client.ts:431](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L431)
+Defined in: [src/client.ts:444](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L444)
 
 #### Parameters
 
@@ -716,7 +716,7 @@ Defined in: [src/client.ts:431](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **uploadFile**(`options`): `Promise`\<[`Attachment`](/api/interfaces/attachment/)\>
 
-Defined in: [src/client.ts:589](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L589)
+Defined in: [src/client.ts:619](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L619)
 
 Uploads bytes and finalizes an attachment without forwarding account headers to signed URLs.
 
@@ -736,7 +736,7 @@ Uploads bytes and finalizes an attachment without forwarding account headers to 
 
 > **uploadFileBytes**(`options`): `Promise`\<`void`\>
 
-Defined in: [src/client.ts:621](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L621)
+Defined in: [src/client.ts:651](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L651)
 
 #### Parameters
 
@@ -772,7 +772,7 @@ Defined in: [src/client.ts:621](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **userMessage**(`text`, `options?`): [`ConversationMessage`](/api/interfaces/conversationmessage/)
 
-Defined in: [src/client.ts:384](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L384)
+Defined in: [src/client.ts:397](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L397)
 
 #### Parameters
 
@@ -794,7 +794,7 @@ Defined in: [src/client.ts:384](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `static` **create**(`options?`): `Promise`\<`ChatGPTClient`\>
 
-Defined in: [src/client.ts:272](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L272)
+Defined in: [src/client.ts:285](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L285)
 
 Loads desktop authentication when needed and creates a configured client.
 
@@ -814,7 +814,7 @@ Loads desktop authentication when needed and creates a configured client.
 
 > `static` **messageChain**(`conversation`, `options?`): [`ConversationMessage`](/api/interfaces/conversationmessage/)[]
 
-Defined in: [src/client.ts:811](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L811)
+Defined in: [src/client.ts:841](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L841)
 
 Returns the active message chain and rejects cyclic conversation mappings.
 
@@ -840,7 +840,7 @@ Returns the active message chain and rejects cyclic conversation mappings.
 
 > `static` **renderParts**(`parts`): `string`
 
-Defined in: [src/client.ts:827](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L827)
+Defined in: [src/client.ts:857](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L857)
 
 #### Parameters
 

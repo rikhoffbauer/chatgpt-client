@@ -5,7 +5,7 @@ prev: false
 title: "ModelInfo"
 ---
 
-Defined in: [src/client.ts:67](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L67)
+Defined in: [src/client.ts:79](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L79)
 
 ## Indexable
 
@@ -17,7 +17,7 @@ Defined in: [src/client.ts:67](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **slug?**: `string`
 
-Defined in: [src/client.ts:68](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L68)
+Defined in: [src/client.ts:80](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L80)
 
 ***
 
@@ -25,4 +25,4 @@ Defined in: [src/client.ts:68](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **title?**: `string`
 
-Defined in: [src/client.ts:69](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L69)
+Defined in: [src/client.ts:81](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L81)

@@ -7,7 +7,7 @@ title: "openDictationStream"
 
 > **openDictationStream**(`client`, `options?`): `Promise`\<[`DictationStream`](/api/interfaces/dictationstream/)\>
 
-Defined in: [src/realtime.ts:147](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L147)
+Defined in: [src/realtime.ts:147](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L147)
 
 Opens a dictation WebSocket, validates sample rate, and applies a finite handshake deadline.
 

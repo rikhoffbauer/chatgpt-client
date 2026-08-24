@@ -5,7 +5,7 @@ prev: false
 title: "JsonRpcNotification"
 ---
 
-Defined in: [src/appserver.ts:56](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L56)
+Defined in: [src/appserver.ts:56](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L56)
 
 ## Extends
 
@@ -21,7 +21,7 @@ Defined in: [src/appserver.ts:56](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **jsonrpc?**: `"2.0"`
 
-Defined in: [src/appserver.ts:57](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L57)
+Defined in: [src/appserver.ts:57](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L57)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [src/appserver.ts:57](https://github.com/rikhoffbauer/chatgpt-client
 
 > **method**: `string`
 
-Defined in: [src/appserver.ts:58](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L58)
+Defined in: [src/appserver.ts:58](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L58)
 
 ***
 
@@ -37,4 +37,4 @@ Defined in: [src/appserver.ts:58](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **params?**: `unknown`
 
-Defined in: [src/appserver.ts:59](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L59)
+Defined in: [src/appserver.ts:59](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L59)

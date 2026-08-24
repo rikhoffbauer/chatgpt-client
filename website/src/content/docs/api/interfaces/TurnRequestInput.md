@@ -5,7 +5,7 @@ prev: false
 title: "TurnRequestInput"
 ---
 
-Defined in: [src/client.ts:137](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L137)
+Defined in: [src/client.ts:149](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L149)
 
 ## Properties
 
@@ -13,7 +13,7 @@ Defined in: [src/client.ts:137](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **action?**: `string`
 
-Defined in: [src/client.ts:142](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L142)
+Defined in: [src/client.ts:154](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L154)
 
 ***
 
@@ -21,7 +21,7 @@ Defined in: [src/client.ts:142](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **branchingFromConversationId?**: `string`
 
-Defined in: [src/client.ts:153](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L153)
+Defined in: [src/client.ts:165](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L165)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [src/client.ts:153](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **branchingFromMessageId?**: `string`
 
-Defined in: [src/client.ts:154](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L154)
+Defined in: [src/client.ts:166](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L166)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [src/client.ts:154](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **conversationId?**: `string`
 
-Defined in: [src/client.ts:141](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L141)
+Defined in: [src/client.ts:153](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L153)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [src/client.ts:141](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **conversationMode?**: [`UnknownRecord`](/api/type-aliases/unknownrecord/)
 
-Defined in: [src/client.ts:145](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L145)
+Defined in: [src/client.ts:157](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L157)
 
 ***
 
@@ -53,7 +53,7 @@ Defined in: [src/client.ts:145](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **conversationOrigin?**: `string`
 
-Defined in: [src/client.ts:144](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L144)
+Defined in: [src/client.ts:156](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L156)
 
 ***
 
@@ -61,7 +61,7 @@ Defined in: [src/client.ts:144](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **executionTarget?**: `string`
 
-Defined in: [src/client.ts:146](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L146)
+Defined in: [src/client.ts:158](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L158)
 
 ***
 
@@ -69,7 +69,7 @@ Defined in: [src/client.ts:146](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **extra?**: [`UnknownRecord`](/api/type-aliases/unknownrecord/)
 
-Defined in: [src/client.ts:156](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L156)
+Defined in: [src/client.ts:168](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L168)
 
 ***
 
@@ -77,7 +77,7 @@ Defined in: [src/client.ts:156](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **gizmoId?**: `string`
 
-Defined in: [src/client.ts:143](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L143)
+Defined in: [src/client.ts:155](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L155)
 
 ***
 
@@ -85,7 +85,7 @@ Defined in: [src/client.ts:143](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **hideFromHistory?**: `boolean`
 
-Defined in: [src/client.ts:152](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L152)
+Defined in: [src/client.ts:164](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L164)
 
 ***
 
@@ -93,7 +93,7 @@ Defined in: [src/client.ts:152](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **historyAndTrainingDisabled?**: `boolean`
 
-Defined in: [src/client.ts:151](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L151)
+Defined in: [src/client.ts:163](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L163)
 
 ***
 
@@ -101,7 +101,7 @@ Defined in: [src/client.ts:151](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **localFunctionSignatures?**: [`JsonValue`](/api/type-aliases/jsonvalue/)
 
-Defined in: [src/client.ts:150](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L150)
+Defined in: [src/client.ts:162](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L162)
 
 ***
 
@@ -109,7 +109,7 @@ Defined in: [src/client.ts:150](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **messages**: [`ConversationMessage`](/api/interfaces/conversationmessage/)[]
 
-Defined in: [src/client.ts:138](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L138)
+Defined in: [src/client.ts:150](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L150)
 
 ***
 
@@ -117,7 +117,7 @@ Defined in: [src/client.ts:138](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **model**: `string`
 
-Defined in: [src/client.ts:139](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L139)
+Defined in: [src/client.ts:151](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L151)
 
 ***
 
@@ -125,7 +125,7 @@ Defined in: [src/client.ts:139](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **parentMessageId**: `string`
 
-Defined in: [src/client.ts:140](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L140)
+Defined in: [src/client.ts:152](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L152)
 
 ***
 
@@ -133,7 +133,7 @@ Defined in: [src/client.ts:140](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **serviceTier?**: `string`
 
-Defined in: [src/client.ts:149](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L149)
+Defined in: [src/client.ts:161](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L161)
 
 ***
 
@@ -141,7 +141,7 @@ Defined in: [src/client.ts:149](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **supportedEncodings?**: `string`[]
 
-Defined in: [src/client.ts:155](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L155)
+Defined in: [src/client.ts:167](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L167)
 
 ***
 
@@ -149,7 +149,7 @@ Defined in: [src/client.ts:155](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **systemHints?**: [`JsonValue`](/api/type-aliases/jsonvalue/)
 
-Defined in: [src/client.ts:147](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L147)
+Defined in: [src/client.ts:159](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L159)
 
 ***
 
@@ -157,4 +157,4 @@ Defined in: [src/client.ts:147](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **thinkingEffort?**: `string`
 
-Defined in: [src/client.ts:148](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L148)
+Defined in: [src/client.ts:160](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L160)

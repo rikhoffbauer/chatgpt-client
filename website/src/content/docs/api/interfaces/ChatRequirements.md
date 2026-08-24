@@ -5,7 +5,7 @@ prev: false
 title: "ChatRequirements"
 ---
 
-Defined in: [src/protocol/sentinel.ts:24](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/sentinel.ts#L24)
+Defined in: [src/protocol/sentinel.ts:24](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/sentinel.ts#L24)
 
 ## Extends
 
@@ -21,7 +21,7 @@ Defined in: [src/protocol/sentinel.ts:24](https://github.com/rikhoffbauer/chatgp
 
 > `optional` **prepare\_token?**: `string`
 
-Defined in: [src/protocol/sentinel.ts:26](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/sentinel.ts#L26)
+Defined in: [src/protocol/sentinel.ts:26](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/sentinel.ts#L26)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [src/protocol/sentinel.ts:26](https://github.com/rikhoffbauer/chatgp
 
 > `optional` **proofofwork?**: [`ProofOfWorkRequirement`](/api/interfaces/proofofworkrequirement/)
 
-Defined in: [src/protocol/sentinel.ts:27](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/sentinel.ts#L27)
+Defined in: [src/protocol/sentinel.ts:27](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/sentinel.ts#L27)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [src/protocol/sentinel.ts:27](https://github.com/rikhoffbauer/chatgp
 
 > `optional` **token?**: `string`
 
-Defined in: [src/protocol/sentinel.ts:25](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/sentinel.ts#L25)
+Defined in: [src/protocol/sentinel.ts:25](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/sentinel.ts#L25)
 
 ***
 
@@ -45,4 +45,4 @@ Defined in: [src/protocol/sentinel.ts:25](https://github.com/rikhoffbauer/chatgp
 
 > `optional` **turnstile?**: [`TurnstileRequirement`](/api/interfaces/turnstilerequirement/)
 
-Defined in: [src/protocol/sentinel.ts:28](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/sentinel.ts#L28)
+Defined in: [src/protocol/sentinel.ts:28](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/sentinel.ts#L28)

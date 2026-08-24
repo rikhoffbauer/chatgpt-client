@@ -5,7 +5,7 @@ prev: false
 title: "Attachment"
 ---
 
-Defined in: [src/client.ts:27](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L27)
+Defined in: [src/client.ts:27](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L27)
 
 ## Indexable
 
@@ -17,7 +17,7 @@ Defined in: [src/client.ts:27](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **asset\_pointer?**: `string`
 
-Defined in: [src/client.ts:29](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L29)
+Defined in: [src/client.ts:29](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L29)
 
 ***
 
@@ -25,7 +25,7 @@ Defined in: [src/client.ts:29](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **content\_type?**: `string`
 
-Defined in: [src/client.ts:30](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L30)
+Defined in: [src/client.ts:30](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L30)
 
 ***
 
@@ -33,7 +33,7 @@ Defined in: [src/client.ts:30](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **file\_id**: `string`
 
-Defined in: [src/client.ts:28](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L28)
+Defined in: [src/client.ts:28](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L28)
 
 ***
 
@@ -41,7 +41,7 @@ Defined in: [src/client.ts:28](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **height?**: `number`
 
-Defined in: [src/client.ts:33](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L33)
+Defined in: [src/client.ts:33](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L33)
 
 ***
 
@@ -49,7 +49,7 @@ Defined in: [src/client.ts:33](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **mime\_type?**: `string`
 
-Defined in: [src/client.ts:35](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L35)
+Defined in: [src/client.ts:35](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L35)
 
 ***
 
@@ -57,7 +57,7 @@ Defined in: [src/client.ts:35](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **name?**: `string`
 
-Defined in: [src/client.ts:34](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L34)
+Defined in: [src/client.ts:34](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L34)
 
 ***
 
@@ -65,7 +65,7 @@ Defined in: [src/client.ts:34](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **size\_bytes?**: `number`
 
-Defined in: [src/client.ts:31](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L31)
+Defined in: [src/client.ts:31](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L31)
 
 ***
 
@@ -73,4 +73,4 @@ Defined in: [src/client.ts:31](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **width?**: `number`
 
-Defined in: [src/client.ts:32](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L32)
+Defined in: [src/client.ts:32](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L32)

@@ -5,7 +5,7 @@ prev: false
 title: "Disposable"
 ---
 
-Defined in: [src/types.ts:16](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/types.ts#L16)
+Defined in: [src/types.ts:16](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/types.ts#L16)
 
 ## Methods
 
@@ -13,7 +13,7 @@ Defined in: [src/types.ts:16](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **close**(): `void` \| `Promise`\<`void`\>
 
-Defined in: [src/types.ts:17](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/types.ts#L17)
+Defined in: [src/types.ts:17](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/types.ts#L17)
 
 #### Returns
 

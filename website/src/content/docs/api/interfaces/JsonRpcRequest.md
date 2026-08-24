@@ -5,7 +5,7 @@ prev: false
 title: "JsonRpcRequest"
 ---
 
-Defined in: [src/appserver.ts:49](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L49)
+Defined in: [src/appserver.ts:49](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L49)
 
 ## Extends
 
@@ -21,7 +21,7 @@ Defined in: [src/appserver.ts:49](https://github.com/rikhoffbauer/chatgpt-client
 
 > **id**: `string` \| `number`
 
-Defined in: [src/appserver.ts:51](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L51)
+Defined in: [src/appserver.ts:51](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L51)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [src/appserver.ts:51](https://github.com/rikhoffbauer/chatgpt-client
 
 > **jsonrpc**: `"2.0"`
 
-Defined in: [src/appserver.ts:50](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L50)
+Defined in: [src/appserver.ts:50](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L50)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [src/appserver.ts:50](https://github.com/rikhoffbauer/chatgpt-client
 
 > **method**: `string`
 
-Defined in: [src/appserver.ts:52](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L52)
+Defined in: [src/appserver.ts:52](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L52)
 
 ***
 
@@ -45,4 +45,4 @@ Defined in: [src/appserver.ts:52](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **params?**: `unknown`
 
-Defined in: [src/appserver.ts:53](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L53)
+Defined in: [src/appserver.ts:53](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L53)

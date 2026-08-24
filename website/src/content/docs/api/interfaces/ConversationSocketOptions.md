@@ -5,7 +5,7 @@ prev: false
 title: "ConversationSocketOptions"
 ---
 
-Defined in: [src/realtime.ts:8](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L8)
+Defined in: [src/realtime.ts:8](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L8)
 
 Callback, cancellation, finite connection timeout, and bounded message queue options.
 
@@ -15,7 +15,7 @@ Callback, cancellation, finite connection timeout, and bounded message queue opt
 
 > `optional` **connectTimeoutMs?**: `number`
 
-Defined in: [src/realtime.ts:13](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L13)
+Defined in: [src/realtime.ts:13](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L13)
 
 ***
 
@@ -23,7 +23,7 @@ Defined in: [src/realtime.ts:13](https://github.com/rikhoffbauer/chatgpt-client/
 
 > `optional` **onClose?**: (`event`) => `void`
 
-Defined in: [src/realtime.ts:11](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L11)
+Defined in: [src/realtime.ts:11](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L11)
 
 #### Parameters
 
@@ -41,7 +41,7 @@ Defined in: [src/realtime.ts:11](https://github.com/rikhoffbauer/chatgpt-client/
 
 > `optional` **onError?**: (`error`) => `void`
 
-Defined in: [src/realtime.ts:10](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L10)
+Defined in: [src/realtime.ts:10](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L10)
 
 #### Parameters
 
@@ -59,7 +59,7 @@ Defined in: [src/realtime.ts:10](https://github.com/rikhoffbauer/chatgpt-client/
 
 > `optional` **onMessage?**: (`message`) => `void`
 
-Defined in: [src/realtime.ts:9](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L9)
+Defined in: [src/realtime.ts:9](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L9)
 
 #### Parameters
 
@@ -77,7 +77,7 @@ Defined in: [src/realtime.ts:9](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **queueSize?**: `number`
 
-Defined in: [src/realtime.ts:14](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L14)
+Defined in: [src/realtime.ts:14](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L14)
 
 ***
 
@@ -85,4 +85,4 @@ Defined in: [src/realtime.ts:14](https://github.com/rikhoffbauer/chatgpt-client/
 
 > `optional` **signal?**: `AbortSignal`
 
-Defined in: [src/realtime.ts:12](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L12)
+Defined in: [src/realtime.ts:12](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L12)

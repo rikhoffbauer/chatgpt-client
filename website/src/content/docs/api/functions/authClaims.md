@@ -7,7 +7,7 @@ title: "authClaims"
 
 > **authClaims**(`token`): [`ChatGptAuthClaims`](/api/interfaces/chatgptauthclaims/)
 
-Defined in: [src/auth.ts:76](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L76)
+Defined in: [src/auth.ts:78](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L78)
 
 ## Parameters
 

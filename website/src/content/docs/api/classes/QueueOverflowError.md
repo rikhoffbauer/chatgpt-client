@@ -5,7 +5,7 @@ prev: false
 title: "QueueOverflowError"
 ---
 
-Defined in: [src/errors.ts:55](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L55)
+Defined in: [src/errors.ts:55](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L55)
 
 Base error with a stable machine-readable code and optional JSON details.
 
@@ -19,7 +19,7 @@ Base error with a stable machine-readable code and optional JSON details.
 
 > **new QueueOverflowError**(`name`, `maxSize`): `QueueOverflowError`
 
-Defined in: [src/errors.ts:56](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L56)
+Defined in: [src/errors.ts:56](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L56)
 
 #### Parameters
 
@@ -57,7 +57,7 @@ Defined in: website/node\_modules/typescript/lib/lib.es2022.error.d.ts:26
 
 > `readonly` **code**: `string`
 
-Defined in: [src/errors.ts:13](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L13)
+Defined in: [src/errors.ts:13](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L13)
 
 #### Inherited from
 
@@ -69,7 +69,7 @@ Defined in: [src/errors.ts:13](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `readonly` `optional` **details?**: [`JsonValue`](/api/type-aliases/jsonvalue/)
 
-Defined in: [src/errors.ts:14](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L14)
+Defined in: [src/errors.ts:14](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L14)
 
 #### Inherited from
 

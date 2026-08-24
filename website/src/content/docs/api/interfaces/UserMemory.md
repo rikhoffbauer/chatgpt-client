@@ -5,7 +5,7 @@ prev: false
 title: "UserMemory"
 ---
 
-Defined in: [src/client.ts:85](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L85)
+Defined in: [src/client.ts:97](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L97)
 
 One memory saved by ChatGPT for the current user.
 
@@ -19,7 +19,7 @@ One memory saved by ChatGPT for the current user.
 
 > **content**: `string`
 
-Defined in: [src/client.ts:87](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L87)
+Defined in: [src/client.ts:99](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L99)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [src/client.ts:87](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **conversation\_id**: `string` \| `null`
 
-Defined in: [src/client.ts:91](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L91)
+Defined in: [src/client.ts:103](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L103)
 
 ***
 
@@ -35,7 +35,7 @@ Defined in: [src/client.ts:91](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **created\_timestamp**: `number` \| `null`
 
-Defined in: [src/client.ts:92](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L92)
+Defined in: [src/client.ts:104](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L104)
 
 ***
 
@@ -43,7 +43,7 @@ Defined in: [src/client.ts:92](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **gizmo\_id**: `string` \| `null`
 
-Defined in: [src/client.ts:89](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L89)
+Defined in: [src/client.ts:101](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L101)
 
 ***
 
@@ -51,7 +51,7 @@ Defined in: [src/client.ts:89](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **id**: `string`
 
-Defined in: [src/client.ts:86](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L86)
+Defined in: [src/client.ts:98](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L98)
 
 ***
 
@@ -59,7 +59,7 @@ Defined in: [src/client.ts:86](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **labels**: `unknown`[] \| `null`
 
-Defined in: [src/client.ts:94](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L94)
+Defined in: [src/client.ts:106](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L106)
 
 ***
 
@@ -67,7 +67,7 @@ Defined in: [src/client.ts:94](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **last\_updated**: [`UnknownRecord`](/api/type-aliases/unknownrecord/) \| `null`
 
-Defined in: [src/client.ts:93](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L93)
+Defined in: [src/client.ts:105](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L105)
 
 ***
 
@@ -75,7 +75,7 @@ Defined in: [src/client.ts:93](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **status**: `string`
 
-Defined in: [src/client.ts:90](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L90)
+Defined in: [src/client.ts:102](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L102)
 
 ***
 
@@ -83,4 +83,4 @@ Defined in: [src/client.ts:90](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **updated\_at**: `string`
 
-Defined in: [src/client.ts:88](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L88)
+Defined in: [src/client.ts:100](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L100)

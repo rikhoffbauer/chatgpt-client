@@ -5,7 +5,7 @@ prev: false
 title: "ConsoleLogger"
 ---
 
-Defined in: [src/logger.ts:46](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/logger.ts#L46)
+Defined in: [src/logger.ts:46](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/logger.ts#L46)
 
 Stderr logger that filters by level and redacts credential-like fields and URL query values.
 
@@ -19,7 +19,7 @@ Stderr logger that filters by level and redacts credential-like fields and URL q
 
 > **new ConsoleLogger**(`options?`): `ConsoleLogger`
 
-Defined in: [src/logger.ts:50](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/logger.ts#L50)
+Defined in: [src/logger.ts:50](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/logger.ts#L50)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [src/logger.ts:50](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `readonly` **json**: `boolean`
 
-Defined in: [src/logger.ts:48](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/logger.ts#L48)
+Defined in: [src/logger.ts:48](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/logger.ts#L48)
 
 ***
 
@@ -51,7 +51,7 @@ Defined in: [src/logger.ts:48](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `readonly` **level**: [`LogLevel`](/api/type-aliases/loglevel/)
 
-Defined in: [src/logger.ts:47](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/logger.ts#L47)
+Defined in: [src/logger.ts:47](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/logger.ts#L47)
 
 ## Methods
 
@@ -59,7 +59,7 @@ Defined in: [src/logger.ts:47](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **debug**(`message`, `fields?`): `void`
 
-Defined in: [src/logger.ts:55](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/logger.ts#L55)
+Defined in: [src/logger.ts:55](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/logger.ts#L55)
 
 #### Parameters
 
@@ -85,7 +85,7 @@ Defined in: [src/logger.ts:55](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **error**(`message`, `fields?`): `void`
 
-Defined in: [src/logger.ts:67](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/logger.ts#L67)
+Defined in: [src/logger.ts:67](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/logger.ts#L67)
 
 #### Parameters
 
@@ -111,7 +111,7 @@ Defined in: [src/logger.ts:67](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **info**(`message`, `fields?`): `void`
 
-Defined in: [src/logger.ts:59](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/logger.ts#L59)
+Defined in: [src/logger.ts:59](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/logger.ts#L59)
 
 #### Parameters
 
@@ -137,7 +137,7 @@ Defined in: [src/logger.ts:59](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **warn**(`message`, `fields?`): `void`
 
-Defined in: [src/logger.ts:63](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/logger.ts#L63)
+Defined in: [src/logger.ts:63](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/logger.ts#L63)
 
 #### Parameters
 

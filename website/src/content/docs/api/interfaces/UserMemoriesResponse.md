@@ -5,7 +5,7 @@ prev: false
 title: "UserMemoriesResponse"
 ---
 
-Defined in: [src/client.ts:99](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L99)
+Defined in: [src/client.ts:111](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L111)
 
 The current user's saved ChatGPT memories and server-side token accounting.
 
@@ -19,7 +19,7 @@ The current user's saved ChatGPT memories and server-side token accounting.
 
 > **memories**: [`UserMemory`](/api/interfaces/usermemory/)[]
 
-Defined in: [src/client.ts:100](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L100)
+Defined in: [src/client.ts:112](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L112)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [src/client.ts:100](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **memory\_max\_tokens**: `number`
 
-Defined in: [src/client.ts:101](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L101)
+Defined in: [src/client.ts:113](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L113)
 
 ***
 
@@ -35,4 +35,4 @@ Defined in: [src/client.ts:101](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **memory\_num\_tokens**: `number`
 
-Defined in: [src/client.ts:102](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L102)
+Defined in: [src/client.ts:114](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L114)

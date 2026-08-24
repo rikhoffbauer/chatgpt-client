@@ -5,7 +5,7 @@ prev: false
 title: "AppServer"
 ---
 
-Defined in: [src/appserver.ts:110](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L110)
+Defined in: [src/appserver.ts:110](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L110)
 
 Owns a local Codex app-server child process and bounded JSON-RPC state.
 Register an explicit server-request policy and await [AppServer.close](/api/classes/appserver/#close) when finished.
@@ -20,7 +20,7 @@ Register an explicit server-request policy and await [AppServer.close](/api/clas
 
 > **new AppServer**(`options?`): `AppServer`
 
-Defined in: [src/appserver.ts:132](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L132)
+Defined in: [src/appserver.ts:132](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L132)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [src/appserver.ts:132](https://github.com/rikhoffbauer/chatgpt-clien
 
 > `readonly` **args**: readonly `string`[]
 
-Defined in: [src/appserver.ts:112](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L112)
+Defined in: [src/appserver.ts:112](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L112)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [src/appserver.ts:112](https://github.com/rikhoffbauer/chatgpt-clien
 
 > `readonly` **binary**: `string`
 
-Defined in: [src/appserver.ts:111](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L111)
+Defined in: [src/appserver.ts:111](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L111)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [src/appserver.ts:111](https://github.com/rikhoffbauer/chatgpt-clien
 
 > `readonly` `optional` **cwd?**: `string`
 
-Defined in: [src/appserver.ts:114](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L114)
+Defined in: [src/appserver.ts:114](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L114)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [src/appserver.ts:114](https://github.com/rikhoffbauer/chatgpt-clien
 
 > `readonly` **env**: `ProcessEnv`
 
-Defined in: [src/appserver.ts:113](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L113)
+Defined in: [src/appserver.ts:113](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L113)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [src/appserver.ts:113](https://github.com/rikhoffbauer/chatgpt-clien
 
 > **serverInfo**: `unknown`
 
-Defined in: [src/appserver.ts:130](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L130)
+Defined in: [src/appserver.ts:130](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L130)
 
 ***
 
@@ -269,7 +269,7 @@ v0.1.26
 
 > **close**(): `Promise`\<`void`\>
 
-Defined in: [src/appserver.ts:258](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L258)
+Defined in: [src/appserver.ts:258](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L258)
 
 Terminates the process, escalating to SIGKILL after the finite close deadline.
 
@@ -503,7 +503,7 @@ v0.1.26
 
 > **notify**(`method`, `params?`): `Promise`\<`void`\>
 
-Defined in: [src/appserver.ts:221](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L221)
+Defined in: [src/appserver.ts:221](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L221)
 
 #### Parameters
 
@@ -695,7 +695,7 @@ v0.3.0
 
 > **onRequest**(`handler`): `this`
 
-Defined in: [src/appserver.ts:175](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L175)
+Defined in: [src/appserver.ts:175](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L175)
 
 Installs the policy handler for server-initiated requests such as approvals.
 
@@ -1029,7 +1029,7 @@ v0.1.26
 
 > **request**\<`T`\>(`method`, `params?`, `options?`): `Promise`\<`T`\>
 
-Defined in: [src/appserver.ts:181](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L181)
+Defined in: [src/appserver.ts:181](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L181)
 
 Sends one bounded JSON-RPC request and rejects on timeout, cancellation, or process exit.
 
@@ -1063,7 +1063,7 @@ Sends one bounded JSON-RPC request and rejects on timeout, cancellation, or proc
 
 > **runTurn**(`params`, `options?`): `AsyncGenerator`\<[`JsonRpcNotification`](/api/interfaces/jsonrpcnotification/) \| \{ `method`: `string`; `result`: `unknown`; \}\>
 
-Defined in: [src/appserver.ts:226](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L226)
+Defined in: [src/appserver.ts:226](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L226)
 
 Starts a turn and yields its result plus matching notifications through completion or failure.
 
@@ -1130,7 +1130,7 @@ v0.3.5
 
 > **start**(`clientInfo?`): `Promise`\<`unknown`\>
 
-Defined in: [src/appserver.ts:154](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L154)
+Defined in: [src/appserver.ts:154](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L154)
 
 #### Parameters
 
@@ -1859,7 +1859,7 @@ v15.4.0
 
 > `static` **start**(`options?`): `Promise`\<`AppServer`\>
 
-Defined in: [src/appserver.ts:148](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L148)
+Defined in: [src/appserver.ts:148](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L148)
 
 Creates, starts, and initializes an app-server process.
 

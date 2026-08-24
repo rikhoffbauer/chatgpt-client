@@ -5,7 +5,7 @@ prev: false
 title: "ConversationListResponse"
 ---
 
-Defined in: [src/client.ts:78](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L78)
+Defined in: [src/client.ts:90](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L90)
 
 ## Indexable
 
@@ -17,7 +17,7 @@ Defined in: [src/client.ts:78](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **items?**: [`UnknownRecord`](/api/type-aliases/unknownrecord/) & `object`[]
 
-Defined in: [src/client.ts:80](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L80)
+Defined in: [src/client.ts:92](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L92)
 
 ***
 
@@ -25,4 +25,4 @@ Defined in: [src/client.ts:80](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `optional` **total?**: `number`
 
-Defined in: [src/client.ts:79](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L79)
+Defined in: [src/client.ts:91](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L91)

@@ -5,7 +5,7 @@ prev: false
 title: "LineReaderOptions"
 ---
 
-Defined in: [src/streaming/lines.ts:4](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/lines.ts#L4)
+Defined in: [src/streaming/lines.ts:4](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/lines.ts#L4)
 
 Cancellation and per-line UTF-8 byte limit for [readLines](/api/functions/readlines/).
 
@@ -19,7 +19,7 @@ Cancellation and per-line UTF-8 byte limit for [readLines](/api/functions/readli
 
 > `optional` **maxLineBytes?**: `number`
 
-Defined in: [src/streaming/lines.ts:5](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/lines.ts#L5)
+Defined in: [src/streaming/lines.ts:5](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/lines.ts#L5)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [src/streaming/lines.ts:5](https://github.com/rikhoffbauer/chatgpt-c
 
 > `optional` **signal?**: `AbortSignal`
 
-Defined in: [src/streaming/lines.ts:6](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/lines.ts#L6)
+Defined in: [src/streaming/lines.ts:6](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/lines.ts#L6)

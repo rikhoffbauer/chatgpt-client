@@ -7,7 +7,7 @@ title: "defaultConfig"
 
 > **defaultConfig**(`overrides?`): [`ClientConfig`](/api/interfaces/clientconfig/)
 
-Defined in: [src/config.ts:66](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L66)
+Defined in: [src/config.ts:66](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L66)
 
 Resolves configuration with programmatic overrides taking precedence over environment variables.
 

@@ -5,7 +5,7 @@ prev: false
 title: "UserMessageOptions"
 ---
 
-Defined in: [src/client.ts:132](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L132)
+Defined in: [src/client.ts:144](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L144)
 
 ## Properties
 
@@ -13,7 +13,7 @@ Defined in: [src/client.ts:132](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **attachments?**: [`Attachment`](/api/interfaces/attachment/)[]
 
-Defined in: [src/client.ts:133](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L133)
+Defined in: [src/client.ts:145](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L145)
 
 ***
 
@@ -21,4 +21,4 @@ Defined in: [src/client.ts:133](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **metadata?**: [`UnknownRecord`](/api/type-aliases/unknownrecord/)
 
-Defined in: [src/client.ts:134](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L134)
+Defined in: [src/client.ts:146](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L146)

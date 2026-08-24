@@ -5,7 +5,7 @@ prev: false
 title: "UserMemorySummaryFollowUp"
 ---
 
-Defined in: [src/client.ts:107](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L107)
+Defined in: [src/client.ts:119](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L119)
 
 A suggested prompt shown alongside an About You summary section.
 
@@ -19,7 +19,7 @@ A suggested prompt shown alongside an About You summary section.
 
 > **action**: `string`
 
-Defined in: [src/client.ts:110](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L110)
+Defined in: [src/client.ts:122](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L122)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [src/client.ts:110](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **preview**: `string`
 
-Defined in: [src/client.ts:108](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L108)
+Defined in: [src/client.ts:120](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L120)
 
 ***
 
@@ -35,4 +35,4 @@ Defined in: [src/client.ts:108](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **prompt**: `string`
 
-Defined in: [src/client.ts:109](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L109)
+Defined in: [src/client.ts:121](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L121)

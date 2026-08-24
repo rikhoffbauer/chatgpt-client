@@ -5,7 +5,7 @@ prev: false
 title: "HttpError"
 ---
 
-Defined in: [src/errors.ts:73](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L73)
+Defined in: [src/errors.ts:73](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L73)
 
 Base error with a stable machine-readable code and optional JSON details.
 
@@ -19,7 +19,7 @@ Base error with a stable machine-readable code and optional JSON details.
 
 > **new HttpError**(`options`): `HttpError`
 
-Defined in: [src/errors.ts:80](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L80)
+Defined in: [src/errors.ts:80](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L80)
 
 #### Parameters
 
@@ -63,7 +63,7 @@ Defined in: [src/errors.ts:80](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `readonly` **bodyPreview**: `string`
 
-Defined in: [src/errors.ts:77](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L77)
+Defined in: [src/errors.ts:77](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L77)
 
 ***
 
@@ -83,7 +83,7 @@ Defined in: website/node\_modules/typescript/lib/lib.es2022.error.d.ts:26
 
 > `readonly` **code**: `string`
 
-Defined in: [src/errors.ts:13](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L13)
+Defined in: [src/errors.ts:13](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L13)
 
 #### Inherited from
 
@@ -95,7 +95,7 @@ Defined in: [src/errors.ts:13](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `readonly` `optional` **details?**: [`JsonValue`](/api/type-aliases/jsonvalue/)
 
-Defined in: [src/errors.ts:14](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L14)
+Defined in: [src/errors.ts:14](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L14)
 
 #### Inherited from
 
@@ -119,7 +119,7 @@ Defined in: website/node\_modules/typescript/lib/lib.es5.d.ts:1077
 
 > `readonly` **method**: [`HttpMethod`](/api/type-aliases/httpmethod/)
 
-Defined in: [src/errors.ts:74](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L74)
+Defined in: [src/errors.ts:74](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L74)
 
 ***
 
@@ -139,7 +139,7 @@ Defined in: website/node\_modules/typescript/lib/lib.es5.d.ts:1076
 
 > `readonly` `optional` **retryAfterMs?**: `number`
 
-Defined in: [src/errors.ts:78](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L78)
+Defined in: [src/errors.ts:78](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L78)
 
 ***
 
@@ -159,7 +159,7 @@ Defined in: website/node\_modules/typescript/lib/lib.es5.d.ts:1078
 
 > `readonly` **status**: `number`
 
-Defined in: [src/errors.ts:76](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L76)
+Defined in: [src/errors.ts:76](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L76)
 
 ***
 
@@ -167,7 +167,7 @@ Defined in: [src/errors.ts:76](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > `readonly` **url**: `string`
 
-Defined in: [src/errors.ts:75](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/errors.ts#L75)
+Defined in: [src/errors.ts:75](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/errors.ts#L75)
 
 ***
 

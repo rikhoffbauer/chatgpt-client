@@ -5,7 +5,7 @@ prev: false
 title: "RetryPolicy"
 ---
 
-Defined in: [src/config.ts:10](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L10)
+Defined in: [src/config.ts:10](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L10)
 
 Bounded retry policy used for idempotent transport operations.
 
@@ -15,7 +15,7 @@ Bounded retry policy used for idempotent transport operations.
 
 > **baseDelayMs**: `number`
 
-Defined in: [src/config.ts:12](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L12)
+Defined in: [src/config.ts:12](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L12)
 
 ***
 
@@ -23,7 +23,7 @@ Defined in: [src/config.ts:12](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **maxAttempts**: `number`
 
-Defined in: [src/config.ts:11](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L11)
+Defined in: [src/config.ts:11](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L11)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [src/config.ts:11](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **maxDelayMs**: `number`
 
-Defined in: [src/config.ts:13](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L13)
+Defined in: [src/config.ts:13](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L13)
 
 ***
 
@@ -39,4 +39,4 @@ Defined in: [src/config.ts:13](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **retryStatuses**: `ReadonlySet`\<`number`\>
 
-Defined in: [src/config.ts:14](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L14)
+Defined in: [src/config.ts:14](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L14)

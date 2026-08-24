@@ -5,7 +5,7 @@ prev: false
 title: "UserMemorySummaryResponse"
 ---
 
-Defined in: [src/client.ts:124](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L124)
+Defined in: [src/client.ts:136](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L136)
 
 ChatGPT's generated About You summary for the current user.
 
@@ -19,7 +19,7 @@ ChatGPT's generated About You summary for the current user.
 
 > **emptyStateMessage**: `string`
 
-Defined in: [src/client.ts:127](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L127)
+Defined in: [src/client.ts:139](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L139)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [src/client.ts:127](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **generatedAtIso**: `string`
 
-Defined in: [src/client.ts:126](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L126)
+Defined in: [src/client.ts:138](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L138)
 
 ***
 
@@ -35,7 +35,7 @@ Defined in: [src/client.ts:126](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **sections**: [`UserMemorySummarySection`](/api/interfaces/usermemorysummarysection/)[]
 
-Defined in: [src/client.ts:125](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L125)
+Defined in: [src/client.ts:137](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L137)
 
 ***
 
@@ -43,4 +43,4 @@ Defined in: [src/client.ts:125](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **sourceChecksum**: `string`
 
-Defined in: [src/client.ts:128](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L128)
+Defined in: [src/client.ts:140](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L140)

@@ -5,7 +5,7 @@ prev: false
 title: "PrepareIntegrityOptions"
 ---
 
-Defined in: [src/protocol/sentinel.ts:39](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/sentinel.ts#L39)
+Defined in: [src/protocol/sentinel.ts:39](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/sentinel.ts#L39)
 
 ## Properties
 
@@ -13,7 +13,7 @@ Defined in: [src/protocol/sentinel.ts:39](https://github.com/rikhoffbauer/chatgp
 
 > `optional` **maxProofIterations?**: `number`
 
-Defined in: [src/protocol/sentinel.ts:42](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/sentinel.ts#L42)
+Defined in: [src/protocol/sentinel.ts:42](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/sentinel.ts#L42)
 
 ***
 
@@ -21,7 +21,7 @@ Defined in: [src/protocol/sentinel.ts:42](https://github.com/rikhoffbauer/chatgp
 
 > `optional` **signal?**: `AbortSignal`
 
-Defined in: [src/protocol/sentinel.ts:41](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/sentinel.ts#L41)
+Defined in: [src/protocol/sentinel.ts:41](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/sentinel.ts#L41)
 
 ***
 
@@ -29,4 +29,4 @@ Defined in: [src/protocol/sentinel.ts:41](https://github.com/rikhoffbauer/chatgp
 
 > `optional` **solver?**: [`IntegritySolver`](/api/type-aliases/integritysolver/)
 
-Defined in: [src/protocol/sentinel.ts:40](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/protocol/sentinel.ts#L40)
+Defined in: [src/protocol/sentinel.ts:40](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/protocol/sentinel.ts#L40)

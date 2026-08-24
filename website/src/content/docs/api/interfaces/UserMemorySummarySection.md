@@ -5,7 +5,7 @@ prev: false
 title: "UserMemorySummarySection"
 ---
 
-Defined in: [src/client.ts:115](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L115)
+Defined in: [src/client.ts:127](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L127)
 
 One section in ChatGPT's generated About You summary.
 
@@ -19,7 +19,7 @@ One section in ChatGPT's generated About You summary.
 
 > **description**: `string`
 
-Defined in: [src/client.ts:118](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L118)
+Defined in: [src/client.ts:130](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L130)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [src/client.ts:118](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > `optional` **followUps?**: [`UserMemorySummaryFollowUp`](/api/interfaces/usermemorysummaryfollowup/)[]
 
-Defined in: [src/client.ts:119](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L119)
+Defined in: [src/client.ts:131](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L131)
 
 ***
 
@@ -35,7 +35,7 @@ Defined in: [src/client.ts:119](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **id**: `string`
 
-Defined in: [src/client.ts:116](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L116)
+Defined in: [src/client.ts:128](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L128)
 
 ***
 
@@ -43,4 +43,4 @@ Defined in: [src/client.ts:116](https://github.com/rikhoffbauer/chatgpt-client/b
 
 > **title**: `string`
 
-Defined in: [src/client.ts:117](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/client.ts#L117)
+Defined in: [src/client.ts:129](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/client.ts#L129)

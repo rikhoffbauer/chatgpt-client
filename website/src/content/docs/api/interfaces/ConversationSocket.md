@@ -5,7 +5,7 @@ prev: false
 title: "ConversationSocket"
 ---
 
-Defined in: [src/realtime.ts:18](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L18)
+Defined in: [src/realtime.ts:18](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L18)
 
 Owned conversation WebSocket and bounded async message iterator; call `close()` when finished.
 
@@ -15,7 +15,7 @@ Owned conversation WebSocket and bounded async message iterator; call `close()` 
 
 > **socket**: `WebSocket`
 
-Defined in: [src/realtime.ts:19](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L19)
+Defined in: [src/realtime.ts:19](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L19)
 
 ## Methods
 
@@ -23,7 +23,7 @@ Defined in: [src/realtime.ts:19](https://github.com/rikhoffbauer/chatgpt-client/
 
 > **close**(`code?`, `reason?`): `void`
 
-Defined in: [src/realtime.ts:20](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L20)
+Defined in: [src/realtime.ts:20](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L20)
 
 #### Parameters
 
@@ -45,7 +45,7 @@ Defined in: [src/realtime.ts:20](https://github.com/rikhoffbauer/chatgpt-client/
 
 > **messages**(): `AsyncIterable`\<`unknown`\>
 
-Defined in: [src/realtime.ts:21](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/realtime.ts#L21)
+Defined in: [src/realtime.ts:21](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/realtime.ts#L21)
 
 #### Returns
 

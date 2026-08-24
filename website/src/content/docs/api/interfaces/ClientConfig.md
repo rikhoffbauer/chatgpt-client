@@ -5,7 +5,7 @@ prev: false
 title: "ClientConfig"
 ---
 
-Defined in: [src/config.ts:30](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L30)
+Defined in: [src/config.ts:30](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L30)
 
 Fully resolved client configuration after overrides, environment, and defaults.
 
@@ -15,7 +15,7 @@ Fully resolved client configuration after overrides, environment, and defaults.
 
 > **appVersion**: `string`
 
-Defined in: [src/config.ts:36](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L36)
+Defined in: [src/config.ts:36](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L36)
 
 ***
 
@@ -23,7 +23,7 @@ Defined in: [src/config.ts:36](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **authPath**: `string`
 
-Defined in: [src/config.ts:32](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L32)
+Defined in: [src/config.ts:32](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L32)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [src/config.ts:32](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **baseUrl**: `string`
 
-Defined in: [src/config.ts:31](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L31)
+Defined in: [src/config.ts:31](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L31)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [src/config.ts:31](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **limits**: [`RuntimeLimits`](/api/interfaces/runtimelimits/)
 
-Defined in: [src/config.ts:38](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L38)
+Defined in: [src/config.ts:38](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L38)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [src/config.ts:38](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **persona**: [`Persona`](/api/type-aliases/persona/)
 
-Defined in: [src/config.ts:34](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L34)
+Defined in: [src/config.ts:34](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L34)
 
 ***
 
@@ -55,7 +55,7 @@ Defined in: [src/config.ts:34](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **retry**: [`RetryPolicy`](/api/interfaces/retrypolicy/)
 
-Defined in: [src/config.ts:37](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L37)
+Defined in: [src/config.ts:37](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L37)
 
 ***
 
@@ -63,7 +63,7 @@ Defined in: [src/config.ts:37](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **solver**: [`IntegritySolver`](/api/type-aliases/integritysolver/)
 
-Defined in: [src/config.ts:35](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L35)
+Defined in: [src/config.ts:35](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L35)
 
 ***
 
@@ -71,4 +71,4 @@ Defined in: [src/config.ts:35](https://github.com/rikhoffbauer/chatgpt-client/bl
 
 > **statePath**: `string`
 
-Defined in: [src/config.ts:33](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/config.ts#L33)
+Defined in: [src/config.ts:33](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/config.ts#L33)

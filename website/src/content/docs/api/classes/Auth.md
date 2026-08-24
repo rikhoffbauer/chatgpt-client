@@ -5,7 +5,7 @@ prev: false
 title: "Auth"
 ---
 
-Defined in: [src/auth.ts:90](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L90)
+Defined in: [src/auth.ts:92](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L92)
 
 Mutable OAuth credential holder with finite refresh deadlines and concurrent-refresh deduplication.
 Loaded tokens are sensitive and must not be logged or committed.
@@ -16,7 +16,7 @@ Loaded tokens are sensitive and must not be logged or committed.
 
 > **new Auth**(`options`): `Auth`
 
-Defined in: [src/auth.ts:101](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L101)
+Defined in: [src/auth.ts:103](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L103)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [src/auth.ts:101](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **accessToken**: `string`
 
-Defined in: [src/auth.ts:91](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L91)
+Defined in: [src/auth.ts:93](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L93)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [src/auth.ts:91](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > **accountId**: `string` \| `null`
 
-Defined in: [src/auth.ts:94](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L94)
+Defined in: [src/auth.ts:96](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L96)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [src/auth.ts:94](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `optional` **idToken?**: `string`
 
-Defined in: [src/auth.ts:93](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L93)
+Defined in: [src/auth.ts:95](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L95)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [src/auth.ts:93](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `optional` **refreshToken?**: `string`
 
-Defined in: [src/auth.ts:92](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L92)
+Defined in: [src/auth.ts:94](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L94)
 
 ## Accessors
 
@@ -68,7 +68,7 @@ Defined in: [src/auth.ts:92](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > **get** **claims**(): [`ChatGptAuthClaims`](/api/interfaces/chatgptauthclaims/)
 
-Defined in: [src/auth.ts:145](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L145)
+Defined in: [src/auth.ts:147](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L147)
 
 ##### Returns
 
@@ -80,7 +80,7 @@ Defined in: [src/auth.ts:145](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **ensureFresh**(): `Promise`\<`void`\>
 
-Defined in: [src/auth.ts:155](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L155)
+Defined in: [src/auth.ts:157](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L157)
 
 Refreshes an expiring access token when a refresh token is available.
 
@@ -94,7 +94,7 @@ Refreshes an expiring access token when a refresh token is available.
 
 > **isExpiring**(`skewMs?`): `boolean`
 
-Defined in: [src/auth.ts:149](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L149)
+Defined in: [src/auth.ts:151](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L151)
 
 #### Parameters
 
@@ -112,7 +112,7 @@ Defined in: [src/auth.ts:149](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **refresh**(): `Promise`\<`void`\>
 
-Defined in: [src/auth.ts:160](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L160)
+Defined in: [src/auth.ts:162](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L162)
 
 Refreshes tokens once; concurrent callers share the same in-flight operation.
 
@@ -126,7 +126,7 @@ Refreshes tokens once; concurrent callers share the same in-flight operation.
 
 > `static` **load**(`options?`): `Promise`\<`Auth`\>
 
-Defined in: [src/auth.ts:113](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/auth.ts#L113)
+Defined in: [src/auth.ts:115](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/auth.ts#L115)
 
 Loads the Codex auth store, validates its token fields, and refreshes expiring credentials.
 

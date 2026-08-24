@@ -5,7 +5,7 @@ prev: false
 title: "Http"
 ---
 
-Defined in: [src/http.ts:97](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L97)
+Defined in: [src/http.ts:97](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L97)
 
 Low-level authenticated transport with token refresh, finite deadlines, bounded bodies, and idempotent retries.
 Use `sendAuth: false` whenever a request targets an external signed URL.
@@ -16,7 +16,7 @@ Use `sendAuth: false` whenever a request targets an external signed URL.
 
 > **new Http**(`options`): `Http`
 
-Defined in: [src/http.ts:110](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L110)
+Defined in: [src/http.ts:110](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L110)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [src/http.ts:110](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > `readonly` **appVersion**: `string`
 
-Defined in: [src/http.ts:101](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L101)
+Defined in: [src/http.ts:101](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L101)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [src/http.ts:101](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > `readonly` **auth**: [`Auth`](/api/classes/auth/)
 
-Defined in: [src/http.ts:98](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L98)
+Defined in: [src/http.ts:98](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L98)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [src/http.ts:98](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `readonly` **baseUrl**: `string`
 
-Defined in: [src/http.ts:99](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L99)
+Defined in: [src/http.ts:99](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L99)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [src/http.ts:99](https://github.com/rikhoffbauer/chatgpt-client/blob
 
 > `readonly` **config**: [`ClientConfig`](/api/interfaces/clientconfig/)
 
-Defined in: [src/http.ts:102](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L102)
+Defined in: [src/http.ts:102](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L102)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [src/http.ts:102](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > `readonly` **persona**: [`Persona`](/api/type-aliases/persona/)
 
-Defined in: [src/http.ts:100](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L100)
+Defined in: [src/http.ts:100](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L100)
 
 ## Methods
 
@@ -74,7 +74,7 @@ Defined in: [src/http.ts:100](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **delete**\<`T`\>(`path`, `options?`): `Promise`\<`T`\>
 
-Defined in: [src/http.ts:261](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L261)
+Defined in: [src/http.ts:261](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L261)
 
 #### Type Parameters
 
@@ -102,7 +102,7 @@ Defined in: [src/http.ts:261](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **get**\<`T`\>(`path`, `query?`, `options?`): `Promise`\<`T`\>
 
-Defined in: [src/http.ts:245](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L245)
+Defined in: [src/http.ts:245](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L245)
 
 #### Type Parameters
 
@@ -134,7 +134,7 @@ Defined in: [src/http.ts:245](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **headers**(`extra?`, `options?`): `Promise`\<`Headers`\>
 
-Defined in: [src/http.ts:135](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L135)
+Defined in: [src/http.ts:135](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L135)
 
 #### Parameters
 
@@ -158,7 +158,7 @@ Defined in: [src/http.ts:135](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **json**\<`T`\>(`method`, `path`, `options?`): `Promise`\<`T`\>
 
-Defined in: [src/http.ts:229](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L229)
+Defined in: [src/http.ts:229](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L229)
 
 Reads a bounded response body, throws [HttpError](/api/classes/httperror/) for non-success status, and decodes JSON when possible.
 
@@ -192,7 +192,7 @@ Reads a bounded response body, throws [HttpError](/api/classes/httperror/) for n
 
 > **patch**\<`T`\>(`path`, `body?`, `options?`): `Promise`\<`T`\>
 
-Defined in: [src/http.ts:257](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L257)
+Defined in: [src/http.ts:257](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L257)
 
 #### Type Parameters
 
@@ -224,7 +224,7 @@ Defined in: [src/http.ts:257](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **post**\<`T`\>(`path`, `body?`, `options?`): `Promise`\<`T`\>
 
-Defined in: [src/http.ts:249](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L249)
+Defined in: [src/http.ts:249](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L249)
 
 #### Type Parameters
 
@@ -256,7 +256,7 @@ Defined in: [src/http.ts:249](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **put**\<`T`\>(`path`, `body`, `options?`): `Promise`\<`T`\>
 
-Defined in: [src/http.ts:253](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L253)
+Defined in: [src/http.ts:253](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L253)
 
 #### Type Parameters
 
@@ -288,7 +288,7 @@ Defined in: [src/http.ts:253](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **readBytes**(`response`, `options?`): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\>\>
 
-Defined in: [src/http.ts:266](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L266)
+Defined in: [src/http.ts:266](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L266)
 
 Reads response bytes with a finite deadline and configured or explicit maximum size.
 
@@ -312,7 +312,7 @@ Reads response bytes with a finite deadline and configured or explicit maximum s
 
 > **readText**(`response`, `options?`): `Promise`\<`string`\>
 
-Defined in: [src/http.ts:279](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L279)
+Defined in: [src/http.ts:279](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L279)
 
 #### Parameters
 
@@ -334,7 +334,7 @@ Defined in: [src/http.ts:279](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **request**(`method`, `path`, `options?`): `Promise`\<`Response`\>
 
-Defined in: [src/http.ts:169](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L169)
+Defined in: [src/http.ts:169](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L169)
 
 Sends one request, refreshing auth once on 401 and retrying only when allowed by the bounded policy.
 
@@ -362,7 +362,7 @@ Sends one request, refreshing auth once on 401 and retrying only when allowed by
 
 > **stream**(`method`, `path`, `options?`): `Promise`\<`Response`\>
 
-Defined in: [src/http.ts:284](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L284)
+Defined in: [src/http.ts:284](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L284)
 
 #### Parameters
 
@@ -388,7 +388,7 @@ Defined in: [src/http.ts:284](https://github.com/rikhoffbauer/chatgpt-client/blo
 
 > **url**(`path`, `query?`): `string`
 
-Defined in: [src/http.ts:127](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/http.ts#L127)
+Defined in: [src/http.ts:127](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/http.ts#L127)
 
 #### Parameters
 

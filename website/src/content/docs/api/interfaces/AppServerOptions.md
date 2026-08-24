@@ -5,7 +5,7 @@ prev: false
 title: "AppServerOptions"
 ---
 
-Defined in: [src/appserver.ts:80](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L80)
+Defined in: [src/appserver.ts:80](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L80)
 
 Process, deadline, parser, queue, and logging options for the local Codex app-server.
 
@@ -15,7 +15,7 @@ Process, deadline, parser, queue, and logging options for the local Codex app-se
 
 > `optional` **args?**: readonly `string`[]
 
-Defined in: [src/appserver.ts:82](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L82)
+Defined in: [src/appserver.ts:82](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L82)
 
 ***
 
@@ -23,7 +23,7 @@ Defined in: [src/appserver.ts:82](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **binary?**: `string`
 
-Defined in: [src/appserver.ts:81](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L81)
+Defined in: [src/appserver.ts:81](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L81)
 
 ***
 
@@ -31,7 +31,7 @@ Defined in: [src/appserver.ts:81](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **closeTimeoutMs?**: `number`
 
-Defined in: [src/appserver.ts:88](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L88)
+Defined in: [src/appserver.ts:88](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L88)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [src/appserver.ts:88](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **cwd?**: `string`
 
-Defined in: [src/appserver.ts:84](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L84)
+Defined in: [src/appserver.ts:84](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L84)
 
 ***
 
@@ -47,7 +47,7 @@ Defined in: [src/appserver.ts:84](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **env?**: `ProcessEnv`
 
-Defined in: [src/appserver.ts:83](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L83)
+Defined in: [src/appserver.ts:83](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L83)
 
 ***
 
@@ -55,7 +55,7 @@ Defined in: [src/appserver.ts:83](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **logger?**: [`Logger`](/api/interfaces/logger/)
 
-Defined in: [src/appserver.ts:85](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L85)
+Defined in: [src/appserver.ts:85](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L85)
 
 ***
 
@@ -63,7 +63,7 @@ Defined in: [src/appserver.ts:85](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **maxLineBytes?**: `number`
 
-Defined in: [src/appserver.ts:90](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L90)
+Defined in: [src/appserver.ts:90](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L90)
 
 ***
 
@@ -71,7 +71,7 @@ Defined in: [src/appserver.ts:90](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **maxPendingRequests?**: `number`
 
-Defined in: [src/appserver.ts:89](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L89)
+Defined in: [src/appserver.ts:89](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L89)
 
 ***
 
@@ -79,7 +79,7 @@ Defined in: [src/appserver.ts:89](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **notificationQueueSize?**: `number`
 
-Defined in: [src/appserver.ts:91](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L91)
+Defined in: [src/appserver.ts:91](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L91)
 
 ***
 
@@ -87,7 +87,7 @@ Defined in: [src/appserver.ts:91](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **requestTimeoutMs?**: `number`
 
-Defined in: [src/appserver.ts:86](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L86)
+Defined in: [src/appserver.ts:86](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L86)
 
 ***
 
@@ -95,4 +95,4 @@ Defined in: [src/appserver.ts:86](https://github.com/rikhoffbauer/chatgpt-client
 
 > `optional` **startupTimeoutMs?**: `number`
 
-Defined in: [src/appserver.ts:87](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/appserver.ts#L87)
+Defined in: [src/appserver.ts:87](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/appserver.ts#L87)

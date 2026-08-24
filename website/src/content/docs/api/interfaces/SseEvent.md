@@ -5,7 +5,7 @@ prev: false
 title: "SseEvent"
 ---
 
-Defined in: [src/streaming/sse.ts:4](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/sse.ts#L4)
+Defined in: [src/streaming/sse.ts:4](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/sse.ts#L4)
 
 ## Properties
 
@@ -13,7 +13,7 @@ Defined in: [src/streaming/sse.ts:4](https://github.com/rikhoffbauer/chatgpt-cli
 
 > **data**: `string`
 
-Defined in: [src/streaming/sse.ts:6](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/sse.ts#L6)
+Defined in: [src/streaming/sse.ts:6](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/sse.ts#L6)
 
 ***
 
@@ -21,7 +21,7 @@ Defined in: [src/streaming/sse.ts:6](https://github.com/rikhoffbauer/chatgpt-cli
 
 > **event**: `string` \| `null`
 
-Defined in: [src/streaming/sse.ts:5](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/sse.ts#L5)
+Defined in: [src/streaming/sse.ts:5](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/sse.ts#L5)
 
 ***
 
@@ -29,7 +29,7 @@ Defined in: [src/streaming/sse.ts:5](https://github.com/rikhoffbauer/chatgpt-cli
 
 > **id**: `string` \| `null`
 
-Defined in: [src/streaming/sse.ts:7](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/sse.ts#L7)
+Defined in: [src/streaming/sse.ts:7](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/sse.ts#L7)
 
 ***
 
@@ -37,4 +37,4 @@ Defined in: [src/streaming/sse.ts:7](https://github.com/rikhoffbauer/chatgpt-cli
 
 > **retry**: `number` \| `null`
 
-Defined in: [src/streaming/sse.ts:8](https://github.com/rikhoffbauer/chatgpt-client/blob/7e976a90857ff571c9dbcd87ad60810f4399bff8/src/streaming/sse.ts#L8)
+Defined in: [src/streaming/sse.ts:8](https://github.com/rikhoffbauer/chatgpt-client/blob/3345b64ae497343b57b5bd851c982f3d42980012/src/streaming/sse.ts#L8)
