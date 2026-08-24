@@ -4,7 +4,7 @@
   "description": "Unofficial typed client for the ChatGPT desktop protocol and local Codex app-server",
   "type": "module",
   "private": false,
-  "bin": "./dist/src/bin.js",
+  "bin": "./bin/chatgpt-client",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
