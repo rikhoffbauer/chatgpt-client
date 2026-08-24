@@ -36,6 +36,11 @@ export type {
   StartTurnOptions,
   TurnRequestInput,
   UploadFileOptions,
+  UserMemoriesResponse,
+  UserMemory,
+  UserMemorySummaryFollowUp,
+  UserMemorySummaryResponse,
+  UserMemorySummarySection,
   UserMessageOptions,
 } from './client.js'
 export { defaultConfig, DEV_API_BASE, PROD_API_BASE } from './config.js'
