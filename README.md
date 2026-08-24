@@ -27,21 +27,27 @@ This repository turns the original exploratory client into a bounded, testable i
 
 The project has no runtime dependencies.
 
-### Install from GitHub
+### Run the CLI from GitHub
 
 The repository can be installed directly without publishing it to npm. These commands install the
 `chatgpt-client` package and run its CLI without adding it to your project:
 
 ```sh
-# Bun
-bunx --package github:rikhoffbauer/chatgpt-client chatgpt-client --help
-
 # npm
 npx --yes github:rikhoffbauer/chatgpt-client --help
+
+# Bun (the HTTPS URL is required by Bun 1.4.x)
+bunx --package https://github.com/rikhoffbauer/chatgpt-client chatgpt-client --help
 
 # pnpm
 pnpx --yes github:rikhoffbauer/chatgpt-client --help
 ```
+
+`npx github:rikhoffbauer/chatgpt-client` resolves the declared CLI automatically. Bun 1.4.x does not
+infer the executable from the equivalent `bunx github:rikhoffbauer/chatgpt-client` shorthand; use the
+explicit Bun command above.
+
+### Install from GitHub
 
 For a project dependency, use the GitHub repository URL with your package manager, then invoke the
 installed binary as `chatgpt-client`:
@@ -56,9 +62,27 @@ pnpm may require approval to run the package's build script when installing from
 for approval, allow `chatgpt-client` and repeat the `pnpx` command. The package's install/build step
 only compiles the TypeScript sources; it does not contact ChatGPT.
 
-The short `bunx github:rikhoffbauer/chatgpt-client` form is not portable across Bun versions because
-some versions do not infer a GitHub package's executable. Use the explicit
-`--package ... chatgpt-client` form above.
+### Use as a library
+
+After installing the package as a dependency, import its public API from the package root in either
+TypeScript or JavaScript:
+
+```ts
+import { ChatGPTClient } from 'chatgpt-client'
+
+const client = await ChatGPTClient.create()
+
+try {
+  for await (const event of client.send({ text: 'Explain bounded queues.' })) {
+    if (event.type === 'delta') process.stdout.write(event.text)
+  }
+} finally {
+  client.close()
+}
+```
+
+The same ESM import works in a JavaScript file; omit TypeScript-only annotations if you add any.
+`ChatGPTClient.create()` loads `~/.codex/auth.json` by default.
 
 ### CLI
 

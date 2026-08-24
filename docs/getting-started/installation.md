@@ -10,9 +10,30 @@ description: Prepare a supported local environment and install ChatGPT Client fr
 - **Bun 1.3 or newer** only when using the preferred contributor workflow.
 - A signed-in ChatGPT or Codex desktop installation with an auth store at `~/.codex/auth.json` (or a configured alternative).
 
+## Run or install from GitHub
+
+Run the CLI without adding it to a project:
+
+```sh
+npx --yes github:rikhoffbauer/chatgpt-client --help
+bunx --package https://github.com/rikhoffbauer/chatgpt-client chatgpt-client --help
+```
+
+Bun 1.4.x requires the explicit `--package` form with the HTTPS GitHub URL because it does not infer
+the executable from `bunx github:rikhoffbauer/chatgpt-client`.
+
+Install it as a project dependency when you want to use the CLI and library together:
+
+```sh
+npm install github:rikhoffbauer/chatgpt-client
+bun add github:rikhoffbauer/chatgpt-client
+```
+
+The package's executable is then available as `chatgpt-client`.
+
 ## Install from source
 
-The package is currently private and is not published to npm. Clone or use a workspace checkout, then install and build it:
+For contributor work or local changes, clone or use a workspace checkout, then install and build it:
 
 ```sh
 npm install

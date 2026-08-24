@@ -3,7 +3,12 @@ title: Library quick start
 description: Create a client, stream a response, and close resources correctly.
 ---
 
-Import from the package root; `src/index.ts` is the supported public boundary.
+Install the package from GitHub, then import from the package root. `src/index.ts` is the supported
+public boundary:
+
+```sh
+npm install github:rikhoffbauer/chatgpt-client
+```
 
 ```ts
 import { ChatGPTClient } from 'chatgpt-client'
@@ -25,6 +30,19 @@ try {
 } finally {
   client.close()
 }
+```
+
+The same ESM import works in a JavaScript file:
+
+```js
+import { ChatGPTClient } from 'chatgpt-client'
+
+const client = await ChatGPTClient.create()
+const models = await client.routes.getModels({
+  history_and_training_disabled: false,
+})
+console.log(models.models?.map((model) => model.slug))
+client.close()
 ```
 
 `ChatGPTClient.create()` loads the Codex auth store by default. Supply `authPath` or an explicit `Auth` object when embedding the client elsewhere.
