@@ -33,7 +33,7 @@ Conversations:
   export <conversation-id> [--out FILE]
 
 Account and files:
-  whoami | models | settings | usage | pins
+  whoami | models | settings | memories | memory-summary | usage | pins
   upload <file> [--use-case codex]
   download <file-id> [--out FILE]
 
@@ -246,6 +246,31 @@ async function executeClientCommand(command: string, client: ChatGPTClient, cont
     case 'settings':
       output(await client.call('getUserSettings', {}, { signal }))
       return 0
+    case 'memories': {
+      const response = await client.getUserMemories({ signal })
+      if (context.json) {
+        output(response)
+      } else {
+        process.stdout.write(`memory tokens: ${response.memory_num_tokens}/${response.memory_max_tokens}\n`)
+        for (const memory of response.memories) {
+          process.stdout.write(`${memory.id}  ${memory.updated_at}  ${memory.content}\n`)
+        }
+      }
+      return 0
+    }
+    case 'memory-summary': {
+      const response = await client.getUserMemorySummary({ signal })
+      if (context.json) {
+        output(response)
+      } else {
+        for (const section of response.sections) {
+          process.stdout.write(`# ${section.title}\n${section.description}\n`)
+          for (const followUp of section.followUps ?? []) process.stdout.write(`  - ${followUp.preview}\n`)
+          process.stdout.write('\n')
+        }
+      }
+      return 0
+    }
     case 'usage':
       output(await client.call('getMonthlySpend', { account_id: requireValue(client.auth.accountId, 'account id') }, { signal }))
       return 0

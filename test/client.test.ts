@@ -38,6 +38,74 @@ test('typed route facade delegates to the route catalog', async () => {
   assert.deepEqual(await client.routes.getModels({ history_and_training_disabled: false }), { models: [] })
 })
 
+test('getUserMemories requests and validates full memory entries', async () => {
+  const requests: string[] = []
+  const memory = {
+    id: 'memory-1',
+    content: 'Prefers concise answers',
+    updated_at: '2026-08-21',
+    gizmo_id: null,
+    status: 'warm',
+    conversation_id: 'conversation-1',
+    created_timestamp: 1_786_954_922.389472,
+    last_updated: null,
+    labels: [],
+  }
+  const client = createClient(async (input) => {
+    requests.push(String(input))
+    return Response.json({ memories: [memory], memory_max_tokens: 5_000_000, memory_num_tokens: 100 })
+  })
+  const result = await client.getUserMemories()
+  assert.equal(requests[0]?.endsWith('/memories?include_memory_entries=true'), true)
+  assert.deepEqual(result, { memories: [memory], memory_max_tokens: 5_000_000, memory_num_tokens: 100 })
+})
+
+test('getUserMemories rejects malformed responses', async () => {
+  const client = createClient(async () => Response.json({ memories: [{ id: 'memory-1' }], memory_max_tokens: 5_000_000, memory_num_tokens: 1 }))
+  await assert.rejects(
+    client.getUserMemories(),
+    (error: unknown) => error instanceof ProtocolError && error.code === 'INVALID_MEMORY',
+  )
+})
+
+test('getUserMemorySummary posts and validates the About You summary', async () => {
+  const requests: Array<{ url: string; method: string }> = []
+  const response = {
+    sections: [
+      { id: 'overview', title: 'Overview', description: 'A concise overview.' },
+      {
+        id: 'dive-deeper',
+        title: 'Dive Deeper',
+        description: '',
+        followUps: [{ preview: 'Explore preferences.', prompt: 'What are my preferences?', action: 'fill_composer' }],
+      },
+    ],
+    generatedAtIso: '2026-08-21T12:08:46.870213+00:00',
+    emptyStateMessage: 'ChatGPT does not know much about you yet.',
+    sourceChecksum: 'checksum',
+  }
+  const client = createClient(async (input, init) => {
+    requests.push({ url: String(input), method: init?.method ?? 'GET' })
+    return Response.json(response)
+  })
+  assert.deepEqual(await client.getUserMemorySummary(), response)
+  assert.equal(requests[0]?.url.endsWith('/memories/about_you/summary'), true)
+  assert.equal(requests[0]?.method, 'POST')
+})
+
+test('getUserMemorySummary rejects malformed sections', async () => {
+  const client = createClient(async () => Response.json({
+    sections: [{ id: 'overview', title: 'Overview' }],
+    generatedAtIso: '2026-08-21T12:08:46Z',
+    emptyStateMessage: '',
+    sourceChecksum: 'checksum',
+  }))
+  await assert.rejects(
+    client.getUserMemorySummary(),
+    (error: unknown) => error instanceof ProtocolError && error.code === 'INVALID_MEMORY_SUMMARY_SECTION',
+  )
+})
+
 test('strict route mode rejects unused arguments', async () => {
   const client = createClient(async () => Response.json({}))
   await assert.rejects(

@@ -21,6 +21,8 @@ Run `chatgpt-client --help` for the exact commands in the installed revision.
 | Command | Purpose |
 |---|---|
 | `whoami`, `models`, `settings`, `usage`, `pins` | Inspect account state. |
+| `memories` | Retrieve saved memory entries and token accounting. |
+| `memory-summary` | Retrieve the generated About You summary and follow-up prompts. |
 | `upload <file>`, `download <file-id>` | Transfer bounded files. |
 | `watch` | Print realtime conversation events. |
 | `agent methods|call|threads` | Use the local Codex app-server. |
@@ -35,5 +37,14 @@ Run `chatgpt-client --help` for the exact commands in the installed revision.
 - `--timeout MS`
 - `--json` or `--json-stream`
 - `--verbose` or `--quiet`
+
+Use `--json` with either memory command to emit the complete endpoint response:
+
+```sh
+chatgpt-client memories --json
+chatgpt-client memory-summary --json
+```
+
+Without `--json`, `memories` prints one entry per line and `memory-summary` prints readable sections. Both commands use the normal request deadline, cancellation handling, and automatic real-Chrome fallback when Cloudflare challenges the same-origin request.
 
 Structured failures include stable error codes. Output files are created without overwriting existing paths.

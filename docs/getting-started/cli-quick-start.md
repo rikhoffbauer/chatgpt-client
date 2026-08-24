@@ -15,6 +15,8 @@ When linked as `chatgpt-client`, common commands are:
 ```sh
 chatgpt-client whoami --json
 chatgpt-client models
+chatgpt-client memories
+chatgpt-client memory-summary
 chatgpt-client list --limit 10
 chatgpt-client send --json-stream "Give two uses for AbortSignal"
 chatgpt-client read <conversation-id> --json

@@ -53,6 +53,22 @@ test('Http omits account credentials for external requests', async () => {
   assert.equal(captured?.get('origin'), null)
 })
 
+test('Http retries a same-origin Cloudflare challenge through browser fetch', async () => {
+  let browserCalls = 0
+  const http = new Http({
+    auth: new Auth({ accessToken: futureToken() }),
+    deviceIdProvider: async () => 'device-1',
+    fetchImpl: async () => new Response('challenge', { status: 403, headers: { server: 'cloudflare', 'cf-mitigated': 'challenge' } }),
+    browserFetch: async (input) => {
+      browserCalls += 1
+      assert.equal(String(input), 'https://chatgpt.com/backend-api/me')
+      return Response.json({ ok: true })
+    },
+  })
+  assert.deepEqual(await http.json('GET', '/me'), { ok: true })
+  assert.equal(browserCalls, 1)
+})
+
 test('Http refreshes once on 401 and replays with the new token', async () => {
   let apiCalls = 0
   let refreshCalls = 0

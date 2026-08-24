@@ -4,6 +4,7 @@ import { Auth as AuthClass } from './auth.js'
 import { defaultConfig, resolveApiBase } from './config.js'
 import { HttpError, ProtocolError } from './errors.js'
 import { Http, expandPath, type HttpOptions, type Query } from './http.js'
+import { createBrowserFetch, type BrowserFetch } from './protocol/browser-fetch.js'
 import type { Logger } from './logger.js'
 import { noopLogger } from './logger.js'
 import { createRouteApi, type RouteApi, type RouteArguments, type RouteCallOptions, type RouteResult } from './route-api.js'
@@ -80,6 +81,54 @@ export interface ConversationListResponse {
   [key: string]: unknown
 }
 
+/** One memory saved by ChatGPT for the current user. */
+export interface UserMemory {
+  id: string
+  content: string
+  updated_at: string
+  gizmo_id: string | null
+  status: string
+  conversation_id: string | null
+  created_timestamp: number | null
+  last_updated: UnknownRecord | null
+  labels: unknown[] | null
+  [key: string]: unknown
+}
+
+/** The current user's saved ChatGPT memories and server-side token accounting. */
+export interface UserMemoriesResponse {
+  memories: UserMemory[]
+  memory_max_tokens: number
+  memory_num_tokens: number
+  [key: string]: unknown
+}
+
+/** A suggested prompt shown alongside an About You summary section. */
+export interface UserMemorySummaryFollowUp {
+  preview: string
+  prompt: string
+  action: string
+  [key: string]: unknown
+}
+
+/** One section in ChatGPT's generated About You summary. */
+export interface UserMemorySummarySection {
+  id: string
+  title: string
+  description: string
+  followUps?: UserMemorySummaryFollowUp[]
+  [key: string]: unknown
+}
+
+/** ChatGPT's generated About You summary for the current user. */
+export interface UserMemorySummaryResponse {
+  sections: UserMemorySummarySection[]
+  generatedAtIso: string
+  emptyStateMessage: string
+  sourceChecksum: string
+  [key: string]: unknown
+}
+
 export interface UserMessageOptions {
   attachments?: Attachment[]
   metadata?: UnknownRecord
@@ -149,6 +198,8 @@ export interface ChatGPTClientOptions {
   config?: HttpOptions['config']
   strictRouteArgs?: boolean
   prepareFailureMode?: 'continue' | 'throw'
+  /** Uses an isolated real-Chrome renderer when Cloudflare blocks a same-origin request. */
+  browserFallback?: boolean
   modelCacheMs?: number
   integrityProvider?: (prepare: PrepareRequirements, options: { solver: IntegritySolver; signal?: AbortSignal }) => Promise<IntegrityResult>
 }
@@ -176,6 +227,7 @@ export class ChatGPTClient {
   private readonly prepareFailureMode: 'continue' | 'throw'
   private readonly modelCacheMs: number
   private readonly integrityProvider: NonNullable<ChatGPTClientOptions['integrityProvider']>
+  private readonly browserFetch?: BrowserFetch
   private heartbeat?: NodeJS.Timeout
   private modelCache?: { value: string; expiresAt: number }
 
@@ -190,6 +242,9 @@ export class ChatGPTClient {
       ...(options.appVersion === undefined ? {} : { appVersion: options.appVersion }),
     })
     this.solver = config.solver
+    this.browserFetch = options.browserFallback === false
+      ? undefined
+      : createBrowserFetch({ maxResponseBytes: config.limits.responseBodyBytes })
     this.http = new Http({
       auth: options.auth,
       baseUrl: config.baseUrl,
@@ -197,6 +252,7 @@ export class ChatGPTClient {
       appVersion: config.appVersion,
       ...(options.fetchImpl === undefined ? {} : { fetchImpl: options.fetchImpl }),
       logger: this.logger,
+      browserFetch: this.browserFetch,
       config: {
         ...options.config,
         statePath: config.statePath,
@@ -322,6 +378,7 @@ export class ChatGPTClient {
   /** Stops the optional heartbeat owned by this client. */
   close(): void {
     this.stopHeartbeat()
+    void this.browserFetch?.close().catch(() => undefined)
   }
 
   userMessage(text: string, options: UserMessageOptions = {}): ConversationMessage {
@@ -655,6 +712,48 @@ export class ChatGPTClient {
     return value
   }
 
+  /** Gets memory entries and token accounting for the current user. */
+  async getUserMemories(options: { signal?: AbortSignal } = {}): Promise<UserMemoriesResponse> {
+    const response = await this.call('getUserMemories', { include_memory_entries: true }, { signal: options.signal })
+    if (
+      !isRecord(response) ||
+      !Array.isArray(response.memories) ||
+      typeof response.memory_max_tokens !== 'number' ||
+      typeof response.memory_num_tokens !== 'number'
+    ) {
+      throw new ProtocolError('User memories response is invalid', { code: 'INVALID_MEMORIES_RESPONSE' })
+    }
+    const memories = response.memories.map((memory, index): UserMemory => parseUserMemory(memory, index))
+    return {
+      ...response,
+      memories,
+      memory_max_tokens: response.memory_max_tokens,
+      memory_num_tokens: response.memory_num_tokens,
+    }
+  }
+
+  /** Generates ChatGPT's sectioned About You summary for the current user. */
+  async getUserMemorySummary(options: { signal?: AbortSignal } = {}): Promise<UserMemorySummaryResponse> {
+    const response = await this.call('getUserMemorySummary', {}, { signal: options.signal })
+    if (
+      !isRecord(response) ||
+      !Array.isArray(response.sections) ||
+      typeof response.generatedAtIso !== 'string' ||
+      typeof response.emptyStateMessage !== 'string' ||
+      typeof response.sourceChecksum !== 'string'
+    ) {
+      throw new ProtocolError('User memory summary response is invalid', { code: 'INVALID_MEMORY_SUMMARY_RESPONSE' })
+    }
+    const sections = response.sections.map((section, index): UserMemorySummarySection => parseMemorySummarySection(section, index))
+    return {
+      ...response,
+      sections,
+      generatedAtIso: response.generatedAtIso,
+      emptyStateMessage: response.emptyStateMessage,
+      sourceChecksum: response.sourceChecksum,
+    }
+  }
+
   setConversationArchived(conversationId: string, isArchived = true): Promise<unknown> {
     return this.call('patchConversation', { conversation_id: conversationId, is_archived: isArchived })
   }
@@ -746,6 +845,71 @@ export class ChatGPTClient {
       for (const item of items) yield item
       if (items.length < pageSize) return
     }
+  }
+}
+
+function parseUserMemory(value: unknown, index: number): UserMemory {
+  if (
+    !isRecord(value) ||
+    typeof value.id !== 'string' ||
+    typeof value.content !== 'string' ||
+    typeof value.updated_at !== 'string' ||
+    !(typeof value.gizmo_id === 'string' || value.gizmo_id === null) ||
+    typeof value.status !== 'string' ||
+    !(typeof value.conversation_id === 'string' || value.conversation_id === null) ||
+    !(typeof value.created_timestamp === 'number' || value.created_timestamp === null) ||
+    !(isRecord(value.last_updated) || value.last_updated === null) ||
+    !(Array.isArray(value.labels) || value.labels === null)
+  ) {
+    throw new ProtocolError(`User memory at index ${index} is invalid`, { code: 'INVALID_MEMORY', details: { index } })
+  }
+  return {
+    ...value,
+    id: value.id,
+    content: value.content,
+    updated_at: value.updated_at,
+    gizmo_id: value.gizmo_id,
+    status: value.status,
+    conversation_id: value.conversation_id,
+    created_timestamp: value.created_timestamp,
+    last_updated: value.last_updated,
+    labels: value.labels,
+  }
+}
+
+function parseMemorySummarySection(value: unknown, index: number): UserMemorySummarySection {
+  if (!isRecord(value) || typeof value.id !== 'string' || typeof value.title !== 'string' || typeof value.description !== 'string') {
+    throw new ProtocolError(`User memory summary section at index ${index} is invalid`, {
+      code: 'INVALID_MEMORY_SUMMARY_SECTION',
+      details: { index },
+    })
+  }
+  if (value.followUps !== undefined && !Array.isArray(value.followUps)) {
+    throw new ProtocolError(`User memory summary follow-ups at section ${index} are invalid`, {
+      code: 'INVALID_MEMORY_SUMMARY_FOLLOW_UPS',
+      details: { index },
+    })
+  }
+  const followUps = value.followUps?.map((followUp, followUpIndex): UserMemorySummaryFollowUp => {
+    if (
+      !isRecord(followUp) ||
+      typeof followUp.preview !== 'string' ||
+      typeof followUp.prompt !== 'string' ||
+      typeof followUp.action !== 'string'
+    ) {
+      throw new ProtocolError(`User memory summary follow-up ${followUpIndex} at section ${index} is invalid`, {
+        code: 'INVALID_MEMORY_SUMMARY_FOLLOW_UP',
+        details: { index, followUpIndex },
+      })
+    }
+    return { ...followUp, preview: followUp.preview, prompt: followUp.prompt, action: followUp.action }
+  })
+  return {
+    ...value,
+    id: value.id,
+    title: value.title,
+    description: value.description,
+    ...(followUps === undefined ? {} : { followUps }),
   }
 }
 

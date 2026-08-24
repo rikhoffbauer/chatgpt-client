@@ -17,17 +17,19 @@ const CHROME_CANDIDATES = [
   '/usr/bin/chromium',
 ].filter((value): value is string => typeof value === 'string' && value !== '')
 
-const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36'
+const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36'
 
-interface CdpClient {
+export interface CdpClient {
   readonly ready: Promise<void>
   send<T extends UnknownRecord = UnknownRecord>(method: string, params?: UnknownRecord, sessionId?: string): Promise<T>
   close(): void
 }
 
-interface BrowserSession {
+export interface ChromeSession {
   cdp: CdpClient
   sessionId: string
+  evaluate<T = unknown>(expression: string, awaitPromise?: boolean): Promise<T>
+  navigate(url: string): Promise<void>
   close(): Promise<void>
 }
 
@@ -210,9 +212,9 @@ const PAGE_SOLVER = String.raw`
 `
 
 
-let browserPromise: Promise<BrowserSession> | undefined
+let browserPromise: Promise<ChromeSession> | undefined
 
-async function launch(options: { url: string; headless: boolean; signal?: AbortSignal }): Promise<BrowserSession> {
+async function launch(options: { url: string; headless: boolean; installSolver: boolean; signal?: AbortSignal }): Promise<ChromeSession> {
   const port = 9_222 + Math.floor(Math.random() * 1_000)
   const userDataDir = await mkdtemp(join(tmpdir(), 'chatgpt-client-chrome-'))
   const args = [
@@ -223,6 +225,7 @@ async function launch(options: { url: string; headless: boolean; signal?: AbortS
     '--disable-background-networking',
     '--disable-features=Translate,MediaRouter',
     '--window-size=1512,856',
+    ...(options.headless ? [] : ['--start-minimized']),
     'about:blank',
   ]
   if (options.headless) args.unshift('--headless=new')
@@ -259,12 +262,29 @@ async function launch(options: { url: string; headless: boolean; signal?: AbortS
       deadline.cleanup()
     }
 
-    const installed = await cdp.send<{ exceptionDetails?: unknown }>('Runtime.evaluate', { expression: PAGE_SOLVER, returnByValue: true }, sessionId)
-    if (installed.exceptionDetails !== undefined) throw new ProtocolError('Turnstile solver installation failed in Chrome', { code: 'CHROME_SOLVER_INSTALL_FAILED' })
+    if (options.installSolver) {
+      const installed = await cdp.send<{ exceptionDetails?: unknown }>('Runtime.evaluate', { expression: PAGE_SOLVER, returnByValue: true }, sessionId)
+      if (installed.exceptionDetails !== undefined) throw new ProtocolError('Turnstile solver installation failed in Chrome', { code: 'CHROME_SOLVER_INSTALL_FAILED' })
+    }
 
+    const connectedCdp = cdp
+    if (connectedCdp === undefined) throw new ProtocolError('Chrome CDP connection was lost during launch', { code: 'CDP_CONNECT_FAILED' })
     return {
-      cdp,
+      cdp: connectedCdp,
       sessionId,
+      async evaluate<T = unknown>(expression: string, awaitPromise = false): Promise<T> {
+        const evaluation = await connectedCdp.send<{ result?: unknown; exceptionDetails?: unknown }>('Runtime.evaluate', {
+          expression,
+          awaitPromise,
+          returnByValue: true,
+        }, sessionId)
+        if (evaluation.exceptionDetails !== undefined) throw new ProtocolError('Chrome runtime evaluation failed', { code: 'CHROME_RUNTIME_EVALUATION_FAILED' })
+        const result = isRecord(evaluation.result) ? evaluation.result.value : undefined
+        return result as T
+      },
+      async navigate(url: string): Promise<void> {
+        await connectedCdp.send('Page.navigate', { url }, sessionId)
+      },
       async close(): Promise<void> {
         cdp?.close()
         process?.kill()
@@ -279,10 +299,20 @@ async function launch(options: { url: string; headless: boolean; signal?: AbortS
   }
 }
 
+/** Launches an isolated real Chrome renderer for browser-backed HTTP requests. */
+export async function createChromeSession(options: { url?: string; headless?: boolean; signal?: AbortSignal } = {}): Promise<ChromeSession> {
+  return launch({
+    url: options.url ?? 'https://chatgpt.com/',
+    headless: options.headless ?? process.env.CHATGPT_CLIENT_HEADFUL !== '1',
+    installSolver: false,
+    ...(options.signal === undefined ? {} : { signal: options.signal }),
+  })
+}
+
 export async function solveInChrome(dx: string, key: string, options: ChromeSolveOptions = {}): Promise<string> {
   const url = options.url ?? 'https://chatgpt.com/'
   const headless = options.headless ?? process.env.CHATGPT_CLIENT_HEADFUL !== '1'
-  browserPromise ??= launch({ url, headless, ...(options.signal === undefined ? {} : { signal: options.signal }) }).catch((error) => {
+  browserPromise ??= launch({ url, headless, installSolver: true, ...(options.signal === undefined ? {} : { signal: options.signal }) }).catch((error) => {
     browserPromise = undefined
     throw error
   })

@@ -57,6 +57,8 @@ export interface HttpOptions {
     limits?: Partial<ClientConfig['limits']>
   }
   deviceIdProvider?: () => Promise<string>
+  /** Optional same-origin browser fallback for Cloudflare challenge responses. */
+  browserFetch?: Fetch
 }
 
 /** Expand `/conversation/{conversation_id}` against a params object. */
@@ -102,6 +104,7 @@ export class Http {
   private readonly fetchImpl: Fetch
   private readonly logger: Logger
   private readonly deviceIdProvider: () => Promise<string>
+  private readonly browserFetch?: Fetch
   private cachedDeviceId?: string
 
   constructor(options: HttpOptions) {
@@ -118,6 +121,7 @@ export class Http {
     this.fetchImpl = options.fetchImpl ?? fetch
     this.logger = options.logger ?? noopLogger
     this.deviceIdProvider = options.deviceIdProvider ?? (() => deviceId(this.config.statePath))
+    this.browserFetch = options.browserFetch
   }
 
   url(path: string, query?: Query): string {
@@ -180,7 +184,11 @@ export class Http {
 
         const requestId = randomUUID()
         this.logger.debug('HTTP request', { requestId, method, url, attempt, maxAttempts })
-        const response = await this.fetchImpl(url, init)
+        let response = await this.fetchImpl(url, init)
+        if (this.browserFetch !== undefined && options.sendAuth !== false && isBrowserChallenge(url, response, this.baseUrl)) {
+          await response.body?.cancel().catch(() => undefined)
+          response = await this.browserFetch(url, init)
+        }
         this.logger.debug('HTTP response', { requestId, method, url, status: response.status, attempt })
 
         if (response.status === 401 && (options.retryOn401 ?? true) && !refreshed && options.sendAuth !== false) {
@@ -359,6 +367,11 @@ function toRequestBody(body: unknown, rawBody: boolean, headers: Headers): BodyI
   }
   headers.set('Content-Type', headers.get('Content-Type') ?? 'application/json')
   return JSON.stringify(body)
+}
+
+function isBrowserChallenge(url: string, response: Response, baseUrl: string): boolean {
+  if (response.status !== 403 || new URL(url).origin !== new URL(baseUrl).origin) return false
+  return response.headers.get('cf-mitigated') === 'challenge' || response.headers.get('server')?.toLowerCase() === 'cloudflare'
 }
 
 function isIdempotent(method: HttpMethod): boolean {

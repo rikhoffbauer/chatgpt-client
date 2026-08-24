@@ -152,6 +152,8 @@ export const ROUTES = {
   // settings & account
   // ---------------------------------------------------------------------------
   getUserSettings: { method: 'GET', path: '/settings/user' },
+  getUserMemories: { method: 'GET', path: '/memories', query: ['include_memory_entries'] },
+  getUserMemorySummary: { method: 'POST', path: '/memories/about_you/summary' },
   getVoices: { method: 'GET', path: '/settings/voices' },
   patchAccountUserSetting: { method: 'PATCH', path: '/settings/account_user_setting', query: ['feature', 'value'] },
   accountsCheck: { method: 'GET', path: '/accounts/check/{version}' },
