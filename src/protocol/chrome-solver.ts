@@ -7,6 +7,10 @@ import { deadlineSignal, sleep } from '../abort.js'
 import { ProtocolError, TimeoutError, errorMessage } from '../errors.js'
 import type { UnknownRecord } from '../types.js'
 
+const DEVTOOLS_TIMEOUT = 2 * 60_000;
+const CDP_CONNECT_TIMEOUT = 2 * 60_000;
+const CHATGPT_PAGE_LOAD_TIMEOUT = 2 * 60_000;
+
 const CHROME_CANDIDATES = [
   process.env.CHROME_PATH,
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -50,7 +54,7 @@ function chromeBinary(): string {
   return found
 }
 
-async function waitForDevTools(port: number, timeoutMs = 20_000, signal?: AbortSignal): Promise<{ webSocketDebuggerUrl: string }> {
+async function waitForDevTools(port: number, timeoutMs = DEVTOOLS_TIMEOUT, signal?: AbortSignal): Promise<{ webSocketDebuggerUrl: string }> {
   const deadline = Date.now() + timeoutMs
   while (Date.now() < deadline) {
     signal?.throwIfAborted()
@@ -69,7 +73,7 @@ async function waitForDevTools(port: number, timeoutMs = 20_000, signal?: AbortS
 }
 
 function connectCdp(webSocketUrl: string, options: { requestTimeoutMs?: number; maxPending?: number } = {}): CdpClient {
-  const requestTimeoutMs = options.requestTimeoutMs ?? 15_000
+  const requestTimeoutMs = options.requestTimeoutMs ?? CDP_CONNECT_TIMEOUT
   const maxPending = options.maxPending ?? 128
   const socket = new WebSocket(webSocketUrl)
   const pending = new Map<number, { resolve(value: UnknownRecord): void; reject(error: unknown): void; timer: NodeJS.Timeout }>()
@@ -234,7 +238,7 @@ async function launch(options: { url: string; headless: boolean; installSolver: 
   let cdp: CdpClient | undefined
   try {
     process = spawn(chromeBinary(), args, { stdio: 'ignore', detached: false })
-    const version = await waitForDevTools(port, 20_000, options.signal)
+    const version = await waitForDevTools(port, DEVTOOLS_TIMEOUT, options.signal)
     cdp = connectCdp(version.webSocketDebuggerUrl)
     await cdp.ready
 
@@ -249,7 +253,7 @@ async function launch(options: { url: string; headless: boolean; installSolver: 
     await cdp.send('Emulation.setUserAgentOverride', { userAgent: USER_AGENT, acceptLanguage: 'en-US,en;q=0.9', platform: 'MacIntel' }, sessionId)
     await cdp.send('Page.navigate', { url: options.url }, sessionId)
 
-    const deadline = deadlineSignal('ChatGPT page load', 15_000, options.signal)
+    const deadline = deadlineSignal('ChatGPT page load', CHATGPT_PAGE_LOAD_TIMEOUT, options.signal)
     try {
       while (true) {
         deadline.signal.throwIfAborted()

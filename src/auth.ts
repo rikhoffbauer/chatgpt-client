@@ -12,6 +12,8 @@ export const OAUTH_TOKEN_URL = 'https://auth.openai.com/oauth/token'
 // public openai codex cli client id, see https://github.com/openai/codex/blob/2aaefa32b0762491d1340675a6082fad26bbb57f/codex-rs/login/src/auth/manager.rs#L1678
 export const OAUTH_CLIENT_ID = 'app_EMoamEEZ73f0CkXaXp7hrann'
 
+const REFRESH_TIMEOUT = 60_000;
+
 export interface JwtPayload extends UnknownRecord {
   exp?: number
   sub?: string
@@ -105,7 +107,7 @@ export class Auth {
     if (options.idToken !== undefined) this.idToken = options.idToken
     this.accountId = options.accountId ?? accountIdFromToken(options.accessToken)
     this.fetchImpl = options.fetchImpl ?? fetch
-    this.refreshTimeoutMs = options.refreshTimeoutMs ?? 15_000
+    this.refreshTimeoutMs = options.refreshTimeoutMs ?? REFRESH_TIMEOUT
     this.logger = options.logger ?? noopLogger
   }
 

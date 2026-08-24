@@ -85,8 +85,8 @@ export function defaultConfig(overrides: Partial<Omit<ClientConfig, 'retry' | 'l
       retryStatuses: overrides.retry?.retryStatuses ?? DEFAULT_RETRY_STATUSES,
     },
     limits: {
-      requestTimeoutMs: overrides.limits?.requestTimeoutMs ?? envInteger('CHATGPT_CLIENT_REQUEST_TIMEOUT_MS', 60_000),
-      connectTimeoutMs: overrides.limits?.connectTimeoutMs ?? envInteger('CHATGPT_CLIENT_CONNECT_TIMEOUT_MS', 15_000),
+      requestTimeoutMs: overrides.limits?.requestTimeoutMs ?? envInteger('CHATGPT_CLIENT_REQUEST_TIMEOUT_MS', 2 * 60_000),
+      connectTimeoutMs: overrides.limits?.connectTimeoutMs ?? envInteger('CHATGPT_CLIENT_CONNECT_TIMEOUT_MS', 2 * 60_000),
       responseBodyBytes: overrides.limits?.responseBodyBytes ?? envInteger('CHATGPT_CLIENT_RESPONSE_BYTES', 8 * 1024 * 1024),
       streamLineBytes: overrides.limits?.streamLineBytes ?? envInteger('CHATGPT_CLIENT_STREAM_LINE_BYTES', 2 * 1024 * 1024),
       streamEventBytes: overrides.limits?.streamEventBytes ?? envInteger('CHATGPT_CLIENT_STREAM_EVENT_BYTES', 8 * 1024 * 1024),
