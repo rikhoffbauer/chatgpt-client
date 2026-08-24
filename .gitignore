@@ -1,4 +1,14 @@
 node_modules/
 dist/
+.test-dist/
 .poc-state.json
 *.log
+
+.env
+.env.*
+!.env.example
+
+auth.json
+*_auth.json
+auth_*.json
+

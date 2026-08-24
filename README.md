@@ -21,6 +21,51 @@ and replays the request once.
 
 ## Quick start
 
+### Install from GitHub
+
+The repository can be installed directly without publishing it to npm. These commands install the
+`chatgpt-client` package and run its CLI without adding it to your project:
+
+```sh
+# Bun
+bunx --package github:rikhoffbauer/chatgpt-client chatgpt-client --help
+
+# npm
+npx --yes github:rikhoffbauer/chatgpt-client --help
+
+# pnpm
+pnpx --yes github:rikhoffbauer/chatgpt-client --help
+```
+
+For a project dependency, use the GitHub repository URL with your package manager, then invoke the
+installed binary as `chatgpt-client`:
+
+```sh
+bun add github:rikhoffbauer/chatgpt-client
+npm install github:rikhoffbauer/chatgpt-client
+pnpm add github:rikhoffbauer/chatgpt-client
+```
+
+pnpm may require approval to run the package's build script when installing from GitHub. If it asks
+for approval, allow `chatgpt-client` and repeat the `pnpx` command. The package's install/build step
+only compiles the TypeScript sources; it does not contact ChatGPT.
+
+The short `bunx github:rikhoffbauer/chatgpt-client` form is not portable across Bun versions because
+some versions do not infer a GitHub package's executable. Use the explicit
+`--package ... chatgpt-client` form above.
+
+### CLI
+
+The CLI's non-networking commands are useful for checking an installation:
+
+```sh
+chatgpt-client --help
+chatgpt-client routes conversations
+```
+
+Commands that access ChatGPT, such as `chatgpt-client whoami` or `chatgpt-client list`, read credentials from
+`~/.codex/auth.json`; see [Credentials](#credentials) before using them.
+
 ```sh
 bun run chatgpt-poc.ts whoami
 bun run chatgpt-poc.ts list --limit 10

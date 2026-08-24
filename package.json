@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Unofficial typed client for the ChatGPT desktop protocol and local Codex app-server",
   "type": "module",
-  "private": true,
-  "bin": "./bin/chatgpt-client",
+  "private": false,
+  "bin": "./dist/src/bin.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -27,7 +27,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist .test-dist coverage",
 
@@ -36,7 +36,7 @@
 
     "test": "case \"${npm_execpath##*/}\" in bun) exec bun test ;; *) exec npm run test:node ;; esac",
     "test:bun": "bun test",
-    "test:node": "rm -rf .test-dist && tsc -p tsconfig.test.json && node --test --enable-source-maps .test-dist/test/*.test.js",
+    "test:node": "node --import=tsx --test test/*.test.ts",
 
     "verify": "\"$npm_execpath\" run check && \"$npm_execpath\" run clean && \"$npm_execpath\" run build && \"$npm_execpath\" run test",
 
