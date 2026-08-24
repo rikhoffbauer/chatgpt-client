@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+
+case "${npm_execpath:-}" in
+  *bun*)
+    exec bun "$ROOT/src/bin.ts" "$@"
+    ;;
+  *)
+    exec node --import=tsx "$ROOT/src/bin.ts" "$@"
+    ;;
+esac

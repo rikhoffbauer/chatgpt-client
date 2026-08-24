@@ -1,19 +1,58 @@
 {
-  "name": "chatgpt-poc",
-  "version": "0.1.0",
-  "private": true,
+  "name": "chatgpt-client",
+  "version": "1.0.0",
+  "description": "Unofficial typed client for the ChatGPT desktop protocol and local Codex app-server",
   "type": "module",
-  "bin": {
-    "chatgpt-poc": "./dist/chatgpt-poc.js"
+  "private": true,
+  "bin": "./bin/chatgpt-client",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/",
+    "bin/",
+    "docs/",
+    "src/",
+    "scripts/",
+    ".env.example",
+    "README.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "dev": "bun run chatgpt-poc.ts",
-    "start": "node dist/chatgpt-poc.js"
+    "clean": "rm -rf dist .test-dist coverage",
+
+    "dev": "case \"${npm_execpath##*/}\" in bun) exec bun --watch src/bin.ts ;; *) exec node --watch --import=tsx src/bin.ts ;; esac",
+    "start": "./bin/chatgpt-client",
+
+    "test": "case \"${npm_execpath##*/}\" in bun) exec bun test ;; *) exec npm run test:node ;; esac",
+    "test:bun": "bun test",
+    "test:node": "rm -rf .test-dist && tsc -p tsconfig.test.json && node --test --enable-source-maps .test-dist/test/*.test.js",
+
+    "verify": "\"$npm_execpath\" run check && \"$npm_execpath\" run clean && \"$npm_execpath\" run build && \"$npm_execpath\" run test",
+
+    "docs:dev": "cd website && \"$npm_execpath\" run dev",
+    "docs:check": "cd website && \"$npm_execpath\" run check",
+    "docs:build": "cd website && \"$npm_execpath\" run build",
+    "docs:serve": "cd website && \"$npm_execpath\" run serve",
+
+    "prepack": "\"$npm_execpath\" run verify"
+  },
+  "dependencies": {
+    "tsx": "^4.23.12"
   },
   "devDependencies": {
-    "@types/node": "latest",
-    "typescript": "latest"
+    "@types/node": "25.1.0",
+    "serve": "^14.2.6",
+    "typescript": "5.8.3"
   }
 }
